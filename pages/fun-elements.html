@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fun Elements Showcase | River Tech</title>
+
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    /* ===== Showcase-specific styles ===== */
+
+    .showcase-intro {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 50px;
+    }
+    .showcase-intro p {
+      font-size: 18px;
+      color: #666;
+    }
+
+    .demo-section {
+      margin: 60px 0;
+      padding: 40px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .demo-section:last-of-type { border-bottom: none; }
+
+    .demo-label {
+      display: inline-block;
+      background: var(--color-red);
+      color: white;
+      font-family: 'Avenir Next', 'Avenir', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      padding: 4px 12px;
+      border-radius: 3px;
+      margin-bottom: 12px;
+    }
+    .demo-title {
+      font-family: 'Palatino Linotype', 'Palatino', 'Book Antiqua', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 8px;
+    }
+    .demo-desc {
+      color: #888;
+      font-size: 15px;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    /* --- Announcement Banner --- */
+    .announcement-banner {
+      background: var(--color-red);
+      color: white;
+      text-align: center;
+      padding: 12px 40px 12px 20px;
+      font-family: 'Avenir Next', 'Avenir', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      position: relative;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    .announcement-banner a { color: white; text-decoration: underline; }
+    .announcement-banner .close-banner {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+    .announcement-banner .close-banner:hover { opacity: 1; }
+
+    /* --- Image Carousel --- */
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: 0 auto;
+      background: #ddd;
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+    .carousel-slide {
+      min-width: 100%;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Avenir Next', sans-serif;
+      font-size: 18px;
+      color: white;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .carousel-slide:nth-child(1) { background: linear-gradient(135deg, #7a2e2e, #c0392b); }
+    .carousel-slide:nth-child(2) { background: linear-gradient(135deg, #272443, #4a4580); }
+    .carousel-slide:nth-child(3) { background: linear-gradient(135deg, #2e5a2e, #4a8c4a); }
+    .carousel-slide:nth-child(4) { background: linear-gradient(135deg, #5a3d2e, #8c6d4a); }
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.85);
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 2;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: background 0.2s;
+    }
+    .carousel-btn:hover { background: white; }
+    .carousel-btn.prev { left: 12px; }
+    .carousel-btn.next { right: 12px; }
+    .carousel-dots {
+      text-align: center;
+      padding: 12px 0;
+    }
+    .carousel-dots button {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: none;
+      background: #ccc;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .carousel-dots button.active { background: var(--color-red); }
+
+    /* --- Animated Counters --- */
+    .counters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .counter-card {
+      text-align: center;
+      padding: 30px 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .counter-num {
+      font-family: 'Avenir Next', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--color-red);
+      line-height: 1;
+    }
+    .counter-label {
+      font-family: 'Palatino Linotype', serif;
+      font-size: 15px;
+      color: #666;
+      margin-top: 8px;
+    }
+
+    /* --- FAQ Accordion --- */
+    .accordion { max-width: 700px; margin: 0 auto; }
+    .accordion-item {
+      border-bottom: 1px solid #ddd;
+    }
+    .accordion-header {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 18px 0;
+      font-family: 'Palatino Linotype', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text);
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .accordion-header:hover { color: var(--color-red); }
+    .accordion-icon {
+      font-size: 22px;
+      transition: transform 0.3s;
+      color: var(--color-red);
+    }
+    .accordion-item.open .accordion-icon { transform: rotate(45deg); }
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+    .accordion-body-inner {
+      padding: 0 0 18px;
+      font-size: 16px;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    /* --- Testimonial Slider --- */
+    .testimonials {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      min-height: 180px;
+    }
+    .testimonial {
+      display: none;
+      animation: fadeIn 0.5s;
+    }
+    .testimonial.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .testimonial blockquote {
+      font-family: 'Palatino Linotype', serif;
+      font-size: 20px;
+      font-style: italic;
+      color: var(--color-text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    .testimonial cite {
+      display: block;
+      margin-top: 16px;
+      font-family: 'Avenir Next', sans-serif;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      color: var(--color-red);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .testimonial-nav {
+      margin-top: 20px;
+    }
+    .testimonial-nav button {
+      background: none;
+      border: 2px solid #ccc;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0 6px;
+      transition: border-color 0.2s;
+    }
+    .testimonial-nav button:hover { border-color: var(--color-red); }
+
+    /* --- Contact Form --- */
+    .contact-form {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 36px;
+      border-radius: 10px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-family: 'Avenir Next', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: 'Palatino Linotype', serif;
+      font-size: 16px;
+      color: var(--color-text);
+      background: #fafafa;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--color-red);
+      outline: none;
+    }
+    .form-submit {
+      background: var(--color-red);
+      color: white;
+      border: none;
+      padding: 14px 36px;
+      font-family: 'Avenir Next', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .form-submit:hover { background: #b71c1c; }
+
+    /* --- Lightbox --- */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .photo-grid img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .photo-grid img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .lightbox-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox-overlay.open { display: flex; }
+    .lightbox-overlay img {
+      max-width: 90%;
+      max-height: 85vh;
+      border-radius: 8px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      font-size: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 20px;
+    }
+    .lightbox-nav.lb-prev { left: 10px; }
+    .lightbox-nav.lb-next { right: 10px; }
+
+    /* --- Event Timeline --- */
+    .timeline {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      padding-left: 40px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 14px;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #e0d8d0;
+      border-radius: 3px;
+    }
+    .timeline-event {
+      position: relative;
+      margin-bottom: 30px;
+      padding-left: 20px;
+    }
+    .timeline-event::before {
+      content: '';
+      position: absolute;
+      left: -32px;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--color-red);
+      border: 3px solid #f6f4f0;
+    }
+    .timeline-date {
+      font-family: 'Avenir Next', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--color-red);
+    }
+    .timeline-title {
+      font-family: 'Palatino Linotype', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text);
+      margin: 4px 0;
+    }
+    .timeline-body {
+      font-size: 15px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* --- Interactive Tabs --- */
+    .tabs { max-width: 700px; margin: 0 auto; }
+    .tab-buttons {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid #ddd;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 12px 24px;
+      font-family: 'Avenir Next', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #999;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tab-btn:hover { color: var(--color-text); }
+    .tab-btn.active {
+      color: var(--color-red);
+      border-bottom-color: var(--color-red);
+    }
+    .tab-panel {
+      display: none;
+      padding: 24px 0;
+      line-height: 1.7;
+    }
+    .tab-panel.active { display: block; }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .counters { grid-template-columns: repeat(2, 1fr); }
+      .tab-buttons { flex-wrap: wrap; }
+      .tab-btn { padding: 10px 14px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+  <a href="../index.html" class="sidebar-logo">postfalls.art</a>
+  <div class="sidebar-tagline">Life is a Stage. <span class="love">Love</span> is our Script.</div>
+  <nav class="sidebar-nav">
+    <a href="../index.html">River Tech School</a>
+    <a href="a-la-carte.html">River Tech À La Carte</a>
+    <a href="why-river-tech.html">Why River Tech?</a>
+    <a href="enrollment.html">Enrollment</a>
+    <a href="school-resources.html">School Resources</a>
+  </nav>
+</div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <a href="enrollment.html" class="enroll-btn">Enroll Today 📞</a>
+  <div class="social-icons">
+    <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" fill="#c0392b"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.13C5.12 19.56 12 19.56 12 19.56s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon fill="white" points="9.75,15.02 15.5,11.75 9.75,8.48"/></svg>
+    </a>
+    <a href="https://www.facebook.com/postfalls.art" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" fill="#3b5998"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- Mobile Header -->
+<div class="mobile-header">
+  <a href="../index.html" class="mobile-logo">postfalls.art</a>
+  <button class="hamburger" aria-label="Open menu">☰</button>
+</div>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav-overlay">
+  <button class="close-btn" aria-label="Close menu">✕</button>
+  <a href="../index.html">River Tech School</a>
+  <a href="a-la-carte.html">River Tech À La Carte</a>
+  <a href="why-river-tech.html">Why River Tech?</a>
+  <a href="enrollment.html">Enrollment</a>
+  <a href="school-resources.html">School Resources</a>
+  <a href="enrollment.html" style="color: var(--color-red); font-weight: 700;">Enroll Today</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="content-area">
+
+    <div class="page-hero-inner">
+      <h1>Fun Elements I Can Build</h1>
+    </div>
+
+    <div class="showcase-intro">
+      <p>Below are working demos of interactive elements that can be added to River Tech's website. Each one is functional — click, scroll, and interact with them to see how they'd feel for parents visiting the site.</p>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 1. ANNOUNCEMENT BANNER -->
+    <!-- ============================== -->
+    <div class="demo-section">
+      <span class="demo-label">Easy</span>
+      <div class="demo-title">Announcement Banner</div>
+      <p class="demo-desc">Dismissable top bar for news, relocations, or enrollment deadlines. Stays visible until closed.</p>
+
+      <div class="announcement-banner" id="banner1">
+        🔥 After a fire on March 15th, River Tech has relocated to <strong>The Heart, 927 E Polston Ave.</strong> <a href="#">Learn more</a>
+        <button class="close-banner" onclick="this.parentElement.style.display='none'">✕</button>
+      </div>
+      <div class="announcement-banner" id="banner2" style="background: #272443; margin-top: 8px;">
+        📋 Enrollment for 2026-27 is now open! Spots are limited. <a href="#">Apply today</a>
+        <button class="close-banner" onclick="this.parentElement.style.display='none'">✕</button>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 2. IMAGE CAROUSEL -->
+    <!-- ============================== -->
+    <div class="demo-section">
+      <span class="demo-label">Easy</span>
+      <div class="demo-title">Image Carousel / Photo Gallery</div>
+      <p class="demo-desc">Showcase student work, performances, field trips, or campus photos. Swipeable on mobile.</p>
+
+      <div class="carousel" id="carousel1">
+        <div class="carousel-track">
+          <div class="carousel-slide">🎭 Frozen — December 2025</div>
+          <div class="carousel-slide">🤖 Robotics Competition</div>
+          <div class="carousel-slide">🎸 Spring Concert 2026</div>
+          <div class="carousel-slide">🥾 Silverwood Field Trip</div>
+        </div>
+        <button class="carousel-btn prev" onclick="moveCarousel(-1)">‹</button>
+        <button class="carousel-btn next" onclick="moveCarousel(1)">›</button>
+      </div>
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 3. ANIMATED COUNTERS -->
+    <!-- ============================== -->
+    <div class="demo-section">
+      <span class="demo-label">Easy</span>
+      <div class="demo-title">Animated Counters</div>
+      <p class="demo-desc">Numbers that count up when scrolled into view. Great for highlighting key stats.</p>
+
+      <div class="counters" id="countersSection">
+        <div class="counter-card">
+          <div class="counter-num" data-target="15">0</div>
+          <div class="counter-label">Students Per Class</div>
+        </div>
+        <div class="counter-card">
+          <div class="counter-num" data-target="5">0</div>
+          <div class="counter-label">Learning Tracks</div>
+        </div>
+        <div class="counter-card">
+          <div class="counter-num" data-target="30">0</div>
+          <div class="counter-label">Years Combined Teaching</div>
+        </div>
+        <div class="counter-card">
+          <div class="counter-num" data-target="6">0</div>
+          <div class="counter-label">Musicals Performed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 4. FAQ ACCORDION -->
+    <!-- ============================== -->
+    <div class="demo-section">
+      <span class="demo-label">Easy</span>
+      <div class="demo-title">FAQ Accordion</div>
+      <p class="demo-desc">Clean expandable sections for frequently asked questions. Click any question to expand.</p>
+
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            What ages does River Tech serve?
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">River Tech serves students from kindergarten through 12th grade (ages 5-18) for full-time enrollment. Our À La Carte homeschool program is designed for students ages 9-16.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            Is River Tech a Christian school?
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">Yes. River Tech is grounded in enduring Christian values and a family-centered culture. All classes are taught with Christian commentary and a conservative moral framework. We believe in nurturing the whole child — mind, body, and spirit.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            What makes River Tech different from other schools?
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">River Tech combines performing arts, technology, and core academics in one integrated program. With class sizes around 15 students — roughly half that of public schools — our teachers spend more time with each student. We use competency-based learning, so each child progresses at their own pace.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            Can my homeschooled child attend part-time?
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">Absolutely. Our À La Carte program lets homeschool families choose 1 to 4 days per week. Each day focuses on a different subject: Performing Arts, Science & Social Studies, Life Skills, or Technology. Tuition scales based on the number of days selected.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 5. TESTIMONIAL SLIDER -->
+    <!-- ============================== -->
+    <div class="demo-section">
+      <span class="demo-label">Easy</span>
+      <div class="demo-title">Testimonial Slider</div>
+      <p class="demo-desc">Rotating parent and student quotes to build trust with prospective families.</p>
+
+      <div class="testimonials">
+        <div class="testimonial active">
+          <blockquote>"River Tech has been transformational for our family. Our son went from dreading school to waking up excited every morning. The small class sizes and creative curriculum make all the difference."</blockquote>
+          <cite>— Sarah M., Parent</cite>
+        </div>
+        <div class="testimonial">
+          <blockquote>"I love that I get to learn coding AND play in the band. At my old school, I had to choose. Here I can do both, and the teachers actually know my name."</blockquote>
+          <cite>— Ethan, 8th Grade Student</cite>
+        </div>
+        <div class="testimonial">
+          <blockquote>"As homeschoolers, finding the right enrichment was hard. The À La Carte program gives our kids community, hands-on learning, and friendships — without sacrificing our family's educational rhythm."</blockquote>
+          <cite>— Jennifer & Mark T., Homeschool Family</cite>
+        </div>
+      </div>
+      <div class="testimonial-nav">
+        <button onclick="changeTestimonial(-1)">‹</button>
+        <button onclick="changeTestimonial(1)">›</button>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 6. CONTACT / INQUIRY FORM -->
+    <!-- ============================== -->
+    <div class="demo-section">
+      <span class="demo-label">Medium</span>
+      <div class="demo-title">Contact / Inquiry Form</div>
+      <p class="demo-desc">Working form that emails submissions to learn@rivertech.me. Can be powered by Netlify Forms (free) or Formspree.</p>
+
+      <div class="contact-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Parent Name</label>
+            <input type="text" placeholder="Jane Smith">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="jane@example.com">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" placeholder="(208) 555-0123">
+          </div>
+          <div class="form-group">
+            <label>Program Interest</label>
+            <select>
+              <option value="">Select one...</option>
+              <option>Full-Time (K-12)</option>
+              <option>À La Carte (Homeschool)</option>
+              <option>Both / Not Sure</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Student Age(s)</label>
+          <input type="text" placeholder="e.g. 10 and 13">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="4" placeholder="Tell us about your family and what you're looking for..."></textarea>
+        </div>
+        <button class="form-submit" onclick="alert('In production, this would submit to Netlify Forms and email learn@rivertech.me. No data is sent in this demo.')">Submit Inquiry</button>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 7. EVENT TIMELINE -->
+    <!-- ============================== -->
+    <div class="demo-section">
+      <span class="demo-label">Medium</span>
+      <div class="demo-title">Event Timeline / Calendar</div>
+      <p class="demo-desc">Visual timeline of upcoming events, performances, and enrollment deadlines.</p>
+
+      <div class="timeline">
+        <div class="timeline-event">
+          <div class="timeline-date">August 25, 2026</div>
+          <div class="timeline-title">First Day of School</div>
+          <div class="timeline-body">Full-time students begin the 2026-27 school year at The Heart.</div>
+        </div>
+        <div class="timeline-event">
+          <div class="timeline-date">September 1, 2026</div>
+          <div class="timeline-title">À La Carte Begins</div>
+          <div class="timeline-body">Homeschool enrichment starts. Monday through Thursday, 10:30 AM – 2:30 PM.</div>
+        </div>
+        <div class="timeline-event">
+          <div class="timeline-date">October 2026</div>
+          <div class="timeline-title">Fall Field Trip — Silverwood</div>
+          <div class="timeline-body">Annual fall excursion. Sign-up forms go out in September.</div>
+        </div>
+        <div class="timeline-event">
+          <div class="timeline-date">December 2026</div>
+          <div class="timeline-title">Winter Musical Performance</div>
+          <div class="timeline-body">Student-produced musical at River Tech. All families welcome to attend.</div>
+        </div>
+        <div class="timeline-event">
+          <div class="timeline-date">May 2027</div>
+          <div class="timeline-title">Spring Concert & Tech Showcase</div>
+          <div class="timeline-body">Band, choir, and technology project presentations. End-of-year celebration.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 8. INTERACTIVE TABS -->
+    <!-- ============================== -->
+    <div class="demo-section">
+      <span class="demo-label">Medium</span>
+      <div class="demo-title">Interactive Curriculum Explorer</div>
+      <p class="demo-desc">Tabbed interface for exploring different learning tracks. Click each tab to see details.</p>
+
+      <div class="tabs">
+        <div class="tab-buttons">
+          <button class="tab-btn active" onclick="switchTab(0)">Core</button>
+          <button class="tab-btn" onclick="switchTab(1)">Technology</button>
+          <button class="tab-btn" onclick="switchTab(2)">Performing Arts</button>
+          <button class="tab-btn" onclick="switchTab(3)">Life Skills</button>
+        </div>
+        <div class="tab-panel active">
+          <h3 style="color: var(--color-text); font-family: 'Palatino Linotype', serif;">Core Academics</h3>
+          <p>Math, Language Arts, Social Science, and Science form the academic foundation. Using competency-based progression, students advance when they've mastered the material — not on an arbitrary calendar. This means a 4th grader doing 6th-grade math can keep going, while another student needing extra time in reading gets it without stigma.</p>
+        </div>
+        <div class="tab-panel">
+          <h3 style="color: var(--color-text); font-family: 'Palatino Linotype', serif;">Technology Track</h3>
+          <p>Coding (Scratch → Python → C# with Unity), Robotics (Vex → Arduino), 3D Design (Blender + 3D Printing), filmmaking, digital arts, videography, and sound engineering. Students build real projects — games, robots, animations, and films — while developing problem-solving and engineering skills.</p>
+        </div>
+        <div class="tab-panel">
+          <h3 style="color: var(--color-text); font-family: 'Palatino Linotype', serif;">Performing Arts Track</h3>
+          <p>Every student learns drums, bass, ukulele, guitar, keyboard, and vocals. Band, choir, dance, acting, and musical theater round out the program. River Tech produces full musicals each year — Frozen, Journey to Bethlehem, The Greatest Showman, Annie, and The Jungle Book are among the productions so far.</p>
+        </div>
+        <div class="tab-panel">
+          <h3 style="color: var(--color-text); font-family: 'Palatino Linotype', serif;">Life Skills</h3>
+          <p>Relationships, finances, health, cooking, and practical life management. River Tech teaches students not just academics, but how to navigate the real world with wisdom, confidence, and character. These are the lessons that last a lifetime.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <!-- 9. PHOTO GALLERY + LIGHTBOX -->
+    <!-- ============================== -->
+    <div class="demo-section">
+      <span class="demo-label">Easy</span>
+      <div class="demo-title">Photo Gallery with Lightbox</div>
+      <p class="demo-desc">Click any photo to view full-size with navigation. Uses your actual teacher photos as a demo.</p>
+
+      <div class="photo-grid">
+        <img src="../assets/images/teachers/dan-mary-hegelund.jpg" alt="Dan & Mary Hegelund" onclick="openLightbox(0)">
+        <img src="../assets/images/teachers/jordan-ezell.jpg" alt="Jordan Ezell" onclick="openLightbox(1)">
+        <img src="../assets/images/teachers/caitlin-relvas.jpg" alt="Caitlin Relvas" onclick="openLightbox(2)">
+        <img src="../assets/images/teachers/luke-hegelund.jpg" alt="Luke Hegelund" onclick="openLightbox(3)">
+        <img src="../assets/images/teachers/jerome-long.jpg" alt="Jerome Long" onclick="openLightbox(4)">
+        <img src="../assets/images/technology-robotics.jpg" alt="Robotics Class" onclick="openLightbox(5)">
+        <img src="../assets/images/performing-arts-music.jpg" alt="Music Class" onclick="openLightbox(6)">
+        <img src="../assets/images/why-river-tech-hero.jpg" alt="River Tech Group" onclick="openLightbox(7)">
+      </div>
+    </div>
+
+    <!-- Lightbox Overlay -->
+    <div class="lightbox-overlay" id="lightbox" onclick="closeLightbox(event)">
+      <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+      <button class="lightbox-nav lb-prev" onclick="event.stopPropagation(); navLightbox(-1)">‹</button>
+      <img id="lightboxImg" src="" alt="">
+      <button class="lightbox-nav lb-next" onclick="event.stopPropagation(); navLightbox(1)">›</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <a href="../index.html" class="footer-logo">postfalls.art</a>
+    <div class="footer-tagline">Life is a Stage. <span class="love">Love</span> is our Script.</div>
+  </div>
+
+  <div class="footer-columns">
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>
+      <span>Tel: 425-444-2081</span>
+      <span>The Heart</span>
+      <span>927 E Polston Ave</span>
+      <span>Post Falls, ID 83854</span>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="why-river-tech.html">Why River Tech?</a>
+      <a href="enrollment.html">Enrollment</a>
+      <a href="school-resources.html">School Resources</a>
+      <a href="a-la-carte.html">À La Carte</a>
+    </div>
+    <div class="footer-col">
+      <h4>Social</h4>
+      <a href="https://www.youtube.com/@rivertechschool" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/rivertechschool/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 by Faithful Five Inc. (d.b.a. River Tech and Post Falls Art). <em>Life is a Stage. <span class="love">Love</span> is our Script.</em></p>
+    <p>Nondiscrimination Policy: Faithful Five Inc. and its ministry River Tech School of Performing Arts &amp; Technology admit students of any race, color, national and ethnic origin to all the rights, privileges, programs, and activities generally accorded or made available to students at the school. We do not discriminate on the basis of race, color, national and ethnic origin in administration of our educational policies, admissions policies, scholarship and loan programs, and athletic and other school-administered programs.</p>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js" defer></script>
+<script>
+// === Carousel ===
+let carouselIndex = 0;
+const slides = document.querySelectorAll('.carousel-slide');
+const track = document.querySelector('.carousel-track');
+const dotsContainer = document.getElementById('carouselDots');
+
+slides.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.onclick = () => goToSlide(i);
+  if (i === 0) dot.classList.add('active');
+  dotsContainer.appendChild(dot);
+});
+
+function goToSlide(i) {
+  carouselIndex = i;
+  track.style.transform = `translateX(-${i * 100}%)`;
+  dotsContainer.querySelectorAll('button').forEach((d, j) => d.classList.toggle('active', j === i));
+}
+function moveCarousel(dir) {
+  carouselIndex = (carouselIndex + dir + slides.length) % slides.length;
+  goToSlide(carouselIndex);
+}
+
+// Auto-advance carousel
+setInterval(() => moveCarousel(1), 4000);
+
+// === Counters ===
+let countersDone = false;
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !countersDone) {
+      countersDone = true;
+      document.querySelectorAll('.counter-num').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        let current = 0;
+        const step = Math.ceil(target / 40);
+        const interval = setInterval(() => {
+          current += step;
+          if (current >= target) { current = target; clearInterval(interval); }
+          el.textContent = current;
+        }, 40);
+      });
+    }
+  });
+}, { threshold: 0.5 });
+observer.observe(document.getElementById('countersSection'));
+
+// === Accordion ===
+function toggleAccordion(btn) {
+  const item = btn.parentElement;
+  const body = item.querySelector('.accordion-body');
+  const isOpen = item.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.accordion-item').forEach(el => {
+    el.classList.remove('open');
+    el.querySelector('.accordion-body').style.maxHeight = null;
+  });
+
+  if (!isOpen) {
+    item.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+// === Testimonials ===
+let testimonialIndex = 0;
+const testimonials = document.querySelectorAll('.testimonial');
+function changeTestimonial(dir) {
+  testimonials[testimonialIndex].classList.remove('active');
+  testimonialIndex = (testimonialIndex + dir + testimonials.length) % testimonials.length;
+  testimonials[testimonialIndex].classList.add('active');
+}
+
+// Auto-rotate testimonials
+setInterval(() => changeTestimonial(1), 6000);
+
+// === Tabs ===
+function switchTab(i) {
+  document.querySelectorAll('.tab-btn').forEach((b, j) => b.classList.toggle('active', j === i));
+  document.querySelectorAll('.tab-panel').forEach((p, j) => p.classList.toggle('active', j === i));
+}
+
+// === Lightbox ===
+const lightboxImages = Array.from(document.querySelectorAll('.photo-grid img')).map(img => img.src);
+let lightboxIndex = 0;
+
+function openLightbox(i) {
+  lightboxIndex = i;
+  document.getElementById('lightboxImg').src = lightboxImages[i];
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(e) {
+  if (e && e.target !== e.currentTarget && e.target.tagName !== 'BUTTON') return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function navLightbox(dir) {
+  lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+  document.getElementById('lightboxImg').src = lightboxImages[lightboxIndex];
+}
+
+// Close lightbox on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') navLightbox(-1);
+  if (e.key === 'ArrowRight') navLightbox(1);
+});
+</script>
+</body>
+</html>
