@@ -108,6 +108,57 @@ body {
   border-color: var(--color-red);
 }
 
+/* --- Sidebar Submenus --- */
+.sidebar-submenu {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 12px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.sidebar-submenu.open {
+  display: flex;
+}
+
+.sidebar-submenu a {
+  font-family: var(--font-nav);
+  font-size: 13px;
+  text-decoration: none;
+  padding: 6px 10px;
+  color: var(--color-text);
+  border: none;
+  text-align: left;
+  transition: color 0.2s;
+  border-left: 2px solid #ddd;
+}
+
+.sidebar-submenu a:hover {
+  color: var(--color-red);
+  border-left-color: var(--color-red);
+  background: transparent;
+}
+
+.sidebar-submenu a.active {
+  color: var(--color-red);
+  font-weight: 700;
+  border-left-color: var(--color-red);
+  background: transparent;
+}
+
+/* Arrow indicator on parent links with submenus */
+.sidebar-nav > a[data-has-submenu]::after {
+  content: '▸';
+  float: right;
+  font-size: 12px;
+  transition: transform 0.2s;
+}
+
+.sidebar-nav > a[data-has-submenu].expanded::after {
+  transform: rotate(90deg);
+}
+
 /* --- Top Bar (Enroll + Social) --- */
 .top-bar {
   position: fixed;
@@ -681,6 +732,42 @@ body {
 .mobile-nav-overlay a.active {
   color: var(--color-red);
   font-weight: 700;
+}
+
+/* --- Mobile Submenus --- */
+.mobile-submenu {
+  display: none;
+  flex-direction: column;
+  padding-left: 20px;
+  background: rgba(0,0,0,0.02);
+}
+
+.mobile-submenu.open {
+  display: flex;
+}
+
+.mobile-submenu a {
+  font-size: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  color: #555;
+}
+
+.mobile-submenu a.active {
+  color: var(--color-red);
+  font-weight: 700;
+}
+
+/* Arrow indicator on mobile parent links */
+.mobile-nav-overlay > a[data-has-submenu]::after {
+  content: '▸';
+  float: right;
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+.mobile-nav-overlay > a[data-has-submenu].expanded::after {
+  transform: rotate(90deg);
 }
 
 @media (max-width: 900px) {
