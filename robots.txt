@@ -1,3 +1,6 @@
+# River Tech School of Performing Arts & Technology
+# https://www.postfalls.art
+
 User-agent: *
 Allow: /
 

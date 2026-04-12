@@ -1,147 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage -->
   <url>
     <loc>https://www.postfalls.art/</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <!-- School Pages -->
+  <url>
+    <loc>https://www.postfalls.art/pages/elementary-school.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://www.postfalls.art/why-river-tech</loc>
-    <lastmod>2026-04-12</lastmod>
+    <loc>https://www.postfalls.art/pages/middle-school.html</loc>
+    <priority>0.8</priority>
     <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/high-school.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- À La Carte Pages -->
+  <url>
+    <loc>https://www.postfalls.art/pages/a-la-carte.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/monday-performing-arts.html</loc>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/tuesday-science.html</loc>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/thursday-life-skills.html</loc>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/friday-technology.html</loc>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- Why River Tech -->
+  <url>
+    <loc>https://www.postfalls.art/pages/why-river-tech.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/reviews.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/technology.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/performing-arts.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/sports-fitness.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/fieldtrips.html</loc>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- Enrollment -->
+  <url>
+    <loc>https://www.postfalls.art/pages/enrollment.html</loc>
     <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://www.postfalls.art/enrollment</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/performing-arts</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.postfalls.art/pages/tuition.html</loc>
     <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://www.postfalls.art/technology</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/homeschool</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/school-resources</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.postfalls.art/pages/faq.html</loc>
     <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://www.postfalls.art/calendar</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.postfalls.art/pages/tax-credit.html</loc>
     <priority>0.7</priority>
+    <changefreq>yearly</changefreq>
   </url>
+
+  <!-- School Resources -->
   <url>
-    <loc>https://www.postfalls.art/tuition</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/faq</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/scholarships</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/tax-credit</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/reviews</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.postfalls.art/pages/school-resources.html</loc>
     <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://www.postfalls.art/elementary-school</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.postfalls.art/pages/calendar.html</loc>
     <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://www.postfalls.art/middle-school</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/high-school</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/monday-performing-arts</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/tuesday-science</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/thursday-life-skills</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/friday-technology</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/fieldtrips</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/volunteer</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.postfalls.art/nonprofit</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.postfalls.art/pages/nonprofit.html</loc>
     <priority>0.5</priority>
+    <changefreq>yearly</changefreq>
   </url>
   <url>
-    <loc>https://www.postfalls.art/fun-elements</loc>
-    <lastmod>2026-04-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <loc>https://www.postfalls.art/pages/scholarships.html</loc>
+    <priority>0.6</priority>
+    <changefreq>yearly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/volunteer.html</loc>
+    <priority>0.5</priority>
+    <changefreq>yearly</changefreq>
   </url>
 </urlset>
