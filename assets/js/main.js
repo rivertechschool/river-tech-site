@@ -4,26 +4,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.querySelector('.mobile-nav-overlay');
   const closeBtn = document.querySelector('.mobile-nav-overlay .close-btn');
 
-  if (hamburger && overlay) {
-    hamburger.addEventListener('click', () => overlay.classList.add('open'));
-  }
-  if (closeBtn && overlay) {
-    closeBtn.addEventListener('click', () => overlay.classList.remove('open'));
-  }
-  // Close on link click (but not on parent toggle links)
-  if (overlay) {
-    overlay.querySelectorAll('a:not([data-has-submenu])').forEach(link => {
-      link.addEventListener('click', () => overlay.classList.remove('open'));
-    });
-  }
-
   // --- Submenu expand/collapse ---
-  // Mark parent links that have submenus
+  // Mark parent links that have submenus FIRST (before binding close handlers)
   document.querySelectorAll('.sidebar-submenu, .mobile-submenu').forEach(submenu => {
     const parent = submenu.previousElementSibling;
     if (parent && parent.tagName === 'A') {
       parent.setAttribute('data-has-submenu', 'true');
     }
+  });
+
+  // Toggle submenu on parent click
+  document.querySelectorAll('[data-has-submenu]').forEach(parentLink => {
+    parentLink.addEventListener('click', (e) => {
+      const submenu = parentLink.nextElementSibling;
+      if (submenu && (submenu.classList.contains('sidebar-submenu') || submenu.classList.contains('mobile-submenu'))) {
+        e.preventDefault();
+        e.stopPropagation();
+        submenu.classList.toggle('open');
+        parentLink.classList.toggle('expanded');
+      }
+    });
   });
 
   // Auto-expand submenus that contain an active child or whose parent is active
@@ -37,15 +37,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Toggle submenu on parent click
-  document.querySelectorAll('[data-has-submenu]').forEach(parentLink => {
-    parentLink.addEventListener('click', (e) => {
-      const submenu = parentLink.nextElementSibling;
-      if (submenu && (submenu.classList.contains('sidebar-submenu') || submenu.classList.contains('mobile-submenu'))) {
-        e.preventDefault();
-        submenu.classList.toggle('open');
-        parentLink.classList.toggle('expanded');
-      }
+  if (hamburger && overlay) {
+    hamburger.addEventListener('click', () => overlay.classList.add('open'));
+  }
+  if (closeBtn && overlay) {
+    closeBtn.addEventListener('click', () => overlay.classList.remove('open'));
+  }
+  // Close on link click (but not on parent toggle links)
+  if (overlay) {
+    overlay.querySelectorAll('a:not([data-has-submenu])').forEach(link => {
+      link.addEventListener('click', () => overlay.classList.remove('open'));
     });
-  });
+  }
 });
