@@ -10,11 +10,7 @@
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="../assets/css/base.css">
   <link rel="stylesheet" href="../assets/css/style.css">
-  <style>
-    .faq-item { margin-bottom: 30px; }
-    .faq-item h3 { font-family: var(--font-body); font-size: 20px; font-weight: 700; color: var(--color-text); margin-bottom: 8px; }
-    .faq-item p, .faq-item ul { margin-bottom: 12px; }
-  </style>
+  <!-- FAQ accordion styles are in style.css -->
 </head>
 <body>
 
@@ -128,59 +124,114 @@
     </div>
 
 
-    <div class="faq-item">
-      <h3>1. Is River Tech a full-time school or a homeschool enrichment program?</h3>
-      <p>River Tech is a full-time school that also offers flexible homeschool programs. Homeschool students may enroll in 1&ndash;4 days per week and participate in select classes alongside our full-time students, depending on availability.</p>
-    </div>
+    <div class="accordion" id="faqAccordion">
 
-    <div class="faq-item">
-      <h3>2. What grades do you serve, and what are class sizes like?</h3>
-      <p>River Tech serves students in 1st through 12th grade. Class sizes vary by subject:</p>
-      <ul>
-        <li>Music and foreign language classes typically have around 7 students.</li>
-        <li>Core subjects such as Math, English, and Science average 10&ndash;15 students.</li>
-        <li>Group-based classes like coding or choir may include up to 20 students, in which case two teachers are present.</li>
-      </ul>
-      <p>Overall, River Tech maintains an effective 1:15 teacher&ndash;student ratio, allowing for personalized learning and strong teacher&ndash;student relationships.</p>
-    </div>
+      <div class="accordion-item">
+        <button class="accordion-header">
+          Is River Tech a full-time school or a homeschool enrichment program?
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p>River Tech is a full-time school that also offers flexible homeschool programs. Homeschool students may enroll in 1&ndash;4 days per week and participate in select classes alongside our full-time students, depending on availability.</p>
+          </div>
+        </div>
+      </div>
 
-    <div class="faq-item">
-      
-    <div style="margin:1.5rem 0;"><img src="../assets/images/wix/School_Dress_Code_2025-26.pdf.jpg" alt="River Tech - Faq" style="max-width:100%; height:auto; border-radius:8px; margin:1rem 0;" loading="lazy"></div>
-<h3>3. Do you accept new students mid-year?</h3>
-      <p>We primarily enroll students at the start of the school year (late August) and mid-year after Christmas break (early January). If your family is new to the area or has a unique situation, please reach out. We may be able to find a spot. Next start is August 25th, 2026.</p>
-    </div>
+      <div class="accordion-item">
+        <button class="accordion-header">
+          What grades do you serve, and what are class sizes like?
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p>River Tech serves students in 1st through 12th grade. Class sizes vary by subject:</p>
+            <ul>
+              <li>Music and foreign language classes typically have around 7 students.</li>
+              <li>Core subjects such as Math, English, and Science average 10&ndash;15 students.</li>
+              <li>Group-based classes like coding or choir may include up to 20 students, in which case two teachers are present.</li>
+            </ul>
+            <p>Overall, River Tech maintains an effective 1:15 teacher&ndash;student ratio, allowing for personalized learning and strong teacher&ndash;student relationships.</p>
+          </div>
+        </div>
+      </div>
 
-    <div class="faq-item">
-      <h3>4. Is River Tech accredited?</h3>
-      <p>River Tech has chosen to remain unaccredited to preserve flexibility and personalized learning that doesn&rsquo;t always fit traditional accreditation systems. We provide official diplomas and transcripts, which are broadly accepted by colleges and universities.</p>
-    </div>
+      <div class="accordion-item">
+        <button class="accordion-header">
+          Do you accept new students mid-year?
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p>We primarily enroll students at the start of the school year (late August) and mid-year after Christmas break (early January). If your family is new to the area or has a unique situation, please reach out. We may be able to find a spot. Next start is August 25th, 2026.</p>
+          </div>
+        </div>
+      </div>
 
-    <div class="faq-item">
-      <h3>5. What technology programs do you offer?</h3>
-      <p>River Tech offers hands-on learning in:</p>
-    <div style="margin:1.5rem 0;"><img src="../assets/images/wix/a3f9bc_1c8acdf208024e84a216ef6809ccf2e5f000.jpg" alt="River Tech - Faq" style="max-width:100%; height:auto; border-radius:8px; margin:1rem 0;" loading="lazy"></div>
+      <div class="accordion-item">
+        <button class="accordion-header">
+          Is River Tech accredited?
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p>River Tech has chosen to remain unaccredited to preserve flexibility and personalized learning that doesn&rsquo;t always fit traditional accreditation systems. We provide official diplomas and transcripts, which are broadly accepted by colleges and universities.</p>
+          </div>
+        </div>
+      </div>
 
-      <ul>
-        <li>AI and machine learning</li>
-        <li>Coding and programming</li>
-        <li>Filmmaking and video editing</li>
-        <li>3D modeling and digital design</li>
-        <li>Robotics and circuits</li>
-        <li>Digital arts</li>
-      </ul>
-    </div>
+      <div class="accordion-item">
+        <button class="accordion-header">
+          What technology programs do you offer?
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p>River Tech offers hands-on learning in:</p>
+            <ul>
+              <li>AI and machine learning</li>
+              <li>Coding and programming</li>
+              <li>Filmmaking and video editing</li>
+              <li>3D modeling and digital design</li>
+              <li>Robotics and circuits</li>
+              <li>Digital arts</li>
+            </ul>
+            <img src="../assets/images/wix/a3f9bc_1c8acdf208024e84a216ef6809ccf2e5f000.jpg" alt="River Tech technology classroom" style="max-width:100%; height:auto; border-radius:8px; margin:12px 0 0;" loading="lazy">
+          </div>
+        </div>
+      </div>
 
-    <div class="faq-item">
-      <h3>6. What performing arts opportunities are available?</h3>
-      <p>Our performing arts program includes:</p>
-      <ul>
-        <li>Drums, bass, guitar, piano, and band</li>
-        <li>Acting, musical theater, and choir</li>
-        <li>Dance classes offered multiple times a week</li>
-        <li>Drawing, filmmaking, and digital arts</li>
-      </ul>
-      <p>Students perform in theater productions, concerts, and performances throughout the year.</p>
+      <div class="accordion-item">
+        <button class="accordion-header">
+          What performing arts opportunities are available?
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <p>Our performing arts program includes:</p>
+            <ul>
+              <li>Drums, bass, guitar, piano, and band</li>
+              <li>Acting, musical theater, and choir</li>
+              <li>Dance classes offered multiple times a week</li>
+              <li>Drawing, filmmaking, and digital arts</li>
+            </ul>
+            <p>Students perform in theater productions, concerts, and performances throughout the year.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header">
+          What is the dress code?
+          <span class="accordion-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <img src="../assets/images/wix/School_Dress_Code_2025-26.pdf.jpg" alt="River Tech Dress Code 2025-26" style="max-width:100%; height:auto; border-radius:8px;" loading="lazy">
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="cta-buttons">
@@ -247,5 +298,26 @@
 </footer>
 
 <script src="../assets/js/main.js" defer></script>
+<script>
+// === FAQ Accordion ===
+document.querySelectorAll('.accordion-header').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var item = btn.parentElement;
+    var body = item.querySelector('.accordion-body');
+    var isOpen = item.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.accordion-item').forEach(function(el) {
+      el.classList.remove('open');
+      el.querySelector('.accordion-body').style.maxHeight = null;
+    });
+
+    if (!isOpen) {
+      item.classList.add('open');
+      body.style.maxHeight = body.scrollHeight + 'px';
+    }
+  });
+});
+</script>
 </body>
 </html>

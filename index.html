@@ -141,6 +141,12 @@
 <div class="main-content">
   <div class="content-area">
 
+    <!-- Announcement Banner -->
+    <div class="announcement-banner" id="announcementBanner">
+      🔥 After a fire on March 15th, River Tech has relocated to <strong>The Heart, 927 E Polston Ave.</strong> <a href="pages/enrollment.html">We are fully back and accepting students.</a>
+      <button class="close-banner" aria-label="Close announcement" onclick="document.getElementById('announcementBanner').style.display='none'">✕</button>
+    </div>
+
     <!-- Hero -->
     <div class="hero-section">
       <div class="hero-welcome">WELCOME TO</div>
@@ -191,20 +197,40 @@
     </div>
 
     <p>River Tech is a school of performing arts and technology in Post Falls, Idaho. Our teachers, curriculum, and competency-based learning model create a place where students actually want to show up every day.</p>
-      <img src="assets/images/wix/P1088629.jpeg" alt="P1088629.jpeg" style="max-width:100%; height:auto; border-radius:8px; margin:1rem 0;" loading="lazy">
+          <!-- Image Carousel -->
+    <div class="carousel" id="homeCarousel">
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img src="assets/images/wix/P1088629.jpeg" alt="River Tech students performing on stage" loading="lazy">
+          <div class="carousel-caption">Student Performances</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/images/wix/River_Tech_Background.jpg" alt="River Tech school community" loading="lazy">
+          <div class="carousel-caption">Our School Community</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/images/wix/Screenshot_2025-10-17_at_9.53.41_AM_2.png" alt="River Tech classroom activities" loading="lazy">
+          <div class="carousel-caption">Hands-On Learning</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/images/wix/a3f9bc_b3e72512b1934c96b8dd56d553c646fe_mv2.jpeg" alt="River Tech students in class" loading="lazy">
+          <div class="carousel-caption">Small Class Sizes</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/images/wix/a3f9bc_9b60ac5bce5c467294f8b962ea73edb3_mv2.jpeg" alt="River Tech student activities" loading="lazy">
+          <div class="carousel-caption">Creative Arts &amp; Technology</div>
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/images/wix/a3f9bc_69351f13cb9648238ede02d90ee9031c_mv2.jpeg" alt="River Tech students outdoors" loading="lazy">
+          <div class="carousel-caption">Field Trips &amp; Adventures</div>
+        </div>
+      </div>
+      <button class="carousel-btn prev" aria-label="Previous slide">&#8249;</button>
+      <button class="carousel-btn next" aria-label="Next slide">&#8250;</button>
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
 
-      <img src="assets/images/wix/River_Tech_Background.jpg" alt="River Tech Background.jpg" style="max-width:100%; height:auto; border-radius:8px; margin:1rem 0;" loading="lazy">
-
-      <img src="assets/images/wix/Screenshot_2025-10-17_at_9.53.41_AM_2.png" alt="Screenshot 2025-10-17 at 9.53.41 AM 2.png" style="max-width:100%; height:auto; border-radius:8px; margin:1rem 0;" loading="lazy">
-
-      <img src="assets/images/wix/a3f9bc_b3e72512b1934c96b8dd56d553c646fe_mv2.jpeg" alt="" style="max-width:100%; height:auto; border-radius:8px; margin:1rem 0;" loading="lazy">
-
-      <img src="assets/images/wix/a3f9bc_9b60ac5bce5c467294f8b962ea73edb3_mv2.jpeg" alt="" style="max-width:100%; height:auto; border-radius:8px; margin:1rem 0;" loading="lazy">
-
-      <img src="assets/images/wix/a3f9bc_69351f13cb9648238ede02d90ee9031c_mv2.jpeg" alt="" style="max-width:100%; height:auto; border-radius:8px; margin:1rem 0;" loading="lazy">
-
-
-    <p>With class sizes around 15 students (roughly half that of public schools), our teachers spend real time with each child. Grounded in Christian values and a family-centered culture, our curriculum blends relationships, finances, and health with hands-on technology and performing arts.</p>
+<p>With class sizes around 15 students (roughly half that of public schools), our teachers spend real time with each child. Grounded in Christian values and a family-centered culture, our curriculum blends relationships, finances, and health with hands-on technology and performing arts.</p>
 
     <div class="cta-buttons">
       <a href="pages/tuition.html" class="cta-btn">Tuition</a>
@@ -319,6 +345,47 @@
 
     <p>At River Tech, students progress at their own pace based on mastery, not seat time. If a student excels in math, they move ahead. If they need more time in reading, they get it. No artificial grade-level ceilings. No one left behind.</p>
 
+    <!-- Animated Counters -->
+    <div class="counters" id="countersSection">
+      <div class="counter-card">
+        <div><span class="counter-num" data-target="15">0</span></div>
+        <div class="counter-label">Students Per Class</div>
+      </div>
+      <div class="counter-card">
+        <div><span class="counter-num" data-target="6">0</span></div>
+        <div class="counter-label">Musicals Produced</div>
+      </div>
+      <div class="counter-card">
+        <div><span class="counter-num" data-target="6">0</span></div>
+        <div class="counter-label">Instruments Taught</div>
+      </div>
+      <div class="counter-card">
+        <div><span class="counter-num" data-target="30">0</span><span class="counter-suffix">+</span></div>
+        <div class="counter-label">Years Teaching Experience</div>
+      </div>
+    </div>
+
+    <!-- Testimonial Slider -->
+    <h2 class="section-subheading">What Families Say</h2>
+    <div class="testimonial-slider" id="testimonialSlider">
+      <div class="testimonial-slide active">
+        <blockquote>&ldquo;After a year of public school and a year of homeschool...we found River Tech. My son has loved River Tech from the very beginning.&rdquo;</blockquote>
+        <cite>&mdash; Rebecca, Parent</cite>
+      </div>
+      <div class="testimonial-slide">
+        <blockquote>&ldquo;Dan is a top grade professional in every way. There are few people that are more passionate and committed to their purpose in life. Dan goes above and beyond for people to ensure their success.&rdquo;</blockquote>
+        <cite>&mdash; Dan Tapia, Pastor</cite>
+      </div>
+      <div class="testimonial-slide">
+        <blockquote>&ldquo;Dan is creative and caters each and every lesson to the specific needs and goals of the student. His positivity and energetic spirit is refreshing and a breath of fresh air.&rdquo;</blockquote>
+        <cite>&mdash; Dr. Jessi Jumper, Voice Academy Owner</cite>
+      </div>
+    </div>
+    <div class="testimonial-nav">
+      <button aria-label="Previous testimonial" id="testimonialPrev">&#8249;</button>
+      <button aria-label="Next testimonial" id="testimonialNext">&#8250;</button>
+    </div>
+
   </div><!-- .content-area -->
 
   <!-- Teachers Section (Full-Width Dark) -->
@@ -432,5 +499,98 @@
 </footer>
 
 <script src="assets/js/main.js" defer></script>
+<script>
+// === Image Carousel ===
+(function() {
+  var carousel = document.getElementById('homeCarousel');
+  if (!carousel) return;
+  var track = carousel.querySelector('.carousel-track');
+  var slides = carousel.querySelectorAll('.carousel-slide');
+  var dotsContainer = document.getElementById('carouselDots');
+  var idx = 0;
+  var autoTimer;
+
+  slides.forEach(function(_, i) {
+    var dot = document.createElement('button');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    if (i === 0) dot.classList.add('active');
+    dot.addEventListener('click', function() { goTo(i); resetAuto(); });
+    dotsContainer.appendChild(dot);
+  });
+
+  function goTo(i) {
+    idx = i;
+    track.style.transform = 'translateX(-' + (i * 100) + '%)';
+    dotsContainer.querySelectorAll('button').forEach(function(d, j) {
+      d.classList.toggle('active', j === i);
+    });
+  }
+  function move(dir) {
+    idx = (idx + dir + slides.length) % slides.length;
+    goTo(idx);
+  }
+
+  carousel.querySelector('.prev').addEventListener('click', function() { move(-1); resetAuto(); });
+  carousel.querySelector('.next').addEventListener('click', function() { move(1); resetAuto(); });
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(function() { move(1); }, 5000);
+  }
+  autoTimer = setInterval(function() { move(1); }, 5000);
+})();
+
+// === Animated Counters ===
+(function() {
+  var done = false;
+  var section = document.getElementById('countersSection');
+  if (!section) return;
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && !done) {
+        done = true;
+        section.querySelectorAll('.counter-num').forEach(function(el) {
+          var target = parseInt(el.getAttribute('data-target'));
+          var current = 0;
+          var step = Math.max(1, Math.ceil(target / 40));
+          var interval = setInterval(function() {
+            current += step;
+            if (current >= target) { current = target; clearInterval(interval); }
+            el.textContent = current;
+          }, 45);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+  observer.observe(section);
+})();
+
+// === Testimonial Slider ===
+(function() {
+  var slides = document.querySelectorAll('.testimonial-slide');
+  if (!slides.length) return;
+  var idx = 0;
+  var autoTimer;
+
+  function show(i) {
+    slides[idx].classList.remove('active');
+    idx = (i + slides.length) % slides.length;
+    slides[idx].classList.add('active');
+  }
+
+  document.getElementById('testimonialPrev').addEventListener('click', function() {
+    show(idx - 1); resetAuto();
+  });
+  document.getElementById('testimonialNext').addEventListener('click', function() {
+    show(idx + 1); resetAuto();
+  });
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(function() { show(idx + 1); }, 7000);
+  }
+  autoTimer = setInterval(function() { show(idx + 1); }, 7000);
+})();
+</script>
 </body>
 </html>
