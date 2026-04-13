@@ -1240,9 +1240,33 @@ body {
   width: 100%;
   min-width: 700px;
   border-collapse: collapse;
+  font-family: var(--font-display);
+  font-weight: 600;
   font-size: 13px;
   line-height: 1.45;
 }
+
+/* Grade-level color coding */
+.schedule-table .hs { color: #c0392b; }
+.schedule-table .ms { color: #2471a3; }
+.schedule-table .ue { color: #27864a; }
+.schedule-table .ye { color: #d4880f; }
+
+/* Tab-specific table coloring */
+#panel-hs .schedule-table td:not(.time-cell) { color: #c0392b; }
+#panel-ms .schedule-table td:not(.time-cell) { color: #2471a3; }
+#panel-ue .schedule-table td:not(.time-cell) { color: #27864a; }
+#panel-ye .schedule-table td:not(.time-cell) { color: #d4880f; }
+
+/* Keep special rows neutral */
+#panel-hs .schedule-table .assembly-row td,
+#panel-ms .schedule-table .assembly-row td,
+#panel-ue .schedule-table .assembly-row td,
+#panel-ye .schedule-table .assembly-row td,
+#panel-hs .schedule-table .end-row td,
+#panel-ms .schedule-table .end-row td,
+#panel-ue .schedule-table .end-row td,
+#panel-ye .schedule-table .end-row td { color: #888; }
 .schedule-table thead th {
   background: var(--color-text);
   color: white;
