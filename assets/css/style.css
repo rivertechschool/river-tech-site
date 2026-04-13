@@ -73,6 +73,7 @@ body {
   color: var(--color-black);
   margin-bottom: 16px;
   line-height: 1.4;
+  white-space: nowrap;
 }
 
 .sidebar-tagline .love {
