@@ -123,6 +123,14 @@ body {
   display: flex;
 }
 
+/* Show submenu on hover (desktop only) */
+@media (min-width: 769px) {
+  .sidebar-nav > a:hover + .sidebar-submenu,
+  .sidebar-submenu:hover {
+    display: flex;
+  }
+}
+
 .sidebar-submenu a {
   font-family: var(--font-nav);
   font-size: 13px;
