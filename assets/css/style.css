@@ -1393,6 +1393,10 @@ body {
   text-align: center;
   font-size: 11.5px;
 }
+.lunch-mini td.hs { color: #c0392b; }
+.lunch-mini td.ms { color: #2471a3; }
+.lunch-mini td.ue { color: #27864a; }
+.lunch-mini td.ye { color: #d4880f; }
 .lunch-mini .lunch-time {
   font-weight: 600;
   white-space: nowrap;
