@@ -153,8 +153,8 @@
 </div>
 <div class="schedule-legend">
   <span><strong>Rooms:</strong></span>
-  <span>☕ Cafe/Assembly</span> <span>🚀 Middle School</span> <span>☀ Upper Elementary</span>
-  <span>💡 Lower Elementary</span> <span>🎨 Fine Art Room</span> <span>🏎 Robotics Area</span>
+  <span class="hs">☕ Cafe/Assembly</span> <span class="ms">🚀 Middle School</span> <span class="ue">☀ Upper Elementary</span>
+  <span class="ye">💡 Lower Elementary</span> <span>🎨 Fine Art Room</span> <span>🏎 Robotics Area</span>
 </div>
 <div class="schedule-tabs">
 <button class="schedule-tab active" data-tab="all">All Classes</button>
@@ -168,391 +168,348 @@
 <table class="schedule-table">
 <thead><tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr></thead>
 <tbody>
-<tr class="assembly-row">
-<td class="time-cell">8:30–8:45</td>
-<td>Assembly</td>
-<td>Assembly</td>
-<td>Assembly</td>
-<td>Assembly</td>
-<td>Assembly</td>
+<tr class="assembly-row"><td class="time-cell">8:30–8:45</td><td>Assembly</td><td>Assembly</td><td>Assembly</td><td>Assembly</td><td>Assembly</td></tr>
+<tr><td class="time-cell">8:45–9:35</td>
+<td><div class="cell-grid"><div class="cell-col"><span class="hs">Math (JE) ☕</span><br><span class="ms">English (CA&amp;V) 🚀</span></div><div class="cell-col"><span class="ue">Math (LU) ☀</span><br><span class="ye">English textbooks (MA) 💡</span></div></div></td>
+<td><div class="cell-grid"><div class="cell-col"><span class="hs">Math (JO &amp; LU) ☕</span><br><span class="ms">English (CA) 🚀</span></div><div class="cell-col"><span class="ue">English (DA) ☀</span><br><span class="ye">Math textbooks, Workout (JE) 💡</span></div></div></td>
+<td><div class="cell-grid"><div class="cell-col"><span class="hs">Math (JO &amp; LU) ☕</span><br><span class="ms">English (CA) 🚀</span></div><div class="cell-col"><span class="ue">English (DA) ☀</span><br><span class="ye">Math textbooks, Workout (JE) 💡</span></div></div></td>
+<td><div class="cell-grid"><div class="cell-col"><span class="hs">Math (JO &amp; LU) ☕</span><br><span class="ms">English (CA) 🚀</span></div><div class="cell-col"><span class="ue">English (DA) ☀</span><br><span class="ye">Math textbooks, Workout (JE) 💡</span></div></div></td>
+<td><div class="cell-grid"><div class="cell-col"><span class="hs">Math (JO) ☕</span></div><div class="cell-col"><span class="ye">English (CA) 💡</span><br><span class="ue">Math (JE) ☀</span></div></div></td>
 </tr>
-<tr>
-<td class="time-cell">8:45–9:35</td>
-<td><span class="hs">Math (JE) ☕ </span>&nbsp;<span class="ms"> English (CA&V) 🚀</span><br><span class="ue">Math (LU) ☀ </span>&nbsp;<span class="ye"> English textbooks (MA) 💡</span></td>
-<td><span class="hs">Math (JO & LU) ☕ </span>&nbsp;<span class="ms"> English (CA) 🚀</span><br><span class="ue">English (DA) ☀ </span>&nbsp;<span class="ye"> Math textbooks, Workout (JE) 💡</span></td>
-<td><span class="hs">Math (JO & LU) ☕ </span>&nbsp;<span class="ms"> English (CA) 🚀</span><br><span class="ue">English (DA) ☀ </span>&nbsp;<span class="ye"> Math textbooks, Workout (JE) 💡</span></td>
-<td><span class="hs">Math (JO & LU) ☕ </span>&nbsp;<span class="ms"> English (CA) 🚀</span><br><span class="ue">English (DA) ☀ </span>&nbsp;<span class="ye"> Math textbooks, Workout (JE) 💡</span></td>
-<td><span class="hs">Math (JO) ☕ </span>&nbsp;<span class="ye"> English (CA) 💡</span><br><span class="ue">Math (JE) ☀</span></td>
+<tr><td class="time-cell">9:35–10:25</td>
+<td><div class="cell-grid"><div class="cell-col"><span class="hs">English (CA) ☕</span><br><span class="ms">Math (JE) 🚀</span></div><div class="cell-col"><span class="ue">English (LU&amp;V) ☀</span><br><span class="ye">Math textbooks, Snack (MA) 💡</span></div></div></td>
+<td><div class="cell-grid"><div class="cell-col"><span class="hs">English (CA &amp; LU) ☕</span><br><span class="ms">Math (JE) 🚀</span></div><div class="cell-col"><span class="ue">Math (JO) ☀</span><br><span class="ye">English textbooks, Snack (MA) 💡</span></div></div></td>
+<td><div class="cell-grid"><div class="cell-col"><span class="hs">English (CA &amp; LU) ☕</span><br><span class="ms">Math (JE) 🚀</span></div><div class="cell-col"><span class="ue">Math (JO) ☀</span><br><span class="ye">English textbooks, Snack (MA) 💡</span></div></div></td>
+<td><div class="cell-grid"><div class="cell-col"><span class="hs">English (CA &amp; LU) ☕</span><br><span class="ms">Math (JE) 🚀</span></div><div class="cell-col"><span class="ue">Math (JO) ☀</span><br><span class="ye">English textbooks, Snack (MA) 💡</span></div></div></td>
+<td><div class="cell-grid"><div class="cell-col"><span class="hs">English (CA) ☕</span></div><div class="cell-col"><span class="ye">Math (JE) 💡</span><br><span class="ue">English (JO) ☀</span></div></div></td>
 </tr>
-<tr>
-<td class="time-cell">9:35–10:25</td>
-<td><span class="hs">English (CA) ☕ </span>&nbsp;<span class="ms"> Math (JE) 🚀</span><br><span class="ue">English (LU&V) ☀ </span>&nbsp;<span class="ye"> Math textbooks, Snack (MA) 💡</span></td>
-<td><span class="hs">English (CA & LU) ☕ </span>&nbsp;<span class="ms"> Math (JE) 🚀</span><br><span class="ue">Math (JO) ☀ </span>&nbsp;<span class="ye"> English textbooks, Snack (MA) 💡</span></td>
-<td><span class="hs">English (CA & LU) ☕ </span>&nbsp;<span class="ms"> Math (JE) 🚀</span><br><span class="ue">Math (JO) ☀ </span>&nbsp;<span class="ye"> English textbooks, Snack (MA) 💡</span></td>
-<td><span class="hs">English (CA & LU) ☕ </span>&nbsp;<span class="ms"> Math (JE) 🚀</span><br><span class="ue">Math (JO) ☀ </span>&nbsp;<span class="ye"> English textbooks, Snack (MA) 💡</span></td>
-<td><span class="hs">English (CA) ☕ </span>&nbsp;<span class="ye"> Math (JE) 💡</span><br><span class="ue">English (JO) ☀</span></td>
+<tr><td class="time-cell">10:25–11:05</td>
+<td>"Sound of Music" &amp; "Fun in the Sun"<br>(DA &amp; MA) 🎤<br><span class="ye">Vocab practice, Storytelling &amp; Creative writing (CA) 💡</span><br>11:00 Dance (CA)<br>3D Modeling (LU &amp; JE)</td>
+<td><span class="hs">Christianity (LU) ☕</span><br><span class="ms">Literature (CA) 🚀</span><br><span class="ue">Bible Class (JO) ☀</span><br><span class="ye">Mental Math/Games &amp; PE (JE) 💡</span></td>
+<td><span class="hs">Business &amp; Finance 360° (DA) ☕</span><br><span class="ms">Bible Class (JO) 🚀</span><br><span class="ue">Science (JE) ☀</span><br><span class="ye">Vocab practice, Silent reading, Reading Eggs (CA) 💡</span></td>
+<td><span class="hs">Coding (JO &amp; JE) ☕</span><br><span class="ms">World History &amp; Geography (DA) 🚀</span><br><span class="ue">Spanish (CR) ☀</span><br><span class="ye">Non-Spanish &amp; L.E.S.: Silent reading, Reading Eggs (CA) 💡</span></td>
+<td><div class="split-top"><span class="hs">Robots (JO &amp; PH) 🏎</span><br><span class="ue">Sketchbook/Drawing (CA) ☀</span></div><div class="split-bottom"><span class="ms">Film Making (MA) 🚀</span><br><span class="hs">3D Modeling (LU &amp; JE) ☕</span></div></td>
 </tr>
-<tr>
-<td class="time-cell">10:25–11:05</td>
-<td>"Sound of Music" &<br>"Fun in the Sun"<br>(DA & MA) 🎤<br><br>Vocab practice, Storytelling &<br><span class="ye">Creative writing (CA) 💡</span><br>11:00 Dance (CA)<br>3D Modeling (LU & JE)</td>
-<td><span class="hs">Christianity (LU) ☕</span><br><span class="ms">Literature (CA) 🚀</span><br><span class="ue">Bible Class (JO) ☀</span><br><span class="ye">Mental Math/Games & PE (JE) 💡</span></td>
-<td><span class="hs">Business & Finance 360° (DA) ☕</span><br><span class="ms">Bible Class (JO) 🚀</span><br><span class="ue">Science (JE) ☀</span><br>Vocab practice, Silent reading,<br><span class="ye">Reading Eggs (CA) 💡</span></td>
-<td><span class="hs">Coding (JO & JE) ☕</span><br><span class="ms">World History & Geography (DA) 🚀</span><br><span class="ue">Spanish (CR) ☀</span><br>Non-Spanish & L.E.S.: Silent reading,<br><span class="ye">Reading Eggs (CA) 💡</span></td>
-<td>Robots (JO & PH) 🏎<br><span class="ue">Sketchbook/Drawing (CA) ☀</span><br><br><span class="ms">Film Making (MA) 🚀</span><br><span class="hs">3D Modeling (LU & JE) ☕</span></td>
-</tr>
-<tr>
-<td class="time-cell">11:05–11:45</td>
-<td>Park — P.E. & Ball Games<br>(LU & JE)</td>
-<td>Performing Artists: Park (JE & CA)<br>Non-Performers: Coding (JO & LU)<br><span class="ye">Vocab practice 💡</span><br>Silent reading, Reading Eggs (MA)</td>
+<tr><td class="time-cell">11:05–11:45</td>
+<td>LU &amp; JE<br>Park (P.E. &amp; Ball Games)</td>
+<td>Park (Performing Artists):<br>JE &amp; CA<br>Non-Performers (JO &amp; LU): Coding<br><span class="ye">Vocab practice 💡</span><br>Silent reading, Reading Eggs (MA)</td>
 <td><span class="hs">Chemistry (JO) ☕</span><br><span class="ms">Scientific Literacy (JE) 🚀</span><br><span class="ue">Literature (CA) ☀</span><br><span class="ye">Science (MA) 💡</span></td>
-<td><span class="ue">Spanish (CR) ☀</span><br><span class="hs">Health & Anatomy (JE) ☕</span><br>Fine Art & Drawing (Amy & JO) 🎨<br><span class="ye">Vocab Test, Shop Prizes (CA) 💡</span></td>
-<td><span class="ms">Film Making (MA) 🚀</span><br><span class="ue">Engineering (CA) ☀</span><br><br>Robotics (LU & PH) 🏎<br><span class="hs">Coding (JO & JE) ☕</span></td>
+<td><span class="ue">Spanish (CR) ☀</span><br><span class="hs">Health &amp; Anatomy (JE) ☕</span><br>Fine Art &amp; Drawing (Amy &amp; JO) 🎨<br><span class="ye">Vocab Test, Shop Prizes (CA) 💡</span></td>
+<td><div class="split-top"><span class="ms">Film Making (MA) 🚀</span><br><span class="ue">Engineering (CA) ☀</span></div><div class="split-bottom"><span class="hs">Robotics (LU &amp; PH) 🏎</span><br><span class="hs">Coding (JO &amp; JE) ☕</span></div></td>
 </tr>
-<tr class="lunch-row">
-<td class="time-cell">Lunch</td>
-<td><strong>Lunch Rotation</strong><br>11:45–12:05: E.S. Lunch (CA & JO)<br>12:10–12:30: E.S. Indoor Hangout (MA)<br>12:35–12:55: E.S. Outdoor Drill (LU & DA)<br><br>M.S. Outdoor Drill (JE & LU)<br>M.S. Lunch (CA & LU)<br>M.S. Indoor Hangout (CA* & JO)<br><br>H.S. Indoor Hangout (MA)<br>H.S. Outdoor Drill (JE & JO)<br>H.S. Lunch (JE & MA)<br><em>*Mon with E.S. (Dan)</em></td>
-<td></td>
-<td></td>
-<td>11:45–12:30: H.S. Fine Art & Drawing (Amy & JO) 🎨<br>12:10–12:30: E.S. Indoor Hangout (JO)<br>M.S. Lunch (CA & JE)<br><br>Otherwise Mon–Wed rotation</td>
-<td>See Mon–Wed Lunch Rotation</td>
+<tr class="lunch-row"><td class="time-cell">Lunch<br>Rotation</td>
+<td colspan="3"><table class="lunch-mini">
+<thead><tr><th></th><th class="ue">E.S.</th><th class="ms">M.S.</th><th class="hs">H.S.</th></tr></thead>
+<tbody>
+<tr><td class="lunch-time">11:45–12:05</td><td>Lunch (CA &amp; JO)</td><td>Outdoor Drill (JE &amp; LU)</td><td>Indoor Hangout (MA)</td></tr>
+<tr><td class="lunch-time">12:10–12:30</td><td>Indoor Hangout (MA)</td><td>Lunch (CA &amp; LU)</td><td>Outdoor Drill (JE &amp; JO)</td></tr>
+<tr><td class="lunch-time">12:35–12:55</td><td>Outdoor Drill (LU &amp; DA)</td><td>Indoor Hangout (CA* &amp; JO)</td><td>Lunch (JE &amp; MA)</td></tr>
+</tbody>
+</table>
+<em class="lunch-note">*Mondays with E.S. (Dan)</em></td>
+<td>11:45–12:30: H.S. Fine Art &amp; Drawing (Amy &amp; JO) 🎨<br>
+12:10–12:30: E.S. Indoor Hangout (JO)<br>
+M.S. Lunch (CA &amp; JE)<br><br>
+<em>Otherwise Mon–Wed rotation</em></td>
+<td><em>See Mon–Wed Lunch Rotation</em></td>
 </tr>
-<tr>
-<td class="time-cell">1:00–1:40</td>
-<td>"Sound of Music" /<br>"Fun in the Sun" (DA & MA) 🎤<br><br>Social studies (CA)<br>1:30 Legos & Drawing<br><br>LU & JE: Documentary,<br>Digital Design, Drill, Chess,<br>Board Games, Props/Stage, Homework</td>
-<td><span class="hs">World History (CA) ☕</span><br><span class="ms">Film Making (JE & LU) 🚀</span><br><span class="ue">World History & Geography (DA) ☀</span><br><span class="ye">Drawing, Scratch Jr, Sketchbook (JO) 💡</span></td>
-<td>"Sound of Music" &<br>"Fun in the Sun" (DA & CA)<br><br>Gizmo/Robotics<br>1:40 Number Blocks,<br><span class="ye">Number practice (JO) 💡</span><br><br>LU & JE: Documentary,<br>Digital Design, Drill, Chess,<br>Board Games, Props/Stage</td>
-<td><span class="hs">3D Modeling (LU & JE) ☕</span><br>Fine Art & Drawing (Amy & JO) 🎨<br>Dance (CA): select students<br><span class="ue">Non-Dance & L.E.S. Arts & Crafts (MA) ☀</span><br><br>Robotics (JO & PH) 🏎<br><span class="ue">Filmmaking/Puppet show (CA) ☀</span></td>
-<td><span class="hs">Film Making (DA) ☕</span><br><span class="ms">Digital Arts (LU & JE) 🚀</span><br>Robotics (JO & PH) 🏎</td>
+<tr><td class="time-cell">1:00–1:40</td>
+<td>"Sound of Music" / "Fun in the Sun"<br>(DA &amp; MA) 🎤<br>Social studies (CA)<br>1:30 Legos &amp; Drawing<br>LU &amp; JE: Documentary,<br>Digital Design, Drill, Chess,<br>Board Games, Props/Stage, Homework</td>
+<td><span class="hs">World History (CA) ☕</span><br><span class="ms">Film Making (JE &amp; LU) 🚀</span><br><span class="ue">World History &amp; Geography (DA) ☀</span><br><span class="ye">Drawing, Scratch Jr, Sketchbook (JO) 💡</span></td>
+<td>"Sound of Music" &amp; "Fun in the Sun"<br>(DA &amp; CA)<br>Gizmo/Robotics<br>1:40 Number Blocks,<br><span class="ye">Number practice (JO) 💡</span><br>LU &amp; JE: Documentary,<br>Digital Design, Drill, Chess,<br>Board Games, Props/Stage</td>
+<td><div class="split-top"><span class="hs">3D Modeling (LU &amp; JE) ☕</span><br>Fine Art &amp; Drawing (Amy &amp; JO) 🎨<br>Dance (CA): select students<br><span class="ue">Non-Dance &amp; L.E.S. Arts &amp; Crafts (MA) ☀</span></div><div class="split-bottom"><span class="hs">Robotics (JO &amp; PH) 🏎</span><br><span class="ue">Filmmaking/Puppet show (CA) ☀</span></div></td>
+<td><div class="split-top"><span class="hs">Film Making (DA) ☕</span></div><div class="split-bottom"><span class="ms">Digital Arts (LU &amp; JE) 🚀</span></div></td>
 </tr>
-<tr>
-<td class="time-cell">1:40–2:20</td>
+<tr><td class="time-cell">1:40–2:20</td>
 <td></td>
 <td><span class="hs">Film Making (LU) ☕</span><br><span class="ms">Coding (JO) 🚀</span><br><span class="ue">Film Making (JE) ☀</span><br><span class="ye">Dance/Movement, play (CA) 💡</span></td>
 <td></td>
-<td>Formal Dance (CA)<br><span class="ms">Non-Dance: 3D Modeling (JE & LU) 🚀</span><br><span class="ue">Coding (JO) ☀</span><br><span class="ye">Super Book, play (MA) 💡</span><br><br><span class="hs">World Geo (CA) ☕</span><br><span class="ue">Coding (DA) ☀</span></td>
-<td><span class="ms">Coding (LU & JE) 🚀</span></td>
+<td>Formal Dance (CA)<br><span class="ms">Non-Dance: 3D Modeling (JE &amp; LU) 🚀</span><br><span class="ue">Coding (JO) ☀</span><br><span class="ye">Super Book, play (MA) 💡</span><br><span class="hs">World Geo (CA) ☕</span><br><span class="ue">Coding (DA) ☀</span></td>
+<td><div class="split-top"><span class="hs">Robotics (JO &amp; PH) 🏎</span></div><div class="split-bottom"><span class="ms">Coding (LU &amp; JE) 🚀</span></div></td>
 </tr>
-<tr class="end-row">
-<td class="time-cell">2:20–2:35</td>
-<td>Clean · School Ends 2:35</td>
-<td>Clean · School Ends 2:35</td>
-<td>Clean · School Ends 2:35</td>
-<td>Clean · School Ends 2:35</td>
-<td>Clean · School Ends 2:35</td>
-</tr>
-</tbody></table></div></div>
+<tr class="end-row"><td class="time-cell">2:20–2:35</td><td>Clean · School Ends 2:35</td><td>Clean · School Ends 2:35</td><td>Clean · School Ends 2:35</td><td>Clean · School Ends 2:35</td><td>Clean · School Ends 2:35</td></tr>
+</tbody></table>
+</div></div>
 <div class="schedule-panel" id="panel-ye">
 <div class="schedule-table-wrap">
 <table class="schedule-table">
 <thead><tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr></thead>
 <tbody>
-<tr class="assembly-row">
-<td class="time-cell">8:30–8:45</td>
+<tr class="assembly-row"><td class="time-cell">8:30–8:45</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 </tr>
-<tr>
-<td class="time-cell">8:45–9:35</td>
+<tr><td class="time-cell">8:45–9:35</td>
 <td>English textbooks (MA) 💡</td>
 <td>Math textbooks, Workout (JE) 💡</td>
 <td>Math textbooks, Workout (JE) 💡</td>
 <td>Math textbooks, Workout (JE) 💡</td>
 <td>Math (JE) ☀</td>
 </tr>
-<tr>
-<td class="time-cell">9:35–10:25</td>
+<tr><td class="time-cell">9:35–10:25</td>
 <td>Math textbooks, Snack (MA) 💡</td>
 <td>English textbooks, Snack (MA) 💡</td>
 <td>English textbooks, Snack (MA) 💡</td>
 <td>English textbooks, Snack (MA) 💡</td>
 <td>English (JO) ☀</td>
 </tr>
-<tr>
-<td class="time-cell">10:25–11:05</td>
-<td>Vocab practice,<br>Storytelling &<br>Creative writing (CA) 💡<br><br>11:00 Dance (CA)</td>
-<td>Mental Math/Games &<br>PE games (JE) 💡</td>
+<tr><td class="time-cell">10:25–11:05</td>
+<td>Vocab practice,<br>Storytelling &amp;<br>Creative writing (CA) 💡<br><br>11:00 Dance (CA)</td>
+<td>Mental Math/Games &amp;<br>PE games (JE) 💡</td>
 <td>Vocab practice,<br>Silent reading,<br>Reading Eggs (CA) 💡</td>
 <td>Silent reading,<br>Read for teacher,<br>Reading Eggs (CA) 💡</td>
 <td>Sketchbook/Drawing (CA) ☀</td>
 </tr>
-<tr>
-<td class="time-cell">11:05–11:45</td>
+<tr><td class="time-cell">11:05–11:45</td>
 <td></td>
 <td>Vocab practice 💡<br>Silent reading,<br>Read for teacher,<br>Reading Eggs (MA)</td>
 <td>Science (MA) 💡</td>
 <td>Vocab Test,<br>Shop Prizes (CA) 💡</td>
 <td>Engineering (CA) ☀</td>
 </tr>
-<tr class="lunch-row">
-<td class="time-cell">Lunch</td>
-<td><strong>Lunch Rotation</strong><br>11:45–12:05: E.S. Lunch (CA & JO)<br>12:10–12:30: E.S. Indoor Hangout (MA)<br>12:35–12:55: E.S. Outdoor Drill (LU & DA)</td>
+<tr class="lunch-row"><td class="time-cell">Lunch</td>
+<td><strong>Lunch Rotation</strong><br>11:45–12:05: Lunch (CA &amp; JO)<br>12:10–12:30: Indoor Hangout (MA)<br>12:35–12:55: Outdoor Drill (LU &amp; DA)</td>
 <td></td>
 <td></td>
-<td>12:10–12:30: E.S. Indoor Hangout (JO)<br><br>Otherwise Mon–Wed rotation</td>
-<td><strong>Lunch Rotation</strong><br>11:45–12:05: E.S. Lunch (CA & JO)<br>12:10–12:30: E.S. Indoor Hangout (MA)<br>12:35–12:55: E.S. Outdoor Drill (LU & DA)</td>
+<td>12:10–12:30: Indoor Hangout (JO)<br><br>Otherwise Mon–Wed rotation</td>
+<td>See Mon–Wed<br>Lunch Rotation</td>
 </tr>
-<tr>
-<td class="time-cell">1:00–1:40</td>
-<td>Social studies (CA)<br><br>1:30 Legos & Drawing</td>
+<tr><td class="time-cell">1:00–1:40</td>
+<td>Social studies (CA)<br><br>1:30 Legos &amp; Drawing</td>
 <td>Drawing, Scratch Jr,<br>Sketchbook (JO) 💡</td>
 <td>Gizmo/Robotics<br><br>1:40 Number Blocks,<br>Number practice (JO) 💡</td>
-<td>Arts & Crafts (MA) ☀</td>
+<td>Arts &amp; Crafts (MA) ☀</td>
 <td>Filmmaking/Puppet show (CA) ☀</td>
 </tr>
-<tr>
-<td class="time-cell">1:40–2:20</td>
+<tr><td class="time-cell">1:40–2:20</td>
 <td></td>
 <td>Dance/Movement, play (CA) 💡</td>
 <td></td>
 <td>Super Book, play (MA) 💡</td>
 <td>Coding (DA) ☀</td>
 </tr>
-<tr class="end-row">
-<td class="time-cell">2:20–2:35</td>
+<tr class="end-row"><td class="time-cell">2:20–2:35</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 </tr>
-</tbody></table></div></div>
+</tbody></table>
+</div></div>
 <div class="schedule-panel" id="panel-ue">
 <div class="schedule-table-wrap">
 <table class="schedule-table">
 <thead><tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr></thead>
 <tbody>
-<tr class="assembly-row">
-<td class="time-cell">8:30–8:45</td>
+<tr class="assembly-row"><td class="time-cell">8:30–8:45</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 </tr>
-<tr>
-<td class="time-cell">8:45–9:35</td>
+<tr><td class="time-cell">8:45–9:35</td>
 <td>Math (LU) ☀</td>
 <td>English (DA) ☀</td>
 <td>English (DA) ☀</td>
 <td>English (DA) ☀</td>
 <td>Math (JE) ☀</td>
 </tr>
-<tr>
-<td class="time-cell">9:35–10:25</td>
-<td>English (LU&V) ☀</td>
+<tr><td class="time-cell">9:35–10:25</td>
+<td>English (LU&amp;V) ☀</td>
 <td>Math (JO) ☀</td>
 <td>Math (JO) ☀</td>
 <td>Math (JO) ☀</td>
 <td>English (JO) ☀</td>
 </tr>
-<tr>
-<td class="time-cell">10:25–11:05</td>
-<td>"Sound of Music" &<br>"Fun in the Sun"<br>(DA & MA) 🎤<br><br>3D Modeling (LU & JE)</td>
+<tr><td class="time-cell">10:25–11:05</td>
+<td>"Sound of Music" &amp;<br>"Fun in the Sun"<br>(DA &amp; MA) 🎤<br><br>3D Modeling (LU &amp; JE)</td>
 <td>Bible Class (JO) ☀</td>
 <td>Science (JE) ☀</td>
 <td>Spanish (CR) ☀<br>Non-Spanish: Silent reading</td>
 <td>Sketchbook/Drawing (CA) ☀</td>
 </tr>
-<tr>
-<td class="time-cell">11:05–11:45</td>
-<td>Park — P.E. & Ball Games<br>(LU & JE)</td>
-<td>Performing Artists: Park (JE & CA)<br>Non-Performers: Coding (JO & LU)</td>
+<tr><td class="time-cell">11:05–11:45</td>
+<td>Park — P.E. &amp; Ball Games<br>(LU &amp; JE)</td>
+<td>Performing Artists: Park (JE &amp; CA)<br>Non-Performers: Coding (JO &amp; LU)</td>
 <td>Literature (CA) ☀</td>
-<td>Fine Art & Drawing (Amy & JO) 🎨</td>
+<td>Fine Art &amp; Drawing (Amy &amp; JO) 🎨</td>
 <td>Engineering (CA) ☀</td>
 </tr>
-<tr class="lunch-row">
-<td class="time-cell">Lunch</td>
-<td><strong>Lunch Rotation</strong><br>11:45–12:05: E.S. Lunch (CA & JO)<br>12:10–12:30: E.S. Indoor Hangout (MA)<br>12:35–12:55: E.S. Outdoor Drill (LU & DA)</td>
+<tr class="lunch-row"><td class="time-cell">Lunch</td>
+<td><strong>Lunch Rotation</strong><br>11:45–12:05: Lunch (CA &amp; JO)<br>12:10–12:30: Indoor Hangout (MA)<br>12:35–12:55: Outdoor Drill (LU &amp; DA)</td>
 <td></td>
 <td></td>
-<td>12:10–12:30: E.S. Indoor Hangout (JO)<br><br>Otherwise Mon–Wed rotation</td>
-<td><strong>Lunch Rotation</strong><br>11:45–12:05: E.S. Lunch (CA & JO)<br>12:10–12:30: E.S. Indoor Hangout (MA)<br>12:35–12:55: E.S. Outdoor Drill (LU & DA)</td>
+<td>12:10–12:30: Indoor Hangout (JO)<br><br>Otherwise Mon–Wed rotation</td>
+<td>See Mon–Wed<br>Lunch Rotation</td>
 </tr>
-<tr>
-<td class="time-cell">1:00–1:40</td>
-<td>"Sound of Music" /<br>"Fun in the Sun"<br>(DA & MA) 🎤<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage, Homework<br>(LU & JE)</td>
-<td>World History & Geography (DA) ☀</td>
-<td>"Sound of Music" &<br>"Fun in the Sun"<br>(DA & CA)<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage, Homework<br>(LU & JE)</td>
-<td>Dance (CA)<br>Non-Dance: Arts & Crafts (MA) ☀</td>
+<tr><td class="time-cell">1:00–1:40</td>
+<td>"Sound of Music" /<br>"Fun in the Sun"<br>(DA &amp; MA) 🎤<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage, Homework<br>(LU &amp; JE)</td>
+<td>World History &amp; Geography (DA) ☀</td>
+<td>"Sound of Music" &amp;<br>"Fun in the Sun"<br>(DA &amp; CA)<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage<br>(LU &amp; JE)</td>
+<td>Dance (CA)<br>Non-Dance: Arts &amp; Crafts (MA) ☀</td>
 <td>Filmmaking/Puppet show (CA) ☀</td>
 </tr>
-<tr>
-<td class="time-cell">1:40–2:20</td>
+<tr><td class="time-cell">1:40–2:20</td>
 <td></td>
 <td>Film Making (JE) ☀</td>
 <td></td>
 <td>Coding (JO) ☀</td>
 <td>Coding (DA) ☀</td>
 </tr>
-<tr class="end-row">
-<td class="time-cell">2:20–2:35</td>
+<tr class="end-row"><td class="time-cell">2:20–2:35</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 </tr>
-</tbody></table></div></div>
+</tbody></table>
+</div></div>
 <div class="schedule-panel" id="panel-ms">
 <div class="schedule-table-wrap">
 <table class="schedule-table">
 <thead><tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr></thead>
 <tbody>
-<tr class="assembly-row">
-<td class="time-cell">8:30–8:45</td>
+<tr class="assembly-row"><td class="time-cell">8:30–8:45</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 </tr>
-<tr>
-<td class="time-cell">8:45–9:35</td>
-<td>English (CA&V) 🚀</td>
+<tr><td class="time-cell">8:45–9:35</td>
+<td>English (CA&amp;V) 🚀</td>
 <td>English (CA) 🚀</td>
 <td>English (CA) 🚀</td>
 <td>English (CA) 🚀</td>
 <td>English (CA) 💡</td>
 </tr>
-<tr>
-<td class="time-cell">9:35–10:25</td>
+<tr><td class="time-cell">9:35–10:25</td>
 <td>Math (JE) 🚀</td>
 <td>Math (JE) 🚀</td>
 <td>Math (JE) 🚀</td>
 <td>Math (JE) 🚀</td>
 <td>Math (JE) 💡</td>
 </tr>
-<tr>
-<td class="time-cell">10:25–11:05</td>
-<td>"Sound of Music" &<br>"Fun in the Sun"<br>(DA & MA) 🎤<br><br>3D Modeling (LU & JE)</td>
+<tr><td class="time-cell">10:25–11:05</td>
+<td>"Sound of Music" &amp;<br>"Fun in the Sun"<br>(DA &amp; MA) 🎤<br><br>3D Modeling (LU &amp; JE)</td>
 <td>Literature (CA) 🚀</td>
 <td>Bible Class (JO) 🚀</td>
-<td>World History & Geography (DA) 🚀</td>
-<td>Robots (JO & PH) 🏎</td>
+<td>World History &amp; Geography (DA) 🚀</td>
+<td>Robots (JO &amp; PH) 🏎</td>
 </tr>
-<tr>
-<td class="time-cell">11:05–11:45</td>
-<td>Park — P.E. & Ball Games<br>(LU & JE)</td>
-<td>Performing Artists: Park (JE & CA)<br>Non-Performers: Coding (JO & LU)</td>
+<tr><td class="time-cell">11:05–11:45</td>
+<td>Park — P.E. &amp; Ball Games<br>(LU &amp; JE)</td>
+<td>Performing Artists: Park (JE &amp; CA)<br>Non-Performers: Coding (JO &amp; LU)</td>
 <td>Scientific Literacy (JE) 🚀</td>
-<td>Spanish (CR) ☀<br>Health & Anatomy (JE) ☕</td>
+<td>Spanish (CR) ☀<br>Health &amp; Anatomy (JE) ☕</td>
 <td>Film Making (MA) 🚀</td>
 </tr>
-<tr class="lunch-row">
-<td class="time-cell">Lunch</td>
-<td><strong>Lunch Rotation</strong><br>11:45–12:05: Outdoor Drill (JE & LU)<br>12:10–12:30: Lunch (CA & LU)<br>12:35–12:55: Indoor Hangout (CA* & JO)<br><em>*Mondays with E.S. (Dan)</em></td>
+<tr class="lunch-row"><td class="time-cell">Lunch</td>
+<td><strong>Lunch Rotation</strong><br>11:45–12:05: Outdoor Drill (JE &amp; LU)<br>12:10–12:30: Lunch (CA &amp; LU)<br>12:35–12:55: Indoor Hangout (CA* &amp; JO)<br><em>*Mondays with E.S. (Dan)</em></td>
 <td></td>
 <td></td>
-<td>12:10–12:30: Lunch (CA & JE)<br><br>Otherwise Mon–Wed rotation</td>
-<td><strong>Lunch Rotation</strong><br>11:45–12:05: Outdoor Drill (JE & LU)<br>12:10–12:30: Lunch (CA & LU)<br>12:35–12:55: Indoor Hangout (CA* & JO)<br><em>*Mondays with E.S. (Dan)</em></td>
+<td>12:10–12:30: Lunch (CA &amp; JE)<br><br>Otherwise Mon–Wed rotation</td>
+<td>See Mon–Wed<br>Lunch Rotation</td>
 </tr>
-<tr>
-<td class="time-cell">1:00–1:40</td>
-<td>"Sound of Music" /<br>"Fun in the Sun"<br>(DA & MA) 🎤<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage, Homework<br>(LU & JE)</td>
-<td>Film Making (JE & LU) 🚀</td>
-<td>"Sound of Music" &<br>"Fun in the Sun"<br>(DA & CA) 🎤<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage, Homework<br>(LU & JE)</td>
-<td>Fine Art & Drawing (Amy & JO) 🎨</td>
-<td>Digital Arts (LU & JE) 🚀</td>
+<tr><td class="time-cell">1:00–1:40</td>
+<td>"Sound of Music" /<br>"Fun in the Sun"<br>(DA &amp; MA) 🎤<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage, Homework<br>(LU &amp; JE)</td>
+<td>Film Making (JE &amp; LU) 🚀</td>
+<td>"Sound of Music" &amp;<br>"Fun in the Sun"<br>(DA &amp; CA) 🎤<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage<br>(LU &amp; JE)</td>
+<td>Fine Art &amp; Drawing (Amy &amp; JO) 🎨</td>
+<td>Digital Arts (LU &amp; JE) 🚀</td>
 </tr>
-<tr>
-<td class="time-cell">1:40–2:20</td>
+<tr><td class="time-cell">1:40–2:20</td>
 <td></td>
 <td>Coding (JO) 🚀</td>
 <td></td>
-<td>Formal Dance (CA) 🎤<br>Non-Dance: 3D Modeling (JE & LU) 🚀</td>
-<td>Coding (LU & JE) 🚀</td>
+<td>Formal Dance (CA) 🎤<br>Non-Dance: 3D Modeling (JE &amp; LU) 🚀</td>
+<td>Coding (LU &amp; JE) 🚀</td>
 </tr>
-<tr class="end-row">
-<td class="time-cell">2:20–2:35</td>
+<tr class="end-row"><td class="time-cell">2:20–2:35</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 </tr>
-</tbody></table></div></div>
+</tbody></table>
+</div></div>
 <div class="schedule-panel" id="panel-hs">
 <div class="schedule-table-wrap">
 <table class="schedule-table">
 <thead><tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr></thead>
 <tbody>
-<tr class="assembly-row">
-<td class="time-cell">8:30–8:45</td>
+<tr class="assembly-row"><td class="time-cell">8:30–8:45</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 <td>Assembly</td>
 </tr>
-<tr>
-<td class="time-cell">8:45–9:35</td>
+<tr><td class="time-cell">8:45–9:35</td>
 <td>Math (JE) ☕</td>
 <td>Math (JO & LU) ☕</td>
 <td>Math (JO & LU) ☕</td>
 <td>Math (JO & LU) ☕</td>
 <td>Math (JO) ☕</td>
 </tr>
-<tr>
-<td class="time-cell">9:35–10:25</td>
+<tr><td class="time-cell">9:35–10:25</td>
 <td>English (CA) ☕</td>
 <td>English (CA & LU) ☕</td>
 <td>English (CA & LU) ☕</td>
 <td>English (CA & LU) ☕</td>
 <td>English (CA) ☕</td>
 </tr>
-<tr>
-<td class="time-cell">10:25–11:05</td>
-<td>"Sound of Music" &<br>"Fun in the Sun"<br>(DA & MA) 🎤<br><br>3D Modeling (LU & JE)</td>
+<tr><td class="time-cell">10:25–11:05</td>
+<td>"Sound of Music" &amp;<br>"Fun in the Sun"<br>(DA &amp; MA) 🎤<br><br>3D Modeling (LU &amp; JE)</td>
 <td>Christianity (LU) ☕</td>
-<td>Business & Finance 360° (DA) ☕</td>
-<td>Coding (JO & JE) ☕</td>
-<td>3D Modeling (LU & JE) ☕</td>
+<td>Business &amp; Finance 360° (DA) ☕</td>
+<td>Coding (JO &amp; JE) ☕</td>
+<td>3D Modeling (LU &amp; JE) ☕</td>
 </tr>
-<tr>
-<td class="time-cell">11:05–11:45</td>
-<td>Park — P.E. & Ball Games<br>(LU & JE)</td>
-<td>Performing Artists: Park (JE & CA)<br>Non-Performers: Coding (JO & LU)</td>
+<tr><td class="time-cell">11:05–11:45</td>
+<td>Park — P.E. &amp; Ball Games<br>(LU &amp; JE)</td>
+<td>Performing Artists: Park (JE &amp; CA)<br>Non-Performers: Coding (JO &amp; LU)</td>
 <td>Chemistry (JO) ☕</td>
-<td>Spanish (CR) ☀<br>Health & Anatomy (JE) ☕</td>
-<td>Coding (JO & JE) ☕</td>
+<td>Spanish (CR) ☀<br>Health &amp; Anatomy (JE) ☕</td>
+<td>Coding (JO &amp; JE) ☕</td>
 </tr>
-<tr class="lunch-row">
-<td class="time-cell">Lunch</td>
-<td><strong>Lunch Rotation</strong><br>11:45–12:05: Indoor Hangout (MA)<br>12:10–12:30: Outdoor Drill (JE & JO)<br>12:35–12:55: Lunch (JE & MA)</td>
+<tr class="lunch-row"><td class="time-cell">Lunch</td>
+<td><strong>Lunch Rotation</strong><br>11:45–12:05: Indoor Hangout (MA)<br>12:10–12:30: Outdoor Drill (JE &amp; JO)<br>12:35–12:55: Lunch (JE &amp; MA)</td>
 <td></td>
 <td></td>
-<td>11:45–12:30: Fine Art & Drawing (Amy & JO) 🎨<br><br>Otherwise Mon–Wed rotation</td>
-<td><strong>Lunch Rotation</strong><br>11:45–12:05: Indoor Hangout (MA)<br>12:10–12:30: Outdoor Drill (JE & JO)<br>12:35–12:55: Lunch (JE & MA)</td>
+<td>11:45–12:30: Fine Art &amp; Drawing (Amy &amp; JO) 🎨<br><br>Otherwise Mon–Wed rotation</td>
+<td>See Mon–Wed<br>Lunch Rotation</td>
 </tr>
-<tr>
-<td class="time-cell">1:00–1:40</td>
-<td>"Sound of Music" /<br>"Fun in the Sun"<br>(DA & MA) 🎤<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage, Homework<br>(LU & JE)</td>
+<tr><td class="time-cell">1:00–1:40</td>
+<td>"Sound of Music" /<br>"Fun in the Sun"<br>(DA &amp; MA) 🎤<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage, Homework<br>(LU &amp; JE)</td>
 <td>World History (CA) ☕</td>
-<td>"Sound of Music" &<br>"Fun in the Sun"<br>(DA & CA)<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage, Homework<br>(LU & JE)</td>
-<td>3D Modeling (LU & JE) ☕</td>
-<td>Robotics (JO & PH) 🏎</td>
+<td>"Sound of Music" &amp;<br>"Fun in the Sun"<br>(DA &amp; CA)<br><br>Documentary, Digital Design,<br>Drill, Chess, Board Games,<br>Props/Stage<br>(LU &amp; JE)</td>
+<td>3D Modeling (LU &amp; JE) ☕</td>
+<td>Robotics (JO &amp; PH) 🏎</td>
 </tr>
-<tr>
-<td class="time-cell">1:40–2:20</td>
+<tr><td class="time-cell">1:40–2:20</td>
 <td></td>
 <td>Film Making (LU) ☕</td>
 <td></td>
-<td>Formal Dance (CA) 🎤<br>Non-Dance: 3D Modeling (JE & LU) 🚀</td>
+<td>Formal Dance (CA) 🎤<br>Non-Dance: 3D Modeling (JE &amp; LU) 🚀<br><br>World Geo (CA) ☕</td>
 <td>World Geo (CA) ☕</td>
 </tr>
-<tr class="end-row">
-<td class="time-cell">2:20–2:35</td>
+<tr class="end-row"><td class="time-cell">2:20–2:35</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 <td>Clean</td>
 </tr>
-</tbody></table></div></div>
+</tbody></table>
+</div></div>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -566,7 +523,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('panel-' + tab.dataset.tab).style.display = 'block';
     });
   });
-  // Hide all but first
   panels.forEach(function(p, i) { if (i > 0) p.style.display = 'none'; });
 });
 </script>

@@ -1313,6 +1313,63 @@ body {
   padding: 6px 8px;
 }
 
+/* Two-column grid within cells (HS+MS left, UE+YE right) */
+.cell-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.cell-col {
+  padding: 2px 4px;
+}
+.cell-col + .cell-col {
+  border-left: 1px solid #ddd;
+}
+
+/* Split cells — two time sub-blocks stacked */
+.split-top,
+.split-bottom {
+  padding: 4px 2px;
+}
+.split-top {
+  border-bottom: 1px dashed #ccc;
+}
+
+/* Lunch mini-table */
+.lunch-mini {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 4px 0;
+}
+.lunch-mini th {
+  font-weight: 700;
+  padding: 3px 6px;
+  border-bottom: 1px solid #e2d5b0;
+  text-align: center;
+  font-size: 11px;
+}
+.lunch-mini td {
+  padding: 3px 6px;
+  border: none;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  font-size: 11.5px;
+}
+.lunch-mini .lunch-time {
+  font-weight: 600;
+  white-space: nowrap;
+  text-align: right;
+  padding-right: 8px;
+  font-size: 11px;
+}
+.lunch-note {
+  display: block;
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+}
+
 /* Mobile: horizontal scroll hint */
 @media (max-width: 768px) {
   .schedule-table-wrap {
