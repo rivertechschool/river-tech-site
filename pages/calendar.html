@@ -9,7 +9,7 @@
   <meta property="og:description" content="View the River Tech Christian School schedule and academic calendar for 2026-27. Key dates, class schedules, and event information.">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="../assets/css/base.css">
-  <link rel="stylesheet" href="../assets/css/style.css?v=9">
+  <link rel="stylesheet" href="../assets/css/style.css?v=10">
 
 
   <link rel="canonical" href="https://www.postfalls.art/pages/calendar.html">
@@ -565,6 +565,8 @@
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  var container = document.querySelector('.schedule-tabs-container');
+  var defaultTab = container ? container.getAttribute('data-default-tab') : null;
   var tabs = document.querySelectorAll('.schedule-tab');
   var panels = document.querySelectorAll('.schedule-panel');
   tabs.forEach(function(tab) {
@@ -575,7 +577,18 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('panel-' + tab.dataset.tab).style.display = 'block';
     });
   });
-  panels.forEach(function(p, i) { if (i > 0) p.style.display = 'none'; });
+  // Set default tab: use data-default-tab attribute if present, otherwise "all"
+  var activeTab = defaultTab || 'all';
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  panels.forEach(function(p) { p.style.display = 'none'; });
+  var target = document.querySelector('.schedule-tab[data-tab="' + activeTab + '"]');
+  if (target) {
+    target.classList.add('active');
+    document.getElementById('panel-' + activeTab).style.display = 'block';
+  } else {
+    tabs[0].classList.add('active');
+    panels[0].style.display = 'block';
+  }
 });
 </script>
 
