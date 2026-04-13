@@ -125,8 +125,7 @@ body {
 
 /* Show submenu on hover (desktop only) */
 @media (min-width: 769px) {
-  .sidebar-nav > a:hover + .sidebar-submenu,
-  .sidebar-submenu:hover {
+  .nav-group:hover > .sidebar-submenu {
     display: flex;
   }
 }
