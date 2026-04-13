@@ -929,35 +929,30 @@ body {
    Interactive Elements
    ============================================ */
 
-/* --- Announcement Banner --- */
-.announcement-banner {
-  background: var(--color-red);
-  color: white;
-  text-align: center;
-  padding: 12px 44px 12px 20px;
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 600;
-  position: relative;
-  margin-bottom: 20px;
-  border-radius: 6px;
+/* --- Scrolling Ticker --- */
+.ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-bg);
+  padding: 10px 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
 }
-.announcement-banner a { color: white; text-decoration: underline; }
-.announcement-banner a:hover { opacity: 0.85; }
-.announcement-banner .close-banner {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-  opacity: 0.7;
-  line-height: 1;
+.ticker {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker-scroll 28s linear infinite;
 }
-.announcement-banner .close-banner:hover { opacity: 1; }
+.ticker-text {
+  font-family: 'Palatino Linotype', 'Palatino', 'Book Antiqua', Georgia, serif;
+  font-size: 18px;
+  color: #DA392B;
+  padding-right: 80px;
+}
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
 
 /* --- Image Carousel --- */
 .carousel {
