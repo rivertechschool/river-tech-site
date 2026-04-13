@@ -1381,6 +1381,7 @@ body {
   grid-column: 1 / -1;
   padding: 4px;
   border-top: 1px solid #ddd;
+  text-align: center;
 }
 
 /* ── Vertical split: top/bottom stacked ── */
