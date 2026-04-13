@@ -1313,29 +1313,66 @@ body {
   padding: 6px 8px;
 }
 
-/* Two-column grid within cells (HS+MS left, UE+YE right) */
-.cell-grid {
+/* ── Quad cell: 2x2 grid (8:45, 9:35 rows) ── */
+.cell-quad {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0;
+  grid-template-rows: auto auto;
 }
-.cell-col {
+.cq-tl, .cq-tr, .cq-bl, .cq-br {
   padding: 2px 4px;
 }
-.cell-col + .cell-col {
+.cq-tr, .cq-br {
+  border-left: 1px solid #ddd;
+}
+.cq-bl, .cq-br {
+  border-top: 1px solid #ddd;
+}
+
+/* ── Side cell: two columns side-by-side ── */
+.cell-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100%;
+}
+.cs-left, .cs-right {
+  padding: 4px;
+}
+.cs-right {
   border-left: 1px solid #ddd;
 }
 
-/* Split cells — two time sub-blocks stacked */
-.split-top,
-.split-bottom {
+/* ── Side-split cell: left tall, right splits top/bottom ── */
+.cell-side-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100%;
+}
+.css-left {
+  padding: 4px;
+}
+.css-right {
+  border-left: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+}
+.css-rt, .css-rb {
+  padding: 4px;
+  flex: 1;
+}
+.css-rb {
+  border-top: 1px solid #ddd;
+}
+
+/* ── Vertical split: top/bottom stacked ── */
+.split-top, .split-bottom {
   padding: 4px 2px;
 }
 .split-top {
   border-bottom: 1px dashed #ccc;
 }
 
-/* Lunch mini-table */
+/* ── Lunch mini-table ── */
 .lunch-mini {
   width: 100%;
   border-collapse: collapse;
