@@ -1364,6 +1364,25 @@ body {
   border-top: 1px solid #ddd;
 }
 
+/* ── Tri cell: 2 top side-by-side + 1 full-width bottom (Friday) ── */
+.cell-tri {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+}
+.ct-tl {
+  padding: 4px;
+}
+.ct-tr {
+  padding: 4px;
+  border-left: 1px solid #ddd;
+}
+.ct-bot {
+  grid-column: 1 / -1;
+  padding: 4px;
+  border-top: 1px solid #ddd;
+}
+
 /* ── Vertical split: top/bottom stacked ── */
 .split-top, .split-bottom {
   padding: 4px 2px;
