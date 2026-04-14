@@ -638,6 +638,18 @@ body {
     left: 0;
   }
 
+  .site-title {
+    display: none;
+  }
+
+  .scroll-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
   .main-content {
     margin-left: 0;
   }
@@ -1677,4 +1689,46 @@ body {
 .explore-links a:hover {
   opacity: 0.88;
   transform: translateY(-1px);
+}
+
+/* --- Site Title in Top Bar --- */
+.site-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  margin-right: auto;
+}
+
+/* --- Scroll to Top Button --- */
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-text);
+  color: white;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.scroll-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+.scroll-to-top:hover {
+  transform: translateY(-2px);
+  background: var(--color-red);
 }

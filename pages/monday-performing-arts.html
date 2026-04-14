@@ -32,8 +32,6 @@
 
 <!-- Sidebar Navigation -->
 <div class="sidebar">
-  <a href="../index.html" class="sidebar-logo">postfalls.art</a>
-  <div class="sidebar-tagline">Life is a Stage. <span class="love">Love</span> is our Script.</div>
   <nav class="sidebar-nav">
     <div class="nav-group">
     <a href="../index.html">River Tech School</a>
@@ -84,12 +82,19 @@
       <a href="volunteer.html">Volunteer</a>
     </div>
     </div>
-    <a href="vlog.html" style="color: #64a0ff;">Video Globe</a>
+    <div class="nav-group">
+    <a href="../pages/gallery.html">Media</a>
+    <div class="sidebar-submenu">
+      <a href="../pages/gallery.html">Photo Gallery</a>
+      <a href="../pages/vlog.html">Video Globe</a>
+    </div>
+    </div>
   </nav>
 </div>
 
 <!-- Top Bar -->
 <div class="top-bar">
+  <div class="site-title">River Tech School of Performing Arts &amp; Technology</div>
   <a href="enrollment.html" class="enroll-btn">Enroll Today 📞</a>
   <div class="social-icons">
     <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
@@ -106,7 +111,7 @@
 
 <!-- Mobile Header -->
 <div class="mobile-header">
-  <a href="../index.html" class="mobile-logo">postfalls.art</a>
+  <a href="../index.html" class="mobile-logo">River Tech</a>
   <button class="hamburger" aria-label="Open menu">☰</button>
 </div>
 
@@ -256,5 +261,16 @@
 </footer>
 
 <script src="../assets/js/main.js" defer></script>
+
+<!-- Scroll to Top -->
+<button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+(function(){
+  var btn=document.querySelector('.scroll-to-top');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible',window.scrollY>400);
+  });
+})();
+</script>
 </body>
 </html>
