@@ -123,12 +123,7 @@ body {
   display: flex;
 }
 
-/* Show submenu on hover (desktop only) */
-@media (min-width: 769px) {
-  .nav-group:hover > .sidebar-submenu {
-    display: flex;
-  }
-}
+/* Submenus controlled by JS hover/open class — no CSS :hover rule needed */
 
 .sidebar-submenu a {
   font-family: var(--font-nav);
