@@ -111,23 +111,29 @@ body {
 
 /* --- Sidebar Submenus --- */
 .sidebar-submenu {
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 2px;
   padding-left: 12px;
   margin-top: 2px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease;
   margin-bottom: 2px;
 }
 
 .sidebar-submenu.open {
-  display: flex;
+  max-height: 500px;
+  opacity: 1;
 }
 
 /* Submenus controlled by JS hover/open class — no CSS :hover rule needed */
 
 .sidebar-submenu a {
   font-family: var(--font-nav);
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 600;
   text-decoration: none;
   padding: 6px 10px;
   color: var(--color-text);
