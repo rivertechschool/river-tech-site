@@ -256,31 +256,32 @@ body {
 
 .hero-welcome {
   font-family: var(--font-display);
-  font-size: 64px;
-  font-weight: 600;
+  font-size: 56px;
+  font-weight: 700;
   color: var(--color-red);
   text-transform: uppercase;
-  letter-spacing: 3px;
-  margin-bottom: 6px;
-  line-height: 1.1;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+  line-height: 1.15;
+  font-style: normal;
 }
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 500;
+  font-size: 22px;
+  font-weight: 600;
   color: var(--color-text);
-  letter-spacing: 1.5px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .hero-subtitle {
   font-family: var(--font-body);
-  font-size: 18px;
-  font-style: italic;
-  color: #666;
+  font-size: 17px;
+  color: var(--color-text);
   margin-bottom: 30px;
+  opacity: 0.7;
 }
 
 /* --- YouTube Embed --- */
@@ -676,12 +677,13 @@ body {
   }
 
   .hero-welcome {
-    font-size: 40px;
-    letter-spacing: 2px;
+    font-size: 36px;
+    letter-spacing: 1px;
   }
 
   .hero-title {
-    font-size: 20px;
+    font-size: 16px;
+    letter-spacing: 1.5px;
   }
 
   .section-heading {
@@ -1806,7 +1808,7 @@ body {
 .topbar-ticker {
   display: flex;
   gap: 300px;
-  animation: topbar-scroll 28s linear infinite;
+  animation: topbar-scroll 20s linear infinite;
   white-space: nowrap;
 }
 .topbar-ticker span {
