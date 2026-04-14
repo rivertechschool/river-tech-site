@@ -1463,3 +1463,191 @@ body {
     padding: 8px 10px;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   School Calendar Timeline
+   ════════════════════════════════════════════════════════════════════ */
+
+.cal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 20px;
+  margin-bottom: 2rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+.cal-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cal-dot--quarter    { background: #2471a3; }
+.cal-dot--no-school  { background: #c0392b; }
+.cal-dot--performance{ background: #8e44ad; }
+.cal-dot--fieldtrip  { background: #27864a; }
+.cal-dot--event      { background: #d4880f; }
+
+.cal-timeline {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 0 0 28px;
+}
+/* The vertical line */
+.cal-timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #ddd;
+}
+
+.cal-month-label {
+  position: relative;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 1.8rem 0 0.6rem 0;
+  padding-left: 4px;
+}
+.cal-month-label::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background: #999;
+  border-radius: 50%;
+}
+
+.cal-event {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 14px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  transition: opacity 0.3s, background 0.3s;
+}
+.cal-event:hover {
+  background: rgba(0,0,0,0.03);
+}
+
+/* The dot on the timeline */
+.cal-event-dot {
+  position: absolute;
+  left: -24px;
+  top: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  flex-shrink: 0;
+}
+/* Dot colors by type */
+[data-type="quarter"] .cal-event-dot    { background: #2471a3; }
+[data-type="no-school"] .cal-event-dot  { background: #c0392b; }
+[data-type="performance"] .cal-event-dot{ background: #8e44ad; }
+[data-type="fieldtrip"] .cal-event-dot  { background: #27864a; }
+[data-type="event"] .cal-event-dot      { background: #d4880f; }
+
+.cal-event-content {
+  flex: 1;
+}
+.cal-date {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 2px;
+}
+.cal-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.3;
+}
+.cal-subtitle {
+  font-size: 0.82rem;
+  color: #777;
+  margin-top: 1px;
+}
+
+/* Past events — faded */
+.cal-event.cal-past {
+  opacity: 0.38;
+}
+.cal-event.cal-past .cal-title {
+  text-decoration: line-through;
+  text-decoration-color: rgba(0,0,0,0.2);
+}
+
+/* Next upcoming event — highlighted */
+.cal-event.cal-next {
+  background: rgba(36, 113, 163, 0.08);
+  border-left: 3px solid #2471a3;
+  margin-left: -3px;
+}
+.cal-event.cal-next .cal-date {
+  color: #2471a3;
+}
+.cal-event.cal-next .cal-title::after {
+  content: ' ← Up Next';
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #2471a3;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* No-school events get a subtle red background */
+[data-type="no-school"]:not(.cal-past) {
+  background: rgba(192, 57, 43, 0.05);
+}
+/* Performance events get a subtle purple background */
+[data-type="performance"]:not(.cal-past) {
+  background: rgba(142, 68, 173, 0.05);
+}
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .cal-timeline {
+    padding-left: 24px;
+  }
+  .cal-timeline::before {
+    left: 6px;
+  }
+  .cal-month-label::before {
+    left: -22px;
+    width: 8px;
+    height: 8px;
+  }
+  .cal-event-dot {
+    left: -22px;
+    width: 8px;
+    height: 8px;
+  }
+  .cal-title {
+    font-size: 0.88rem;
+  }
+  .cal-legend {
+    gap: 8px 14px;
+    font-size: 0.78rem;
+  }
+}
