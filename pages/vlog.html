@@ -475,7 +475,7 @@ function onMove(e) {
   mouse.y = -(p.y / window.innerHeight) * 2 + 1;
   if (isDragging) {
     rotVel.x = (p.y - prevMouse.y) * 0.004;
-    rotVel.y = (p.x - prevMouse.x) * 0.004;
+    rotVel.y = -(p.x - prevMouse.x) * 0.004;
     prevMouse.x = p.x; prevMouse.y = p.y;
     lastInteract = Date.now();
   }
