@@ -13,34 +13,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Toggle submenu on parent click
-  // First click: if submenu is closed, open it (don't navigate).
-  // If submenu is already open, navigate to the link.
-  document.querySelectorAll('[data-has-submenu]').forEach(parentLink => {
-    parentLink.addEventListener('click', (e) => {
-      const submenu = parentLink.nextElementSibling;
-      if (submenu && (submenu.classList.contains('sidebar-submenu') || submenu.classList.contains('mobile-submenu'))) {
-        if (!submenu.classList.contains('open')) {
-          // Submenu is closed — open it, don't navigate yet
-          e.preventDefault();
-          e.stopPropagation();
-          submenu.classList.add('open');
-          parentLink.classList.add('expanded');
+  // Sidebar: hover to show submenus, click always navigates
+  // Parent links with submenus — clicking always navigates (no preventDefault)
+  // Hover opens/closes submenus on desktop
+  document.querySelectorAll('.sidebar-nav .nav-group').forEach(group => {
+    const submenu = group.querySelector('.sidebar-submenu');
+    if (!submenu) return;
+
+    group.addEventListener('mouseenter', () => {
+      // Close all other submenus first
+      document.querySelectorAll('.sidebar-nav .sidebar-submenu.open').forEach(s => {
+        if (s !== submenu) {
+          s.classList.remove('open');
+          const p = s.previousElementSibling;
+          if (p) p.classList.remove('expanded');
         }
-        // If submenu is already open, let the link navigate normally
-      }
+      });
+      submenu.classList.add('open');
+      const parent = submenu.previousElementSibling;
+      if (parent) parent.classList.add('expanded');
+    });
+
+    group.addEventListener('mouseleave', () => {
+      submenu.classList.remove('open');
+      const parent = submenu.previousElementSibling;
+      if (parent) parent.classList.remove('expanded');
     });
   });
 
-  // Auto-expand submenus that contain an active child or whose parent is active
-  document.querySelectorAll('.sidebar-submenu, .mobile-submenu').forEach(submenu => {
-    const parent = submenu.previousElementSibling;
-    const hasActiveChild = submenu.querySelector('a.active');
-    const parentIsActive = parent && parent.classList.contains('active');
-    if (hasActiveChild || parentIsActive) {
-      submenu.classList.add('open');
-      if (parent) parent.classList.add('expanded');
-    }
+  // Mobile nav: tap toggles submenu (since no hover on mobile)
+  document.querySelectorAll('.mobile-nav-overlay [data-has-submenu]').forEach(parentLink => {
+    parentLink.addEventListener('click', (e) => {
+      const submenu = parentLink.nextElementSibling;
+      if (submenu && submenu.classList.contains('mobile-submenu')) {
+        e.preventDefault();
+        e.stopPropagation();
+        // Close other mobile submenus
+        document.querySelectorAll('.mobile-submenu.open').forEach(s => {
+          if (s !== submenu) {
+            s.classList.remove('open');
+            const p = s.previousElementSibling;
+            if (p) p.classList.remove('expanded');
+          }
+        });
+        submenu.classList.toggle('open');
+        parentLink.classList.toggle('expanded');
+      }
+    });
   });
 
   if (hamburger && overlay) {
