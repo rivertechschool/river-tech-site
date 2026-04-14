@@ -31,7 +31,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; overflow: hidden; background: #020810; font-family: 'Inter', sans-serif; }
-    canvas { display: block; }
+    canvas { display: block; touch-action: none; }
 
     /* ── Back button ── */
     #back-btn {
@@ -476,21 +476,23 @@ renderer.domElement.addEventListener('click', e => {
 
 // Touch
 renderer.domElement.addEventListener('touchstart', e => {
+  e.preventDefault();
   if (e.touches.length === 1) {
     isDragging = true;
     prevMouse.x = e.touches[0].clientX; prevMouse.y = e.touches[0].clientY;
     downPos.x = e.touches[0].clientX; downPos.y = e.touches[0].clientY;
     lastInteract = Date.now();
   }
-}, { passive: true });
+}, { passive: false });
 renderer.domElement.addEventListener('touchmove', e => {
+  e.preventDefault();
   if (isDragging && e.touches.length === 1) {
     rotVel.x = (e.touches[0].clientY - prevMouse.y) * 0.003;
     rotVel.y = (e.touches[0].clientX - prevMouse.x) * 0.003;
     prevMouse.x = e.touches[0].clientX; prevMouse.y = e.touches[0].clientY;
     lastInteract = Date.now();
   }
-}, { passive: true });
+}, { passive: false });
 renderer.domElement.addEventListener('touchend', e => {
   isDragging = false;
   if (e.changedTouches.length === 1) {
