@@ -14,14 +14,20 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Toggle submenu on parent click
+  // First click: if submenu is closed, open it (don't navigate).
+  // If submenu is already open, navigate to the link.
   document.querySelectorAll('[data-has-submenu]').forEach(parentLink => {
     parentLink.addEventListener('click', (e) => {
       const submenu = parentLink.nextElementSibling;
       if (submenu && (submenu.classList.contains('sidebar-submenu') || submenu.classList.contains('mobile-submenu'))) {
-        e.preventDefault();
-        e.stopPropagation();
-        submenu.classList.toggle('open');
-        parentLink.classList.toggle('expanded');
+        if (!submenu.classList.contains('open')) {
+          // Submenu is closed — open it, don't navigate yet
+          e.preventDefault();
+          e.stopPropagation();
+          submenu.classList.add('open');
+          parentLink.classList.add('expanded');
+        }
+        // If submenu is already open, let the link navigate normally
       }
     });
   });
