@@ -1646,3 +1646,28 @@ body {
     font-size: 0.78rem;
   }
 }
+
+/* --- Cross-link Explore Buttons --- */
+.explore-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin: 40px 0 20px;
+}
+.explore-links a {
+  display: inline-block;
+  background: var(--color-red);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.explore-links a:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
