@@ -251,31 +251,35 @@ body {
 /* --- Hero / Welcome --- */
 .hero-section {
   text-align: center;
-  padding: 40px 0 20px;
+  padding: 10px 0 20px;
 }
 
 .hero-welcome {
   font-family: var(--font-display);
-  font-size: 56px;
-  font-weight: 400;
+  font-size: 64px;
+  font-weight: 600;
   color: var(--color-red);
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
+  letter-spacing: 3px;
+  margin-bottom: 6px;
+  line-height: 1.1;
 }
 
 .hero-title {
-  font-family: var(--font-body);
-  font-size: 33px;
-  font-weight: 700;
-  color: var(--color-black);
-  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--color-text);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
 }
 
 .hero-subtitle {
   font-family: var(--font-body);
-  font-size: 19px;
-  color: var(--color-text);
+  font-size: 18px;
+  font-style: italic;
+  color: #666;
   margin-bottom: 30px;
 }
 
@@ -642,6 +646,10 @@ body {
     display: none;
   }
 
+  .topbar-ticker-wrap {
+    display: none;
+  }
+
   .scroll-to-top {
     bottom: 20px;
     right: 20px;
@@ -668,7 +676,12 @@ body {
   }
 
   .hero-welcome {
-    font-size: 36px;
+    font-size: 40px;
+    letter-spacing: 2px;
+  }
+
+  .hero-title {
+    font-size: 20px;
   }
 
   .section-heading {
@@ -1780,4 +1793,29 @@ body {
   font-style: normal;
   font-weight: 600;
   color: var(--color-red);
+}
+
+/* --- Topbar Ticker (in top bar) --- */
+.topbar-ticker-wrap {
+  flex: 1;
+  overflow: hidden;
+  margin-right: 20px;
+  mask-image: linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent);
+}
+.topbar-ticker {
+  display: flex;
+  gap: 300px;
+  animation: topbar-scroll 28s linear infinite;
+  white-space: nowrap;
+}
+.topbar-ticker span {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-red);
+  flex-shrink: 0;
+}
+@keyframes topbar-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 150px)); }
 }
