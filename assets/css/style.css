@@ -950,7 +950,7 @@ body {
   font-family: 'Palatino Linotype', 'Palatino', 'Book Antiqua', Georgia, serif;
   font-size: 18px;
   color: #DA392B;
-  padding-right: 80px;
+  padding-right: 300px;
 }
 @keyframes ticker-scroll {
   0%   { transform: translateX(0); }
