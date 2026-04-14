@@ -1808,7 +1808,7 @@ body {
 .topbar-ticker {
   display: flex;
   gap: 300px;
-  animation: topbar-scroll 20s linear infinite;
+  animation: topbar-scroll 12s linear infinite;
   white-space: nowrap;
 }
 .topbar-ticker span {
