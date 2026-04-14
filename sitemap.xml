@@ -131,4 +131,9 @@
     <priority>0.5</priority>
     <changefreq>yearly</changefreq>
   </url>
+  <url>
+    <loc>https://www.postfalls.art/pages/vlog.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
