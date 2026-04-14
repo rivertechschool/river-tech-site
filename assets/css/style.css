@@ -1806,18 +1806,18 @@ body {
   -webkit-mask-image: linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent);
 }
 .topbar-ticker {
-  display: flex;
-  gap: 300px;
-  animation: topbar-scroll 12s linear infinite;
+  display: inline-flex;
   white-space: nowrap;
+  animation: topbar-scroll 28s linear infinite;
 }
 .topbar-ticker span {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--color-red);
+  font-family: 'Palatino Linotype', 'Palatino', 'Book Antiqua', Georgia, serif;
+  font-size: 18px;
+  color: #DA392B;
   flex-shrink: 0;
+  padding-right: 300px;
 }
 @keyframes topbar-scroll {
   0% { transform: translateX(0); }
-  100% { transform: translateX(calc(-50% - 150px)); }
+  100% { transform: translateX(-50%); }
 }
