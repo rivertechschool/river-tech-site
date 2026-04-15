@@ -13,7 +13,7 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://rivertechschool.github.io/river-tech-site/assets/images/og-image.png">
   <link rel="stylesheet" href="../assets/css/base.css">
-  <link rel="stylesheet" href="../assets/css/style.css?v=15">
+  <link rel="stylesheet" href="../assets/css/style.css?v=16">
 
 
   <link rel="canonical" href="https://www.postfalls.art/pages/calendar.html">
@@ -629,7 +629,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <h2 class="section-subheading">School Calendar 2026–27</h2>
 <p style="text-align:center; margin-bottom: 0.5rem;">All important dates for the school year — holidays, conferences, performances, and field trips.</p>
-<p style="text-align:center; margin-bottom: 2rem; font-size: 0.85rem; color: #999;">The timeline auto-scrolls to what's coming up next.</p>
+<p style="text-align:center; margin-bottom: 2rem; font-size: 0.85rem; color: #999;">Upcoming events are highlighted below.</p>
 
 <div class="cal-legend">
   <span class="cal-legend-item"><span class="cal-dot cal-dot--quarter"></span> Quarter</span>
@@ -981,12 +981,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Auto-scroll to the next upcoming event
-  if (nextEvent) {
-    setTimeout(function() {
-      nextEvent.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 600);
-  }
+  // Highlight the next upcoming event (no auto-scroll — let visitors start at the top)
+  // The .cal-next class provides visual highlighting so users can still spot it
 })();
 </script>
 

@@ -417,22 +417,20 @@ body {
 }
 
 .teacher-card {
-  display: flex;
-  gap: 30px;
-  align-items: flex-start;
   margin-bottom: 50px;
 }
 
-.teacher-card.reverse {
-  flex-direction: row-reverse;
-}
-
 .teacher-photo {
-  width: 272px;
-  height: 272px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
   object-fit: cover;
-  flex-shrink: 0;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+.teacher-info {
+  text-align: center;
 }
 
 .teacher-info h3 {
@@ -440,7 +438,7 @@ body {
   font-size: 21px;
   font-weight: 700;
   color: white;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .teacher-info p {
@@ -632,6 +630,10 @@ body {
     --sidebar-width: 0px;
   }
 
+  html, body {
+    overflow-x: hidden;
+  }
+
   .sidebar {
     display: none;
   }
@@ -683,22 +685,18 @@ body {
   }
 
   .hero-title {
-    font-size: 16px;
-    letter-spacing: 1.5px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    white-space: normal;
   }
 
   .section-heading {
     font-size: 32px;
   }
 
-  .teacher-card {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .teacher-card.reverse {
-    flex-direction: column;
+  .teacher-photo {
+    width: 180px;
+    height: 180px;
   }
 
   .teacher-info p {
