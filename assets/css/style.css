@@ -96,7 +96,7 @@ body {
   border: 1.5px solid var(--color-text);
   color: var(--color-text);
   text-align: center;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.35s ease, color 0.35s ease;
 }
 
 .sidebar-nav a:hover {
@@ -120,7 +120,7 @@ body {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: max-height 0.35s ease, opacity 0.3s ease;
+  transition: max-height 0.5s ease, opacity 0.45s ease;
   margin-bottom: 2px;
 }
 
@@ -140,7 +140,7 @@ body {
   color: var(--color-text);
   border: none;
   text-align: left;
-  transition: color 0.2s;
+  transition: color 0.35s ease;
   border-left: 2px solid #ddd;
 }
 
@@ -162,7 +162,7 @@ body {
   content: '▸';
   float: right;
   font-size: 12px;
-  transition: transform 0.2s;
+  transition: transform 0.35s ease;
 }
 
 .sidebar-nav > a[data-has-submenu].expanded::after {
@@ -735,19 +735,23 @@ body {
 }
 
 .mobile-nav-overlay {
-  display: none;
   position: fixed;
   inset: 0;
   background: var(--color-bg);
   z-index: 300;
   flex-direction: column;
+  display: flex;
   padding: 20px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 .mobile-nav-overlay.open {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
 }
 
 .mobile-nav-overlay .close-btn {
@@ -774,14 +778,19 @@ body {
 
 /* --- Mobile Submenus --- */
 .mobile-submenu {
-  display: none;
   flex-direction: column;
+  display: flex;
   padding-left: 20px;
   background: rgba(0,0,0,0.02);
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.45s ease;
 }
 
 .mobile-submenu.open {
-  display: flex;
+  max-height: 500px;
+  opacity: 1;
 }
 
 .mobile-submenu a {
@@ -801,7 +810,7 @@ body {
   content: '▸';
   float: right;
   font-size: 14px;
-  transition: transform 0.2s;
+  transition: transform 0.35s ease;
 }
 
 .mobile-nav-overlay > a[data-has-submenu].expanded::after {
