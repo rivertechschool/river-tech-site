@@ -267,6 +267,34 @@
       margin: 0 0 18px;
       color: var(--color-text);
     }
+    .rtd-schedule-figure {
+      margin: 24px 0 36px;
+      text-align: center;
+    }
+    .rtd-schedule-figure a {
+      display: block;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .rtd-schedule-figure a:hover,
+    .rtd-schedule-figure a:focus {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.14);
+      transform: translateY(-1px);
+    }
+    .rtd-schedule-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+    }
+    .rtd-schedule-figure figcaption {
+      margin-top: 10px;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--color-muted, #6b6b6b);
+    }
   </style>
 </head>
 <body>
@@ -449,6 +477,22 @@
     <p>River Tech is a Christian school built for artistic, tech-savvy kids who love music and technology. Alongside core subjects, students learn performing arts and technology every day — and we're committed to raising the next generation of leaders. Come meet us, try our classes, and see if River Tech is the right fit for your child.</p>
 
     <p>Though the March 15 fire took our building, it didn't take the school. We were back in class within two weeks, and we're now welcoming families to The Heart to see River Tech firsthand.</p>
+
+    <!-- Schedule -->
+    <h2 class="section-subheading">The Schedule</h2>
+
+    <p>Each afternoon runs from 1:00 to 4:00 PM. Every slot offers multiple classes in parallel — your child picks what interests them.</p>
+
+    <figure class="rtd-schedule-figure">
+      <a href="../assets/images/rtd-schedule-2026.jpg" target="_blank" rel="noopener" aria-label="Open full-size schedule in a new tab">
+        <img
+          src="../assets/images/rtd-schedule-2026.jpg"
+          alt="River Tech Days schedule for May 5–14, 2026. Tuesday through Thursday, 1:00 to 4:00 PM. Daily blocks: 1:00–1:20 Assembly; 1:20–2:10, 2:10–3:00, and 3:00–3:50 class slots with five to six parallel classes each; 3:50–4:00 Clean Up Time. Classes include performing arts (dance, choir, rhythm, song writing, 3D modeling), technology (robotics, coding, A.I. LLM, A.I. Vibe Code), academics (math, critical thinking, debate, history, political science, public speaking), creative arts (perler beads, clay sculpt, paint, Lego/Minecraft fort), and P.E./drill games."
+          loading="lazy"
+        >
+      </a>
+      <figcaption>Tap or click to view full size.</figcaption>
+    </figure>
 
     <!-- Video: Introduction to River Tech -->
     <div class="video-embed">
