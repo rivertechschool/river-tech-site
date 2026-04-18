@@ -171,8 +171,7 @@
                           data-day="${c.day}" data-slot="${c.slot}" data-idx="${classes.indexOf(
                   c
                 )}">
-                          <span class="rtd-class__teacher">${escapeHtml(c.teacher)}</span>
-                          <span class="rtd-class__title"> — ${escapeHtml(c.title)}</span>
+                          <span class="rtd-class__title">${escapeHtml(c.title)}</span>
                         </button>`;
               })
               .join("");
@@ -233,19 +232,11 @@
       dlg.querySelector(".rtd-sched__band-tag").style.background = band.color;
       dlg.querySelector("h3").textContent = c.title;
       dlg.querySelector(".rtd-sched__meta").textContent =
-        day.label + " · " + slot.time + " · with " + teacherInfo.name;
+        day.label + " · " + slot.time;
       dlg.querySelector(".rtd-sched__desc").textContent =
         desc || "Details shared on the first day of class.";
-      const bioEl = dlg.querySelector(".rtd-sched__bio");
-      const teacherHead = dlg.querySelector(".rtd-sched__teacher-head");
-      if (teacherInfo.bio) {
-        bioEl.textContent = teacherInfo.bio;
-        bioEl.style.display = "";
-        teacherHead.style.display = "";
-      } else {
-        bioEl.style.display = "none";
-        teacherHead.style.display = "none";
-      }
+      dlg.querySelector(".rtd-sched__bio").style.display = "none";
+      dlg.querySelector(".rtd-sched__teacher-head").style.display = "none";
 
       modal.setAttribute("aria-hidden", "false");
       dlg.focus();

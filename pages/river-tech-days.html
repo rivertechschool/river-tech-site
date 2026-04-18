@@ -400,8 +400,12 @@
     .rtd-class--mid  { color: var(--band-mid);  border-left-color: var(--band-mid); }
     .rtd-class--hm   { color: var(--band-hm);   border-left-color: var(--band-hm); }
     .rtd-class--high { color: var(--band-high); border-left-color: var(--band-high); }
-    .rtd-class__teacher { font-weight: 600; }
-    .rtd-class__title { font-weight: 400; }
+    .rtd-class__title { display: block; font-weight: 600; }
+    .rtd-class__teacher {
+      display: block; font-weight: 400;
+      font-size: 12px; opacity: 0.75; margin-top: 2px;
+      font-style: italic;
+    }
     .rtd-class__info {
       display: inline-block; margin-left: 4px; opacity: 0; transition: opacity 0.15s;
       font-size: 11px; color: var(--sched-muted);
@@ -923,7 +927,7 @@
 </footer>
 
 <script src="../assets/js/main.js" defer></script>
-<script src="../assets/js/rtd-schedule.js?v=1" defer></script>
+<script src="../assets/js/rtd-schedule.js?v=3" defer></script>
 
 <!-- Scroll to Top -->
 <button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
