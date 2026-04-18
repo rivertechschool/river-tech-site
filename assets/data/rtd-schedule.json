@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "title": "River Tech Days Schedule",
+    "subtitle": "May 5–14, 2026 · Tuesdays–Thursdays · 1–4 PM at The Heart",
+    "note": "Each afternoon runs 1:00–4:00 PM. Three class slots plus opening assembly and clean-up. Each grade band offers two choices per slot — parents pick a preference on the registration form.",
+    "gradeBands": {
+      "elementary": { "label": "Elementary",           "color": "#e8a33d" },
+      "middle":     { "label": "Middle School",        "color": "#3a7fc9" },
+      "highmiddle": { "label": "Middle + High School", "color": "#b84a70" },
+      "high":       { "label": "High School",          "color": "#b04442" }
+    }
+  },
+  "days": [
+    { "id": "tue-may-5",  "label": "Tue, May 5",  "date": "2026-05-05" },
+    { "id": "wed-may-6",  "label": "Wed, May 6",  "date": "2026-05-06" },
+    { "id": "thu-may-7",  "label": "Thu, May 7",  "date": "2026-05-07" },
+    { "id": "tue-may-12", "label": "Tue, May 12", "date": "2026-05-12" },
+    { "id": "wed-may-13", "label": "Wed, May 13", "date": "2026-05-13" },
+    { "id": "thu-may-14", "label": "Thu, May 14", "date": "2026-05-14" }
+  ],
+  "slots": [
+    { "id": "assembly",  "time": "1:00–1:20", "type": "assembly" },
+    { "id": "slot-1",    "time": "1:20–2:10", "type": "class" },
+    { "id": "slot-2",    "time": "2:10–3:00", "type": "class" },
+    { "id": "slot-3",    "time": "3:00–3:50", "type": "class" },
+    { "id": "cleanup",   "time": "3:50–4:00", "type": "cleanup" }
+  ],
+  "classes": [
+    { "day": "tue-may-5",  "slot": "slot-1", "teacher": "Mary",         "title": "Perler Beads",         "band": "elementary" },
+    { "day": "tue-may-5",  "slot": "slot-1", "teacher": "Jerome",       "title": "Drill / P.E. Games",   "band": "elementary" },
+    { "day": "tue-may-5",  "slot": "slot-1", "teacher": "Caitlin",      "title": "Creative Writing",     "band": "middle" },
+    { "day": "tue-may-5",  "slot": "slot-1", "teacher": "Luke",         "title": "Drill / P.E.",         "band": "middle" },
+    { "day": "tue-may-5",  "slot": "slot-1", "teacher": "Dan",          "title": "Critical Thinking",    "band": "high" },
+    { "day": "tue-may-5",  "slot": "slot-1", "teacher": "Jordan/Phil",  "title": "Robotics",             "band": "high" },
+
+    { "day": "tue-may-5",  "slot": "slot-2", "teacher": "Caitlin",      "title": "Dance",                "band": "elementary" },
+    { "day": "tue-may-5",  "slot": "slot-2", "teacher": "Jordan",       "title": "Drawing",              "band": "elementary" },
+    { "day": "tue-may-5",  "slot": "slot-2", "teacher": "Phil/Luke",    "title": "Robotics",             "band": "middle" },
+    { "day": "tue-may-5",  "slot": "slot-2", "teacher": "Dan",          "title": "Choir",                "band": "highmiddle" },
+    { "day": "tue-may-5",  "slot": "slot-2", "teacher": "Jerome",       "title": "Drill / P.E.",         "band": "high" },
+
+    { "day": "tue-may-5",  "slot": "slot-3", "teacher": "Caitlin",      "title": "Perler Beads",         "band": "elementary" },
+    { "day": "tue-may-5",  "slot": "slot-3", "teacher": "Luke",         "title": "Rhythm",               "band": "elementary" },
+    { "day": "tue-may-5",  "slot": "slot-3", "teacher": "Dan",          "title": "Political Science",    "band": "middle" },
+    { "day": "tue-may-5",  "slot": "slot-3", "teacher": "Jerome",       "title": "Geometry / Logic",     "band": "highmiddle" },
+    { "day": "tue-may-5",  "slot": "slot-3", "teacher": "Jordan/Phil",  "title": "Robotics",             "band": "high" },
+
+    { "day": "wed-may-6",  "slot": "slot-1", "teacher": "Mary",         "title": "Clay Sculpt",          "band": "elementary" },
+    { "day": "wed-may-6",  "slot": "slot-1", "teacher": "Jordan",       "title": "Drawing",              "band": "elementary" },
+    { "day": "wed-may-6",  "slot": "slot-1", "teacher": "Dan",          "title": "World History",        "band": "middle" },
+    { "day": "wed-may-6",  "slot": "slot-1", "teacher": "Luke/Phil",    "title": "Robotics",             "band": "middle" },
+    { "day": "wed-may-6",  "slot": "slot-1", "teacher": "Caitlin",      "title": "Dance",                "band": "high" },
+    { "day": "wed-may-6",  "slot": "slot-1", "teacher": "Jerome",       "title": "Chess",                "band": "high" },
+
+    { "day": "wed-may-6",  "slot": "slot-2", "teacher": "Caitlin",      "title": "Creative Writing",     "band": "elementary" },
+    { "day": "wed-may-6",  "slot": "slot-2", "teacher": "Luke",         "title": "Rhythm",               "band": "elementary" },
+    { "day": "wed-may-6",  "slot": "slot-2", "teacher": "Jerome",       "title": "Chess",                "band": "middle" },
+    { "day": "wed-may-6",  "slot": "slot-2", "teacher": "Dan",          "title": "Critical Thinking",    "band": "highmiddle" },
+    { "day": "wed-may-6",  "slot": "slot-2", "teacher": "Phil/Jordan",  "title": "Robotics",             "band": "high" },
+
+    { "day": "wed-may-6",  "slot": "slot-3", "teacher": "Caitlin",      "title": "Lego / Minecraft Fort","band": "elementary" },
+    { "day": "wed-may-6",  "slot": "slot-3", "teacher": "Jerome",       "title": "Drill / P.E. Games",   "band": "elementary" },
+    { "day": "wed-may-6",  "slot": "slot-3", "teacher": "Dan/Phil",     "title": "Robotics",             "band": "middle" },
+    { "day": "wed-may-6",  "slot": "slot-3", "teacher": "Luke",         "title": "3D Modeling",          "band": "highmiddle" },
+    { "day": "wed-may-6",  "slot": "slot-3", "teacher": "Jordan",       "title": "A.I. LLM",             "band": "high" },
+
+    { "day": "thu-may-7",  "slot": "slot-1", "teacher": "Mary",         "title": "Paint / Paper Craft",  "band": "elementary" },
+    { "day": "thu-may-7",  "slot": "slot-1", "teacher": "Luke",         "title": "Rhythm",               "band": "elementary" },
+    { "day": "thu-may-7",  "slot": "slot-1", "teacher": "Caitlin",      "title": "Dance",                "band": "middle" },
+    { "day": "thu-may-7",  "slot": "slot-1", "teacher": "Jerome",       "title": "Chess",                "band": "middle" },
+    { "day": "thu-may-7",  "slot": "slot-1", "teacher": "Dan",          "title": "Debate",               "band": "high" },
+    { "day": "thu-may-7",  "slot": "slot-1", "teacher": "Jordan/Phil",  "title": "Robotics",             "band": "high" },
+
+    { "day": "thu-may-7",  "slot": "slot-2", "teacher": "Caitlin",      "title": "Legos & Perler",       "band": "elementary" },
+    { "day": "thu-may-7",  "slot": "slot-2", "teacher": "Jerome",       "title": "Drill / P.E. Games",   "band": "elementary" },
+    { "day": "thu-may-7",  "slot": "slot-2", "teacher": "Phil/Luke",    "title": "Robotics",             "band": "middle" },
+    { "day": "thu-may-7",  "slot": "slot-2", "teacher": "Jordan",       "title": "Coding",               "band": "highmiddle" },
+    { "day": "thu-may-7",  "slot": "slot-2", "teacher": "Dan",          "title": "Song Writing",         "band": "high" },
+
+    { "day": "thu-may-7",  "slot": "slot-3", "teacher": "Caitlin",      "title": "Dance",                "band": "elementary" },
+    { "day": "thu-may-7",  "slot": "slot-3", "teacher": "Dan",          "title": "Choir",                "band": "elementary" },
+    { "day": "thu-may-7",  "slot": "slot-3", "teacher": "Jerome",       "title": "Drill / P.E.",         "band": "middle" },
+    { "day": "thu-may-7",  "slot": "slot-3", "teacher": "Luke",         "title": "Christianity",         "band": "highmiddle" },
+    { "day": "thu-may-7",  "slot": "slot-3", "teacher": "Jordan/Phil",  "title": "Robotics",             "band": "high" },
+
+    { "day": "tue-may-12", "slot": "slot-1", "teacher": "Mary",         "title": "Perler Beads",         "band": "elementary" },
+    { "day": "tue-may-12", "slot": "slot-1", "teacher": "Luke",         "title": "Drill / P.E. Games",   "band": "elementary" },
+    { "day": "tue-may-12", "slot": "slot-1", "teacher": "Caitlin",      "title": "Dance",                "band": "middle" },
+    { "day": "tue-may-12", "slot": "slot-1", "teacher": "Dan",          "title": "Choir",                "band": "highmiddle" },
+    { "day": "tue-may-12", "slot": "slot-1", "teacher": "Jordan/Phil",  "title": "Robotics",             "band": "high" },
+
+    { "day": "tue-may-12", "slot": "slot-2", "teacher": "Caitlin",      "title": "Dance",                "band": "elementary" },
+    { "day": "tue-may-12", "slot": "slot-2", "teacher": "Jordan",       "title": "Drawing",              "band": "elementary" },
+    { "day": "tue-may-12", "slot": "slot-2", "teacher": "Phil/Mary",    "title": "Robotics",             "band": "middle" },
+    { "day": "tue-may-12", "slot": "slot-2", "teacher": "Dan",          "title": "Entrepreneurship",     "band": "highmiddle" },
+    { "day": "tue-may-12", "slot": "slot-2", "teacher": "Luke",         "title": "Drill / P.E.",         "band": "high" },
+
+    { "day": "tue-may-12", "slot": "slot-3", "teacher": "Mary",         "title": "Perler Beads",         "band": "elementary" },
+    { "day": "tue-may-12", "slot": "slot-3", "teacher": "Caitlin",      "title": "Creative Writing",     "band": "elementary" },
+    { "day": "tue-may-12", "slot": "slot-3", "teacher": "Luke",         "title": "Drill / P.E.",         "band": "middle" },
+    { "day": "tue-may-12", "slot": "slot-3", "teacher": "Dan",          "title": "Mindset",              "band": "highmiddle" },
+    { "day": "tue-may-12", "slot": "slot-3", "teacher": "Jordan/Phil",  "title": "Robotics",             "band": "high" },
+
+    { "day": "wed-may-13", "slot": "slot-1", "teacher": "Mary",         "title": "Clay Sculpt",          "band": "elementary" },
+    { "day": "wed-may-13", "slot": "slot-1", "teacher": "Jordan",       "title": "Drawing",              "band": "elementary" },
+    { "day": "wed-may-13", "slot": "slot-1", "teacher": "Dan",          "title": "Song Writing",         "band": "middle" },
+    { "day": "wed-may-13", "slot": "slot-1", "teacher": "Luke/Phil",    "title": "Robotics",             "band": "middle" },
+    { "day": "wed-may-13", "slot": "slot-1", "teacher": "Caitlin",      "title": "Creative Writing",     "band": "high" },
+    { "day": "wed-may-13", "slot": "slot-1", "teacher": "Jerome",       "title": "Chess",                "band": "high" },
+
+    { "day": "wed-may-13", "slot": "slot-2", "teacher": "Caitlin",      "title": "Creative Writing",     "band": "elementary" },
+    { "day": "wed-may-13", "slot": "slot-2", "teacher": "Luke",         "title": "Rhythm",               "band": "elementary" },
+    { "day": "wed-may-13", "slot": "slot-2", "teacher": "Dan",          "title": "Debate",               "band": "middle" },
+    { "day": "wed-may-13", "slot": "slot-2", "teacher": "Luke",         "title": "3D Modeling",          "band": "highmiddle" },
+    { "day": "wed-may-13", "slot": "slot-2", "teacher": "Phil/Jordan",  "title": "Robotics",             "band": "high" },
+
+    { "day": "wed-may-13", "slot": "slot-3", "teacher": "Caitlin",      "title": "Lego / Minecraft Fort","band": "elementary" },
+    { "day": "wed-may-13", "slot": "slot-3", "teacher": "Jerome",       "title": "Drill / P.E. Games",   "band": "elementary" },
+    { "day": "wed-may-13", "slot": "slot-3", "teacher": "Luke/Phil",    "title": "Robotics",             "band": "middle" },
+    { "day": "wed-may-13", "slot": "slot-3", "teacher": "Dan",          "title": "Choir",                "band": "highmiddle" },
+    { "day": "wed-may-13", "slot": "slot-3", "teacher": "Jordan",       "title": "A.I. Vibe Code",       "band": "high" },
+
+    { "day": "thu-may-14", "slot": "slot-1", "teacher": "Mary",         "title": "Paint / Paper Craft",  "band": "elementary" },
+    { "day": "thu-may-14", "slot": "slot-1", "teacher": "Luke",         "title": "Rhythm",               "band": "elementary" },
+    { "day": "thu-may-14", "slot": "slot-1", "teacher": "Caitlin",      "title": "Creative Writing",     "band": "middle" },
+    { "day": "thu-may-14", "slot": "slot-1", "teacher": "Dan",          "title": "Public Speaking",      "band": "middle" },
+    { "day": "thu-may-14", "slot": "slot-1", "teacher": "Jerome",       "title": "Drill / P.E.",         "band": "high" },
+    { "day": "thu-may-14", "slot": "slot-1", "teacher": "Jordan/Phil",  "title": "Robotics",             "band": "high" },
+
+    { "day": "thu-may-14", "slot": "slot-2", "teacher": "Caitlin",      "title": "Legos & Perler",       "band": "elementary" },
+    { "day": "thu-may-14", "slot": "slot-2", "teacher": "Jerome",       "title": "Drill / P.E. Games",   "band": "elementary" },
+    { "day": "thu-may-14", "slot": "slot-2", "teacher": "Phil/Luke",    "title": "Robotics",             "band": "middle" },
+    { "day": "thu-may-14", "slot": "slot-2", "teacher": "Jordan",       "title": "Coding",               "band": "highmiddle" },
+    { "day": "thu-may-14", "slot": "slot-2", "teacher": "Dan",          "title": "Political Science",    "band": "high" },
+
+    { "day": "thu-may-14", "slot": "slot-3", "teacher": "Caitlin",      "title": "Dance",                "band": "elementary" },
+    { "day": "thu-may-14", "slot": "slot-3", "teacher": "Dan",          "title": "Choir",                "band": "elementary" },
+    { "day": "thu-may-14", "slot": "slot-3", "teacher": "Jerome",       "title": "Drill / P.E.",         "band": "middle" },
+    { "day": "thu-may-14", "slot": "slot-3", "teacher": "Luke",         "title": "Christianity",         "band": "highmiddle" },
+    { "day": "thu-may-14", "slot": "slot-3", "teacher": "Jordan/Phil",  "title": "Robotics",             "band": "high" }
+  ]
+}

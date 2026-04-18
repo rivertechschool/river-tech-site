@@ -267,33 +267,204 @@
       margin: 0 0 18px;
       color: var(--color-text);
     }
-    .rtd-schedule-figure {
-      margin: 24px 0 36px;
+    /* ===== Interactive RTD Schedule ===== */
+    .rtd-sched {
+      --band-elem: #e8a33d;
+      --band-mid:  #3a7fc9;
+      --band-hm:   #b84a70;
+      --band-high: #b04442;
+      --sched-border: #e5e2dc;
+      --sched-bg: #fafaf7;
+      --sched-text: var(--color-text, #1f1f1f);
+      --sched-muted: #6b6b6b;
+      margin: 28px 0 18px;
+    }
+    .rtd-sched__loading {
+      padding: 40px; text-align: center; color: var(--sched-muted);
+      font-style: italic;
+    }
+    .rtd-sched__fallback {
+      font-size: 13px; color: var(--sched-muted); margin-top: 6px;
+    }
+    .rtd-sched__fallback a { color: var(--sched-muted); text-decoration: underline; }
+
+    /* Controls */
+    .rtd-sched__controls {
+      display: flex; flex-wrap: wrap; gap: 16px 28px;
+      align-items: center;
+      padding: 16px 18px;
+      background: var(--sched-bg);
+      border: 1px solid var(--sched-border);
+      border-radius: 10px;
+      margin-bottom: 18px;
+    }
+    .rtd-sched__group {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    }
+    .rtd-sched__label {
+      font-size: 13px; font-weight: 600; color: var(--sched-muted);
+      text-transform: uppercase; letter-spacing: 0.04em;
+      margin-right: 4px;
+    }
+    .rtd-pill {
+      font: inherit; font-size: 14px;
+      padding: 7px 14px; border-radius: 999px;
+      border: 1px solid var(--sched-border); background: #fff;
+      color: var(--sched-text); cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .rtd-pill:hover { border-color: #c9c4ba; }
+    .rtd-pill[aria-pressed="true"] {
+      background: var(--sched-text); color: #fff; border-color: var(--sched-text);
+    }
+    .rtd-pill--elem[aria-pressed="true"] { background: var(--band-elem); border-color: var(--band-elem); color: #3a2910; }
+    .rtd-pill--mid[aria-pressed="true"]  { background: var(--band-mid);  border-color: var(--band-mid); }
+    .rtd-pill--high[aria-pressed="true"] { background: var(--band-high); border-color: var(--band-high); }
+
+    /* Legend */
+    .rtd-sched__legend {
+      display: flex; flex-wrap: wrap; gap: 14px;
+      font-size: 13px; color: var(--sched-muted);
+      margin-bottom: 14px;
+    }
+    .rtd-sched__legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .rtd-sched__swatch {
+      display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+    }
+
+    /* Grid */
+    .rtd-sched__scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--sched-border);
+      border-radius: 10px;
+      background: #fff;
+    }
+    .rtd-sched__grid {
+      display: grid;
+      min-width: 860px;
+      grid-template-columns: 110px repeat(var(--days, 6), minmax(160px, 1fr));
+    }
+    .rtd-sched__grid--1col { grid-template-columns: 110px minmax(200px, 1fr); min-width: 0; }
+    .rtd-sched__cell {
+      border-right: 1px solid var(--sched-border);
+      border-bottom: 1px solid var(--sched-border);
+      padding: 10px 12px;
+    }
+    .rtd-sched__cell:last-child { border-right: none; }
+    .rtd-sched__row:last-child .rtd-sched__cell { border-bottom: none; }
+    .rtd-sched__cell--head {
+      background: var(--sched-bg);
+      font-weight: 600; font-size: 14px;
+      text-align: center; padding: 12px 8px;
+      position: sticky; top: 0; z-index: 1;
+    }
+    .rtd-sched__cell--time {
+      background: var(--sched-bg);
+      font-size: 13px; font-weight: 600;
+      color: var(--sched-muted);
+      display: flex; flex-direction: column; justify-content: center;
       text-align: center;
     }
-    .rtd-schedule-figure a {
-      display: block;
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    .rtd-sched__cell--time small { display: block; font-weight: 400; font-size: 11px; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .rtd-sched__cell--banner {
+      grid-column: 2 / -1;
+      background: var(--sched-bg);
+      text-align: center; font-weight: 600;
+      color: var(--sched-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 13px;
+      padding: 14px;
     }
-    .rtd-schedule-figure a:hover,
-    .rtd-schedule-figure a:focus {
-      box-shadow: 0 4px 20px rgba(0,0,0,0.14);
-      transform: translateY(-1px);
+
+    /* Class card inside cell */
+    .rtd-class {
+      display: block; width: 100%;
+      text-align: left; background: transparent;
+      border: none; padding: 6px 0;
+      font: inherit; color: var(--sched-text);
+      cursor: pointer;
+      border-radius: 4px;
+      line-height: 1.35;
+      border-left: 3px solid transparent;
+      padding-left: 8px;
+      margin-bottom: 4px;
+      transition: background 0.12s, transform 0.12s;
     }
-    .rtd-schedule-figure img {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-width: 100%;
+    .rtd-class:hover, .rtd-class:focus {
+      background: var(--sched-bg);
+      outline: none;
     }
-    .rtd-schedule-figure figcaption {
-      margin-top: 10px;
-      font-size: 14px;
-      font-style: italic;
-      color: var(--color-muted, #6b6b6b);
+    .rtd-class--elem { color: var(--band-elem); border-left-color: var(--band-elem); }
+    .rtd-class--mid  { color: var(--band-mid);  border-left-color: var(--band-mid); }
+    .rtd-class--hm   { color: var(--band-hm);   border-left-color: var(--band-hm); }
+    .rtd-class--high { color: var(--band-high); border-left-color: var(--band-high); }
+    .rtd-class__teacher { font-weight: 600; }
+    .rtd-class__title { font-weight: 400; }
+    .rtd-class__info {
+      display: inline-block; margin-left: 4px; opacity: 0; transition: opacity 0.15s;
+      font-size: 11px; color: var(--sched-muted);
+    }
+    .rtd-class:hover .rtd-class__info,
+    .rtd-class:focus .rtd-class__info { opacity: 1; }
+
+    /* Detail modal */
+    .rtd-sched__modal {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(20,16,10,0.55);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s;
+    }
+    .rtd-sched__modal[aria-hidden="false"] {
+      opacity: 1; pointer-events: auto;
+    }
+    .rtd-sched__dialog {
+      background: #fff; border-radius: 12px;
+      max-width: 480px; width: 100%;
+      padding: 28px 28px 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+      transform: translateY(8px);
+      transition: transform 0.18s;
+    }
+    .rtd-sched__modal[aria-hidden="false"] .rtd-sched__dialog { transform: translateY(0); }
+    .rtd-sched__close {
+      position: absolute; top: 10px; right: 10px;
+      background: transparent; border: none; font-size: 22px;
+      width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; color: var(--sched-muted);
+    }
+    .rtd-sched__close:hover { background: var(--sched-bg); color: var(--sched-text); }
+    .rtd-sched__dialog h3 {
+      margin: 0 0 4px; font-size: 22px; line-height: 1.25;
+    }
+    .rtd-sched__dialog .rtd-sched__meta {
+      font-size: 13px; color: var(--sched-muted);
+      margin: 0 0 16px;
+    }
+    .rtd-sched__dialog h4 {
+      margin: 16px 0 4px; font-size: 13px;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--sched-muted); font-weight: 600;
+    }
+    .rtd-sched__dialog p { margin: 0; font-size: 15px; line-height: 1.5; }
+    .rtd-sched__dialog .rtd-sched__band-tag {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 999px;
+      color: #fff; margin-bottom: 10px;
+    }
+
+    /* Mobile-specific tweaks */
+    @media (max-width: 640px) {
+      .rtd-sched__controls { padding: 12px; gap: 10px 16px; }
+      .rtd-sched__grid { min-width: 720px; }
+      .rtd-sched__cell { padding: 8px 10px; font-size: 13px; }
+      .rtd-sched__dialog { padding: 22px 20px 20px; }
+      .rtd-sched__dialog h3 { font-size: 19px; }
     }
   </style>
 </head>
@@ -481,18 +652,14 @@
     <!-- Schedule -->
     <h2 class="section-subheading">The Schedule</h2>
 
-    <p>Each afternoon runs from 1:00 to 4:00 PM. Every slot offers multiple classes in parallel — your child picks what interests them.</p>
+    <p>Each afternoon runs from 1:00 to 4:00 PM. Every slot offers two class choices per grade band — your child picks a preference when you register.</p>
 
-    <figure class="rtd-schedule-figure">
-      <a href="../assets/images/rtd-schedule-2026.jpg" target="_blank" rel="noopener" aria-label="Open full-size schedule in a new tab">
-        <img
-          src="../assets/images/rtd-schedule-2026.jpg"
-          alt="River Tech Days schedule for May 5–14, 2026. Tuesday through Thursday, 1:00 to 4:00 PM. Daily blocks: 1:00–1:20 Assembly; 1:20–2:10, 2:10–3:00, and 3:00–3:50 class slots with five to six parallel classes each; 3:50–4:00 Clean Up Time. Classes include performing arts (dance, choir, rhythm, song writing, 3D modeling), technology (robotics, coding, A.I. LLM, A.I. Vibe Code), academics (math, critical thinking, debate, history, political science, public speaking), creative arts (perler beads, clay sculpt, paint, Lego/Minecraft fort), and P.E./drill games."
-          loading="lazy"
-        >
-      </a>
-      <figcaption>Tap or click to view full size.</figcaption>
-    </figure>
+    <div id="rtd-schedule-app" class="rtd-sched" aria-live="polite">
+      <div class="rtd-sched__loading">Loading schedule…</div>
+    </div>
+    <p class="rtd-sched__fallback">
+      <a href="../assets/images/rtd-schedule-2026.jpg" target="_blank" rel="noopener">View the printable schedule image →</a>
+    </p>
 
     <!-- Video: Introduction to River Tech -->
     <div class="video-embed">
@@ -756,6 +923,7 @@
 </footer>
 
 <script src="../assets/js/main.js" defer></script>
+<script src="../assets/js/rtd-schedule.js?v=1" defer></script>
 
 <!-- Scroll to Top -->
 <button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
