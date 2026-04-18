@@ -235,6 +235,28 @@ body {
   text-decoration: underline;
 }
 
+/* --- Enrollment Notice (warm callout card) --- */
+.enroll-notice {
+  background: #fdf6ec;
+  border: 1px solid #e6d4a8;
+  border-left: 4px solid #c9973d;
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin: 24px 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--color-text);
+}
+.enroll-notice strong {
+  color: #8a5a10;
+  font-weight: 700;
+}
+.enroll-notice p { margin: 0; }
+.enroll-notice p + p { margin-top: 8px; }
+@media (max-width: 640px) {
+  .enroll-notice { padding: 14px 16px; font-size: 15px; }
+}
+
 /* --- Main Content Area --- */
 .main-content {
   margin-left: var(--sidebar-width);
