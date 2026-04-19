@@ -799,20 +799,21 @@ body {
 }
 
 /* --- Mobile Submenus --- */
-/* Slow fade + expand. Block (not flex) + roomy max-height avoids the
-   iOS clipping we hit before. */
+/* display toggle = bulletproof on iOS. Opacity fade is driven by the
+   .visible class added a tick AFTER .open (see main.js). */
 .mobile-submenu {
-  display: block;
+  display: none;
   padding-left: 20px;
   background: rgba(0,0,0,0.02);
-  max-height: 0;
   opacity: 0;
-  overflow: hidden;
-  transition: max-height 0.7s ease, opacity 0.6s ease;
+  transition: opacity 0.6s ease;
 }
 
 .mobile-submenu.open {
-  max-height: 2000px;
+  display: block;
+}
+
+.mobile-submenu.visible {
   opacity: 1;
 }
 

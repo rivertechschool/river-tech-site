@@ -41,11 +41,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Helpers for two-stage fade: .open = display:block (in DOM),
+  // .visible = opacity:1 (faded in). Class order avoids iOS clipping.
+  function openSubmenu(submenu) {
+    submenu.classList.add('open');
+    // Force layout before adding .visible so the opacity transition runs
+    // eslint-disable-next-line no-unused-expressions
+    submenu.offsetHeight;
+    requestAnimationFrame(() => submenu.classList.add('visible'));
+  }
+  function closeSubmenu(submenu) {
+    submenu.classList.remove('visible');
+    // After fade-out finishes, remove .open (display:block)
+    setTimeout(() => {
+      if (!submenu.classList.contains('visible')) {
+        submenu.classList.remove('open');
+      }
+    }, 600);
+  }
+
   // Pre-expand the mobile submenu containing the current page's link
   document.querySelectorAll('.mobile-nav-overlay .mobile-submenu').forEach(submenu => {
     const hasActive = submenu.querySelector('a.active');
     if (hasActive) {
       submenu.classList.add('open');
+      submenu.classList.add('visible');
       const parent = submenu.previousElementSibling;
       if (parent) parent.classList.add('expanded');
     }
@@ -58,16 +78,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (submenu && submenu.classList.contains('mobile-submenu')) {
         e.preventDefault();
         e.stopPropagation();
+        const isOpen = submenu.classList.contains('open');
         // Close other mobile submenus
         document.querySelectorAll('.mobile-submenu.open').forEach(s => {
           if (s !== submenu) {
-            s.classList.remove('open');
+            closeSubmenu(s);
             const p = s.previousElementSibling;
             if (p) p.classList.remove('expanded');
           }
         });
-        submenu.classList.toggle('open');
-        parentLink.classList.toggle('expanded');
+        if (isOpen) {
+          closeSubmenu(submenu);
+          parentLink.classList.remove('expanded');
+        } else {
+          openSubmenu(submenu);
+          parentLink.classList.add('expanded');
+        }
       }
     });
   });
