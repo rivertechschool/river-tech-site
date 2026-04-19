@@ -898,12 +898,18 @@ body {
 
 .page-hero-inner h1 {
   font-family: var(--font-display);
-  font-size: 48px;
+  /* Scales from ~28px on narrow phones to 48px on desktop */
+  font-size: clamp(28px, 7vw, 48px);
   font-weight: 400;
   color: var(--color-red);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 10px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.1;
+  padding: 0 12px;
 }
 
 .page-hero-inner p {
