@@ -800,20 +800,17 @@ body {
 
 /* --- Mobile Submenus --- */
 .mobile-submenu {
-  flex-direction: column;
-  display: flex;
+  display: none;
   padding-left: 20px;
   background: rgba(0,0,0,0.02);
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease, opacity 0.45s ease;
 }
 
 .mobile-submenu.open {
-  /* Large enough to never clip, even with iOS Dynamic Type at max size */
-  max-height: 2000px;
-  opacity: 1;
+  display: block;
+}
+
+.mobile-submenu a {
+  display: block;
 }
 
 .mobile-submenu a {
