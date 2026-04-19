@@ -811,7 +811,8 @@ body {
 }
 
 .mobile-submenu.open {
-  max-height: 500px;
+  /* Large enough to never clip, even with iOS Dynamic Type at max size */
+  max-height: 2000px;
   opacity: 1;
 }
 
