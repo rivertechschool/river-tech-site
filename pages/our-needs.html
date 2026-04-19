@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+  <title>Our Needs | River Tech School | Post Falls, ID</title>
+  <meta name="description" content="Ways to help River Tech School rebuild after the March 15 fire — from a school bus and classroom equipment to books, instruments, art supplies, and financial gifts. Every gift at every size is received with gratitude.">
+  <meta property="og:title" content="Our Needs | River Tech School">
+  <meta property="og:description" content="Ways to help River Tech School rebuild after the March 15 fire. Big gifts, small gifts, supplies, and financial support — all appreciated.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://www.rivertechschool.com/assets/images/og-image.png">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/style.css?v=18">
+
+  <link rel="canonical" href="https://www.rivertechschool.com/pages/our-needs.html">
+
+  <style>
+    /* --- Our Needs page: scoped styles --- */
+
+    .needs-intro {
+      font-size: 18px;
+      line-height: 1.65;
+      margin: 10px 0 32px;
+    }
+
+    .needs-fire-card {
+      background: #fdf6ec;
+      border: 1px solid #e6d4a8;
+      border-left: 4px solid #c9973d;
+      border-radius: 10px;
+      padding: 24px 26px;
+      margin: 24px 0 40px;
+    }
+    .needs-fire-card h3 {
+      margin: 0 0 10px;
+      color: #8a5a10;
+      font-size: 20px;
+    }
+    .needs-fire-card p {
+      margin: 0 0 14px;
+      line-height: 1.6;
+    }
+    .needs-fire-card p:last-of-type { margin-bottom: 18px; }
+    .needs-fire-card .cta-buttons { margin: 0; }
+
+    /* Big-asks feature grid */
+    .big-needs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin: 24px 0 40px;
+    }
+    .big-need-card {
+      background: #ffffff;
+      border: 1px solid #e6e1d6;
+      border-top: 4px solid #c9973d;
+      border-radius: 10px;
+      padding: 22px 22px 20px;
+      box-shadow: 0 2px 8px rgba(39,36,67,0.06);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .big-need-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(39,36,67,0.10);
+    }
+    .big-need-card .bn-icon {
+      font-size: 34px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .big-need-card h3 {
+      margin: 0 0 6px;
+      color: var(--color-text);
+      font-size: 19px;
+      font-weight: 700;
+    }
+    .big-need-card p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--color-text);
+      opacity: 0.85;
+    }
+    .big-need-card.anchor {
+      border-top-color: var(--color-red);
+      background: #fffdf9;
+    }
+    .big-need-card.anchor .bn-icon { filter: drop-shadow(0 1px 0 rgba(0,0,0,0.04)); }
+
+    /* Categorized supply grid */
+    .supply-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 18px 0 32px;
+    }
+    .supply-card {
+      background: #ffffff;
+      border: 1px solid #e6e1d6;
+      border-radius: 10px;
+      padding: 18px 20px;
+      box-shadow: 0 1px 4px rgba(39,36,67,0.04);
+    }
+    .supply-card h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: var(--color-text);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .supply-card .sc-icon {
+      font-size: 22px;
+      line-height: 1;
+    }
+    .supply-card ul {
+      list-style: disc;
+      padding-left: 20px;
+      margin: 0;
+    }
+    .supply-card li {
+      margin: 4px 0;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--color-text);
+    }
+
+    /* Section spacing */
+    .needs-section-lead {
+      font-size: 17px;
+      line-height: 1.6;
+      margin: 6px 0 10px;
+      opacity: 0.9;
+    }
+    .needs-close {
+      background: #f6f0e4;
+      border-radius: 10px;
+      padding: 24px 26px;
+      margin: 32px 0 10px;
+      text-align: center;
+    }
+    .needs-close p {
+      margin: 0 0 16px;
+      font-size: 17px;
+      line-height: 1.55;
+    }
+    .needs-close .cta-buttons { justify-content: center; margin: 0; }
+
+    @media (max-width: 640px) {
+      .needs-fire-card, .needs-close { padding: 18px 18px; }
+      .big-need-card, .supply-card { padding: 16px 16px; }
+      .big-need-card h3 { font-size: 17px; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Our Needs — River Tech School",
+    "description": "Ways to help River Tech School rebuild after the March 15 fire.",
+    "url": "https://www.rivertechschool.com/pages/our-needs.html",
+    "isPartOf": {
+      "@type": "School",
+      "name": "River Tech School of Performing Arts & Technology"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+    <a href="../index.html">River Tech School</a>
+    <div class="sidebar-submenu">
+      <a href="../index.html">About River Tech</a>
+      <a href="elementary-school.html">Elementary School</a>
+      <a href="middle-school.html">Middle School</a>
+      <a href="high-school.html">High School</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="a-la-carte.html">River Tech À La Carte</a>
+    <div class="sidebar-submenu">
+      <a href="a-la-carte.html">Homeschooling</a>
+      <a href="monday-performing-arts.html">Mon: Performing Arts</a>
+      <a href="tuesday-science.html">Tue: Science & Social Studies</a>
+      <a href="thursday-life-skills.html">Thu: Life Skills</a>
+      <a href="friday-technology.html">Fri: Technology</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="why-river-tech.html">Why River Tech?</a>
+    <div class="sidebar-submenu">
+      <a href="why-river-tech.html">Overview</a>
+      <a href="reviews.html">References & Reviews</a>
+      <a href="technology.html">Technology</a>
+      <a href="performing-arts.html">Performing Arts</a>
+      <a href="sports-fitness.html">Sports & Fitness</a>
+      <a href="fieldtrips.html">Field Trips</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="enrollment.html">Enrollment</a>
+    <div class="sidebar-submenu">
+      <a href="river-tech-days.html">River Tech Days</a>
+      <a href="enrollment.html">How to Enroll</a>
+      <a href="tuition.html">Tuition</a>
+      <a href="faq.html">FAQs</a>
+      <a href="tax-credit.html">Tax Credit</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="school-resources.html" class="active">School Resources</a>
+    <div class="sidebar-submenu">
+      <a href="school-resources.html">Resources Overview</a>
+      <a href="calendar.html">Schedule & Calendar</a>
+      <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+      <a href="scholarships.html">Scholarships</a>
+      <a href="volunteer.html">Volunteer</a>
+      <a href="our-needs.html" class="active">Our Needs</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="../pages/gallery.html">Media</a>
+    <div class="sidebar-submenu">
+      <a href="../pages/gallery.html">Photo Gallery</a>
+      <a href="../pages/vlog.html">Video Globe</a>
+    </div>
+    </div>
+  </nav>
+</div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="topbar-ticker-wrap">
+    <div class="topbar-ticker">
+      <span>We're back. After a fire on March 15th, River Tech has relocated to The Heart, 927 E Polston Ave, Post Falls. Classes are in session. Next tours are: Wednesdays at 3 PM.</span>
+      <span>We're back. After a fire on March 15th, River Tech has relocated to The Heart, 927 E Polston Ave, Post Falls. Classes are in session. Next tours are: Wednesdays at 3 PM.</span>
+    </div>
+  </div>
+  <a href="enrollment.html" class="enroll-btn">Enroll Today 📞</a>
+  <div class="social-icons">
+    <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" fill="#c0392b"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.13C5.12 19.56 12 19.56 12 19.56s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon fill="white" points="9.75,15.02 15.5,11.75 9.75,8.48"/></svg>
+    </a>
+    <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" fill="#3b5998"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- Mobile Header -->
+<div class="mobile-header">
+  <a href="../index.html" class="mobile-logo">River Tech</a>
+  <button class="hamburger" aria-label="Open menu">☰</button>
+</div>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav-overlay">
+  <button class="close-btn" aria-label="Close menu">✕</button>
+  <a href="../index.html">River Tech School</a>
+  <div class="mobile-submenu">
+    <a href="../index.html">About River Tech</a>
+    <a href="elementary-school.html">Elementary School</a>
+    <a href="middle-school.html">Middle School</a>
+    <a href="high-school.html">High School</a>
+  </div>
+  <a href="a-la-carte.html">River Tech À La Carte</a>
+  <div class="mobile-submenu">
+    <a href="a-la-carte.html">Homeschooling</a>
+    <a href="monday-performing-arts.html">Mon: Performing Arts</a>
+    <a href="tuesday-science.html">Tue: Science & Social Studies</a>
+    <a href="thursday-life-skills.html">Thu: Life Skills</a>
+    <a href="friday-technology.html">Fri: Technology</a>
+  </div>
+  <a href="why-river-tech.html">Why River Tech?</a>
+  <div class="mobile-submenu">
+    <a href="why-river-tech.html">Overview</a>
+    <a href="reviews.html">References & Reviews</a>
+    <a href="technology.html">Technology</a>
+    <a href="performing-arts.html">Performing Arts</a>
+    <a href="sports-fitness.html">Sports & Fitness</a>
+    <a href="fieldtrips.html">Field Trips</a>
+  </div>
+  <a href="enrollment.html">Enrollment</a>
+  <div class="mobile-submenu">
+    <a href="river-tech-days.html">River Tech Days</a>
+    <a href="enrollment.html">How to Enroll</a>
+    <a href="tuition.html">Tuition</a>
+    <a href="faq.html">FAQs</a>
+    <a href="tax-credit.html">Tax Credit</a>
+  </div>
+  <a href="school-resources.html" class="active">School Resources</a>
+  <div class="mobile-submenu open">
+    <a href="calendar.html">Schedule & Calendar</a>
+    <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+    <a href="scholarships.html">Scholarships</a>
+    <a href="volunteer.html">Volunteer</a>
+    <a href="our-needs.html" class="active">Our Needs</a>
+  </div>
+  <a href="enrollment.html" style="color: var(--color-red); font-weight: 700; border-bottom: none;">Enroll Today</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="content-area">
+
+    <div class="page-hero-inner">
+      <h1>Our Needs</h1>
+    </div>
+
+    <p style="text-align: center; font-style: italic; font-size: 20px; margin-bottom: 24px;">Ways to help us rebuild and keep going</p>
+
+    <p class="needs-intro">Parents who grow to love River Tech, and community members who want to support a school they believe is doing something worthwhile, often ask if there&rsquo;s a way they can help. Here is our honest list. Some are in a position to help in a big way; others with something smaller &mdash; and every gift, at every size, is received with real gratitude.</p>
+
+    <!-- Fire context + financial CTA -->
+    <div class="needs-fire-card">
+      <h3>Starting from scratch, after the fire</h3>
+      <p>On March 15th we lost our building and almost everything inside &mdash; instruments, robotics kits, microphones, speakers, the mixer, curriculum, classroom supplies. Insurance covered about 20% of what we lost. We&rsquo;re rebuilding the classroom from the ground up.</p>
+      <p>The fastest way to help is through our post-fire recovery fund. Gifts there go directly toward the curriculum, books, and materials we need right now to keep classes running.</p>
+      <div class="cta-buttons">
+        <a href="https://www.zeffy.com/en-US/donation-form/river-tech-post-fire-recovery" target="_blank" rel="noopener noreferrer" class="cta-btn" style="background: var(--color-enroll-bg); color: white;">Give to the Recovery Fund</a>
+        <a href="mailto:learn@rivertech.me?subject=Donation%20%E2%80%94%20River%20Tech" class="cta-btn">Email Us</a>
+      </div>
+    </div>
+
+    <!-- Biggest asks -->
+    <h2 class="section-subheading">Our Biggest Needs</h2>
+    <p class="needs-section-lead">If you or someone you know is in a position to help with one of these, it would change what we can do for our students.</p>
+
+    <div class="big-needs-grid">
+      <div class="big-need-card anchor">
+        <div class="bn-icon">🚌</div>
+        <h3>A full-size school bus</h3>
+        <p>Our current bus is very old and on the edge of breakdown. We use it for P.E. and field trips almost every week. Replacing it would be the single biggest help anyone could give us.</p>
+      </div>
+      <div class="big-need-card">
+        <div class="bn-icon">🚐</div>
+        <h3>Large passenger vans</h3>
+        <p>12&ndash;15 seater vans. We have one, and we need more. With a second and third van, we can split groups and run outings without renting.</p>
+      </div>
+      <div class="big-need-card">
+        <div class="bn-icon">🖨️</div>
+        <h3>Classroom tech equipment</h3>
+        <p>Classroom-grade 3D printers, robotics kits, and iPad minis. These are the heart of our technology program and we lost ours in the fire.</p>
+      </div>
+      <div class="big-need-card">
+        <div class="bn-icon">🎹</div>
+        <h3>Instruments</h3>
+        <p>Electric pianos (keyboards), guitars, and baritone ukuleles. The fire took every instrument we had.</p>
+      </div>
+      <div class="big-need-card">
+        <div class="bn-icon">🪑</div>
+        <h3>Quality student chairs</h3>
+        <p>We&rsquo;re still short about ten cushioned student chairs, and the school is growing. Comfortable seating matters when children are in classes for hours at a time.</p>
+      </div>
+    </div>
+
+    <!-- Supply categories -->
+    <h2 class="section-subheading">Donate Supplies by Category</h2>
+    <p class="needs-section-lead">We welcome new items and gently used items in quality, classroom-ready condition. Email <a href="mailto:learn@rivertech.me?subject=Supply%20Donation%20%E2%80%94%20River%20Tech">learn@rivertech.me</a> and we&rsquo;ll coordinate pickup or drop-off.</p>
+
+    <div class="supply-grid">
+      <div class="supply-card">
+        <h3><span class="sc-icon">📚</span> Books</h3>
+        <ul>
+          <li>Children&rsquo;s Bibles and easy-to-read Bibles</li>
+          <li>Chapter book series: Pinkalicious, Junie B. Jones, Fancy Nancy, superhero books, and similar</li>
+          <li>Bob Books (phonics sets)</li>
+          <li>Leveled, early, and phonics readers</li>
+          <li>Middle school series: Diary of a Wimpy Kid, Wings of Fire, and similar</li>
+        </ul>
+      </div>
+
+      <div class="supply-card">
+        <h3><span class="sc-icon">🎵</span> Musical Instruments</h3>
+        <ul>
+          <li>Keyboards</li>
+          <li>Guitars</li>
+          <li>Ukuleles</li>
+          <li>Drums</li>
+        </ul>
+      </div>
+
+      <div class="supply-card">
+        <h3><span class="sc-icon">💻</span> Technology</h3>
+        <ul>
+          <li>Charging station power strip towers</li>
+          <li>Extension cords</li>
+          <li>Headphones</li>
+          <li>Laptop and tablet chargers</li>
+          <li>TVs</li>
+          <li>Robotics kits (VEX GO, LEGO Mindstorms)</li>
+          <li>3D printers</li>
+          <li>Tablets and laptops</li>
+        </ul>
+      </div>
+
+      <div class="supply-card">
+        <h3><span class="sc-icon">🎤</span> Stage Equipment</h3>
+        <ul>
+          <li>Mixer</li>
+          <li>Microphones</li>
+          <li>Speakers</li>
+          <li>Lights</li>
+        </ul>
+      </div>
+
+      <div class="supply-card">
+        <h3><span class="sc-icon">🎬</span> Film Equipment</h3>
+        <ul>
+          <li>Cameras</li>
+          <li>Tripods</li>
+          <li>Studio lights</li>
+          <li>Gimbals</li>
+          <li>Green screens</li>
+        </ul>
+      </div>
+
+      <div class="supply-card">
+        <h3><span class="sc-icon">🧩</span> STEM Toys</h3>
+        <ul>
+          <li>LEGO bricks, building parts (houses, vehicles, wheels), base plates, figurines</li>
+          <li>LEGO storage table</li>
+          <li>STEM building toys (ages 6&ndash;12): construction sets, fort-building kits, gears, magnets</li>
+          <li>Snap Circuits kits</li>
+        </ul>
+      </div>
+
+      <div class="supply-card">
+        <h3><span class="sc-icon">🎨</span> Arts & Crafts</h3>
+        <ul>
+          <li>Perler beads, pegboards, storage containers, iron</li>
+          <li>Air-dry clay (new)</li>
+          <li>Pyrography supplies: wood-burning tools, wood pieces, protective gloves, heat-resistant mats</li>
+          <li>Kinetic sand (new)</li>
+          <li>Glue guns and glue</li>
+          <li>Jewelry-making kits</li>
+          <li>Acrylic paint, paintbrushes, canvas</li>
+        </ul>
+      </div>
+
+      <div class="supply-card">
+        <h3><span class="sc-icon">🏠</span> Furniture</h3>
+        <ul>
+          <li>White cubical shelves (6&ndash;12 cubbies)</li>
+          <li>Boxes that fit inside the cubicles</li>
+        </ul>
+      </div>
+
+      <div class="supply-card">
+        <h3><span class="sc-icon">🤸</span> Indoor Play & Gym</h3>
+        <ul>
+          <li>Mini indoor trampoline</li>
+          <li>Bean bags</li>
+          <li>Floor cushions</li>
+          <li>Gymnastics beam</li>
+          <li>Balance beam</li>
+          <li>Gymnastics mats</li>
+        </ul>
+      </div>
+
+      <div class="supply-card">
+        <h3><span class="sc-icon">⚽</span> Sports Equipment (PE)</h3>
+        <ul>
+          <li>Basketballs, volleyballs, dodgeballs</li>
+          <li>Badminton and tennis rackets and balls</li>
+          <li>Capture the flag game set</li>
+          <li>Other indoor and outdoor group game equipment</li>
+        </ul>
+      </div>
+
+      <div class="supply-card">
+        <h3><span class="sc-icon">🧽</span> Cleaning Supplies</h3>
+        <ul>
+          <li>Vacuum cleaners (clean and in good condition)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Close -->
+    <div class="needs-close">
+      <p>Whether you can offer a bus, a box of books, or a monthly gift &mdash; thank you. Every contribution helps us keep doing this work for the children in our community.</p>
+      <div class="cta-buttons">
+        <a href="https://www.zeffy.com/en-US/donation-form/river-tech-post-fire-recovery" target="_blank" rel="noopener noreferrer" class="cta-btn" style="background: var(--color-enroll-bg); color: white;">Give Financially</a>
+        <a href="mailto:learn@rivertech.me?subject=Donation%20%E2%80%94%20River%20Tech" class="cta-btn">Email learn@rivertech.me</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="explore-links">
+  <a href="volunteer.html">Volunteer With Us →</a>
+  <a href="nonprofit.html">About Faithful Five →</a>
+  <a href="enrollment.html">Enroll Today →</a>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <a href="../index.html" class="footer-logo">rivertechschool.com</a>
+    <div class="footer-tagline">Life is a Stage. <span class="love">Love</span> is our Script.</div>
+  </div>
+
+  <div class="footer-columns">
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>
+      <span>Tel: 425-444-2081</span>
+      <span>The Heart</span>
+      <span>927 E Polston Ave</span>
+      <span>Post Falls, ID 83854</span>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="why-river-tech.html">Why River Tech?</a>
+      <a href="enrollment.html">Enrollment</a>
+      <a href="school-resources.html" class="active">School Resources</a>
+      <a href="a-la-carte.html">À La Carte</a>
+    </div>
+    <div class="footer-col">
+      <h4>Social</h4>
+      <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/rivertechschool/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 by Faithful Five Inc. (d.b.a. River Tech and Post Falls Art). <em>Life is a Stage. <span class="love">Love</span> is our Script.</em></p>
+    <p>Nondiscrimination Policy: Faithful Five Inc. and its ministry River Tech School of Performing Arts &amp; Technology admit students of any race, color, national and ethnic origin to all the rights, privileges, programs, and activities generally accorded or made available to students at the school. We do not discriminate on the basis of race, color, national and ethnic origin in administration of our educational policies, admissions policies, scholarship and loan programs, and athletic and other school-administered programs.</p>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js" defer></script>
+
+<!-- Scroll to Top -->
+<button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+(function(){
+  var btn=document.querySelector('.scroll-to-top');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible',window.scrollY>400);
+  });
+})();
+</script>
+</body>
+</html>
