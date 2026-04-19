@@ -41,6 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Pre-expand the mobile submenu containing the current page's link
+  document.querySelectorAll('.mobile-nav-overlay .mobile-submenu').forEach(submenu => {
+    const hasActive = submenu.querySelector('a.active');
+    if (hasActive) {
+      submenu.classList.add('open');
+      const parent = submenu.previousElementSibling;
+      if (parent) parent.classList.add('expanded');
+    }
+  });
+
   // Mobile nav: tap toggles submenu (since no hover on mobile)
   document.querySelectorAll('.mobile-nav-overlay [data-has-submenu]').forEach(parentLink => {
     parentLink.addEventListener('click', (e) => {
