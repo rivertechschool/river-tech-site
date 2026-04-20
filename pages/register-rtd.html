@@ -154,6 +154,36 @@
     .reg-check input { width: 18px; height: 18px; accent-color: var(--color-red); cursor: pointer; }
     .reg-check.checked { border-color: var(--color-red); background: var(--color-pink-btn); }
 
+    /* Grade bands (Elementary / Middle / High) */
+    .reg-grade-bands {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 520px) {
+      .reg-grade-bands { grid-template-columns: 1fr; }
+    }
+    .reg-grade-bands .reg-check {
+      align-items: flex-start;
+      padding: 12px 14px;
+    }
+    .reg-grade-bands .reg-check span { line-height: 1.4; }
+    .reg-grade-bands .reg-check small {
+      display: block;
+      font-size: 13px;
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    /* Elementary follow-up (reading + tablet proficiency) */
+    .elem-follow-up {
+      margin: 2px 0 18px;
+      padding: 16px 18px;
+      border-left: 3px solid var(--color-red);
+      background: var(--color-bg);
+    }
+    .elem-follow-up .reg-row-grid-2 { margin-bottom: 0; }
+
     /* Child card */
     .child-card {
       background: var(--color-white);
@@ -542,7 +572,7 @@
         <!-- Children -->
         <div id="children-container"></div>
 
-        <button type="button" id="add-child-btn" class="add-child-btn">+ Add another child (up to 3)</button>
+        <button type="button" id="add-child-btn" class="add-child-btn">+ Add another child (up to 6)</button>
 
         <!-- Anything else -->
         <div class="reg-section">

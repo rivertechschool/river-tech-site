@@ -15,7 +15,7 @@
     fullTime:  { "3": 29, "6": 49 }
   };
 
-  const MAX_CHILDREN = 3;
+  const MAX_CHILDREN = 6;
   const MIN_DAYS = 1;
   const MAX_DAYS = 6;
 
@@ -99,19 +99,53 @@
       '    <input class="reg-input" type="text" id="c' + idx + '_lastName" name="c' + idx + '_lastName" required>',
       '  </div>',
       '</div>',
+      '<div class="reg-row">',
+      '  <label class="reg-label">Grade level<span class="req">*</span></label>',
+      '  <div class="reg-grade-bands">',
+      '    <label class="reg-check">',
+      '      <input type="radio" name="c' + idx + '_grade" value="elementary" required>',
+      '      <span><strong>Elementary</strong><br><small>can read &amp; use a tablet</small></span>',
+      '    </label>',
+      '    <label class="reg-check">',
+      '      <input type="radio" name="c' + idx + '_grade" value="middle" required>',
+      '      <span><strong>Middle School</strong></span>',
+      '    </label>',
+      '    <label class="reg-check">',
+      '      <input type="radio" name="c' + idx + '_grade" value="high" required>',
+      '      <span><strong>High School</strong></span>',
+      '    </label>',
+      '  </div>',
+      '</div>',
+      '<div class="elem-follow-up" id="elem-follow-' + idx + '" style="display:none;">',
+      '  <div class="reg-row-grid-2">',
+      '    <div>',
+      '      <label class="reg-label" for="c' + idx + '_reading">Reading ability<span class="req">*</span></label>',
+      '      <select class="reg-select" id="c' + idx + '_reading" name="c' + idx + '_reading">',
+      '        <option value="">Select…</option>',
+      '        <option value="independent">Reads confidently on their own</option>',
+      '        <option value="with-help">Reads with some help</option>',
+      '        <option value="letters">Knows letters and simple words</option>',
+      '        <option value="pre-reader">Not yet reading</option>',
+      '      </select>',
+      '    </div>',
+      '    <div>',
+      '      <label class="reg-label" for="c' + idx + '_tablet">Tablet proficiency<span class="req">*</span></label>',
+      '      <select class="reg-select" id="c' + idx + '_tablet" name="c' + idx + '_tablet">',
+      '        <option value="">Select…</option>',
+      '        <option value="independent">Uses a tablet independently</option>',
+      '        <option value="some-help">Uses with occasional help</option>',
+      '        <option value="lots-of-help">Needs help with most tablet tasks</option>',
+      '        <option value="never-used">Has never used a tablet</option>',
+      '      </select>',
+      '    </div>',
+      '  </div>',
+      '</div>',
       '<div class="reg-row-grid-2">',
       '  <div>',
-      '    <label class="reg-label" for="c' + idx + '_grade">Current grade<span class="req">*</span></label>',
-      '    <select class="reg-select" id="c' + idx + '_grade" name="c' + idx + '_grade" required>',
-      '      <option value="">Select grade…</option>',
-      gradeOptionsHtml(),
-      '    </select>',
-      '    <span class="reg-help">Grade decides which classes this child can pick from.</span>',
-      '  </div>',
-      '  <div>',
       '    <label class="reg-label" for="c' + idx + '_age">Age<span class="req">*</span></label>',
-      '    <input class="reg-input" type="number" min="5" max="19" id="c' + idx + '_age" name="c' + idx + '_age" required>',
+      '    <input class="reg-input" type="number" min="4" max="19" id="c' + idx + '_age" name="c' + idx + '_age" required>',
       '  </div>',
+      '  <div></div>',
       '</div>',
       '<div class="reg-row">',
       '  <label class="reg-label">Which days will Child ' + idx + ' attend?<span class="req">*</span></label>',
@@ -152,32 +186,24 @@
     }
   }
 
-  function gradeOptionsHtml() {
-    const grades = [
-      { value: "1", label: "1st grade" },
-      { value: "2", label: "2nd grade" },
-      { value: "3", label: "3rd grade" },
-      { value: "4", label: "4th grade" },
-      { value: "5", label: "5th grade" },
-      { value: "6", label: "6th grade" },
-      { value: "7", label: "7th grade" },
-      { value: "8", label: "8th grade" },
-      { value: "9", label: "9th grade" },
-      { value: "10", label: "10th grade" },
-      { value: "11", label: "11th grade" },
-      { value: "12", label: "12th grade" }
-    ];
-    return grades.map(function (g) {
-      return '<option value="' + g.value + '">' + g.label + '</option>';
-    }).join("");
+  // Current grade (band) for a child card
+  function getChildGrade(idx) {
+    const r = document.querySelector("input[name='c" + idx + "_grade']:checked");
+    return r ? r.value : "";
   }
 
-  function gradeToBand(gradeValue) {
-    const n = parseInt(gradeValue, 10);
-    if (!n) return null;
-    if (n <= 5) return "elementary";
-    if (n <= 8) return "middle";
-    return "high";
+  // Show/hide Elementary follow-ups based on band selection
+  function toggleElemFollowUp(idx, grade) {
+    const block = document.getElementById("elem-follow-" + idx);
+    if (!block) return;
+    const selects = block.querySelectorAll("select");
+    if (grade === "elementary") {
+      block.style.display = "";
+      selects.forEach(function (s) { s.required = true; });
+    } else {
+      block.style.display = "none";
+      selects.forEach(function (s) { s.required = false; s.value = ""; });
+    }
   }
 
   function daysCheckboxesHtml(childIdx) {
@@ -195,8 +221,7 @@
   function rebuildDayBlocks(childIdx) {
     const card = document.getElementById("child-" + childIdx);
     if (!card) return;
-    const grade = card.querySelector("[id$='_grade']").value;
-    const band = gradeToBand(grade);
+    const band = getChildGrade(childIdx);
     const checked = card.querySelectorAll("input[name='c" + childIdx + "_days']:checked");
     const dayIds = Array.from(checked).map(function (c) { return c.value; });
 
@@ -230,8 +255,8 @@
                 '<select class="reg-select" name="c' + childIdx + '_' + d.id + '_' + s.id + '" required>',
                 '<option value="">Select a class…</option>',
                 options.map(function (o) {
-                  const label = o.title + (o.teacher ? " — " + o.teacher : "");
-                  return '<option value="' + escapeHtml(o.title) + '" data-teacher="' + escapeHtml(o.teacher || "") + '">' + escapeHtml(label) + '</option>';
+                  // Display only the subject; teacher travels in the data layer
+                  return '<option value="' + escapeHtml(o.title) + '" data-teacher="' + escapeHtml(o.teacher || "") + '">' + escapeHtml(o.title) + '</option>';
                 }).join(""),
                 '</select>'
               ].join(""),
@@ -264,7 +289,9 @@
     const cards = Array.from(document.querySelectorAll(".child-card"));
     return cards.map(function (card, i) {
       const idx = card.dataset.childIdx;
-      const grade = (card.querySelector("[id$='_grade']") || {}).value || "";
+      const grade = getChildGrade(idx);
+      const reading = (card.querySelector("[id$='_reading']") || {}).value || "";
+      const tablet = (card.querySelector("[id$='_tablet']") || {}).value || "";
       const days = Array.from(card.querySelectorAll("input[name='c" + idx + "_days']:checked"))
         .map(function (c) { return c.value; });
       const firstName = (card.querySelector("[id$='_firstName']") || {}).value || "";
@@ -286,7 +313,9 @@
         index: i + 1,
         firstName: firstName.trim(),
         lastName: lastName.trim(),
-        grade: grade,
+        grade: grade, // "elementary" | "middle" | "high"
+        readingLevel: reading,
+        tabletLevel: tablet,
         age: age,
         days: days,
         picks: picks
@@ -343,7 +372,11 @@
       const c = children[i];
       if (!c.firstName) return "Child " + c.index + ": first name is required.";
       if (!c.lastName)  return "Child " + c.index + ": last name is required.";
-      if (!c.grade)     return "Child " + c.index + ": please select a grade.";
+      if (!c.grade)     return "Child " + c.index + ": please pick a grade level.";
+      if (c.grade === "elementary") {
+        if (!c.readingLevel) return "Child " + c.index + ": please select a reading ability.";
+        if (!c.tabletLevel)  return "Child " + c.index + ": please select a tablet proficiency.";
+      }
       if (!c.age)       return "Child " + c.index + ": please enter an age.";
       if (c.days.length === 0) return "Child " + c.index + ": please pick at least one day.";
 
@@ -355,11 +388,8 @@
           if (!pick || !pick.className) {
             const dayLabel = scheduleData.days.find(function (x) { return x.id === c.days[d]; }).label;
             // Some slots legitimately have zero options for a band — don't fail on those
-            const card = document.querySelector("[data-child-idx='" + c.index + "']");
-            const grade = card.querySelector("[id$='_grade']").value;
-            const band = gradeToBand(grade);
             const avail = scheduleData.classes.filter(function (cl) {
-              return cl.day === c.days[d] && cl.slot === classSlots[s].id && bandVisibleForGrade(cl.band, band);
+              return cl.day === c.days[d] && cl.slot === classSlots[s].id && bandVisibleForGrade(cl.band, c.grade);
             });
             if (avail.length === 0) continue;
             return "Child " + c.index + " (" + dayLabel + "): please pick a class for every slot.";
@@ -402,13 +432,15 @@
       familyTier: tier, // "newFamily" | "fullTime"
       children: children.map(function (c) {
         return {
-          firstName: c.firstName,
-          lastName:  c.lastName,
-          grade:     c.grade,
-          age:       c.age,
-          days:      c.days,
-          picks:     c.picks.filter(function (p) { return p.className; }),
-          subtotal:  pricePerChild(c.days.length, tier)
+          firstName:    c.firstName,
+          lastName:     c.lastName,
+          grade:        c.grade, // elementary | middle | high
+          readingLevel: c.readingLevel,
+          tabletLevel:  c.tabletLevel,
+          age:          c.age,
+          days:         c.days,
+          picks:        c.picks.filter(function (p) { return p.className; }),
+          subtotal:     pricePerChild(c.days.length, tier)
         };
       }),
       notes: form.notes.value.trim(),
@@ -482,10 +514,25 @@
       // Update checked-state visual on check labels
       const label = t.closest(".reg-check");
       if (label && (t.type === "checkbox" || t.type === "radio")) {
-        if (t.type === "checkbox") label.classList.toggle("checked", t.checked);
+        if (t.type === "checkbox") {
+          label.classList.toggle("checked", t.checked);
+        } else if (t.type === "radio") {
+          // Clear siblings in the same radio group
+          const group = document.getElementsByName(t.name);
+          Array.prototype.forEach.call(group, function (r) {
+            const lbl = r.closest(".reg-check");
+            if (lbl) lbl.classList.toggle("checked", r.checked);
+          });
+        }
       }
 
-      if (t.id && (t.id.endsWith("_grade") || t.name === "c" + idx + "_days")) {
+      // Grade band changed → toggle Elementary follow-ups, rebuild slots
+      if (t.name === "c" + idx + "_grade") {
+        toggleElemFollowUp(idx, t.value);
+        rebuildDayBlocks(idx);
+      }
+      // Days changed → rebuild slot dropdowns
+      if (t.name === "c" + idx + "_days") {
         rebuildDayBlocks(idx);
       }
       updateSummary();
@@ -493,7 +540,17 @@
 
     // Family tier radios
     document.querySelectorAll("input[name='fullTimeFamily']").forEach(function (r) {
-      r.addEventListener("change", updateSummary);
+      r.addEventListener("change", function (e) {
+        const label = e.target.closest(".reg-check");
+        if (label) {
+          // Clear siblings for this radio group
+          document.querySelectorAll("input[name='fullTimeFamily']").forEach(function (x) {
+            const lbl = x.closest(".reg-check");
+            if (lbl) lbl.classList.toggle("checked", x.checked);
+          });
+        }
+        updateSummary();
+      });
     });
 
     document.getElementById("reg-form").addEventListener("submit", submitForm);

@@ -81,17 +81,26 @@ function writeToSheet_(registrationId, p) {
 
   // Header row if empty
   if (sh.getLastRow() === 0) {
-    sh.appendRow([
+    const header = [
       "Registration ID", "Submitted (UTC)", "Status",
       "Parent First", "Parent Last", "Parent Email", "Parent Phone",
       "Family Tier",
       "Children Count", "Total Days", "Total Amount (USD)",
-      "Notes",
-      "Child 1 Name", "Child 1 Grade", "Child 1 Age", "Child 1 Days", "Child 1 Classes",
-      "Child 2 Name", "Child 2 Grade", "Child 2 Age", "Child 2 Days", "Child 2 Classes",
-      "Child 3 Name", "Child 3 Grade", "Child 3 Age", "Child 3 Days", "Child 3 Classes"
-    ]);
-    sh.getRange(1, 1, 1, 27).setFontWeight("bold");
+      "Notes"
+    ];
+    for (let n = 1; n <= 6; n++) {
+      header.push(
+        "Child " + n + " Name",
+        "Child " + n + " Grade",
+        "Child " + n + " Reading",
+        "Child " + n + " Tablet",
+        "Child " + n + " Age",
+        "Child " + n + " Days",
+        "Child " + n + " Classes"
+      );
+    }
+    sh.appendRow(header);
+    sh.getRange(1, 1, 1, header.length).setFontWeight("bold");
   }
 
   const children = p.children;
@@ -107,18 +116,20 @@ function writeToSheet_(registrationId, p) {
     p.notes || ""
   ];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 6; i++) {
     const c = children[i];
     if (c) {
       row.push(
         (c.firstName + " " + c.lastName).trim(),
         c.grade,
+        c.readingLevel || "",
+        c.tabletLevel || "",
         c.age,
         (c.days || []).join(", "),
         formatPicks_(c.picks || [])
       );
     } else {
-      row.push("", "", "", "", "");
+      row.push("", "", "", "", "", "", "");
     }
   }
 
@@ -233,8 +244,12 @@ function sendParentEmail_(registrationId, p) {
 function sendNotificationEmail_(registrationId, p) {
   const subject = "[RTD] New registration: " + p.parent.firstName + " " + p.parent.lastName + " — $" + p.totalAmount;
   const childSummary = p.children.map(function (c, i) {
+    const extras = [];
+    if (c.readingLevel) extras.push("reading: " + c.readingLevel);
+    if (c.tabletLevel)  extras.push("tablet: "  + c.tabletLevel);
+    const headerSuffix = extras.length ? ", " + extras.join(", ") : "";
     return [
-      "Child " + (i + 1) + ": " + c.firstName + " " + c.lastName + " (grade " + c.grade + ", age " + c.age + ")",
+      "Child " + (i + 1) + ": " + c.firstName + " " + c.lastName + " (grade " + c.grade + ", age " + c.age + headerSuffix + ")",
       "  Days: " + (c.days || []).join(", "),
       "  Picks:",
       (c.picks || []).map(function (pk) {
