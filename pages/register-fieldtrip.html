@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
+  <title>Field Trip Registration | River Tech School</title>
+  <meta name="description" content="Sign up for the April 29, 2026 River Tech field trip. Christian Karate + CDA Park (Elementary & Middle) or NIC Tour + CDA Park (High School).">
+
+  <meta property="og:title" content="Field Trip Registration — April 29, 2026">
+  <meta property="og:description" content="Sign up for the April 29 River Tech field trip.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.rivertechschool.com/pages/register-fieldtrip.html">
+  <meta property="og:image" content="https://www.rivertechschool.com/assets/images/og-image.png">
+
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/style.css?v=25">
+
+  <link rel="canonical" href="https://www.rivertechschool.com/pages/register-fieldtrip.html">
+
+  <meta name="robots" content="noindex,follow">
+
+  <style>
+    /* --- Register Field Trip: scoped styles, largely shared with RTD --- */
+    .reg-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 20px 0 60px;
+    }
+    .reg-hero {
+      text-align: center;
+      padding: 30px 0 20px;
+    }
+    .reg-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 5vw, 44px);
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--color-text);
+    }
+    .reg-hero .reg-subtitle {
+      font-size: 18px;
+      color: var(--color-text);
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+    .reg-hero .reg-dates {
+      font-size: 16px;
+      color: var(--color-text);
+      opacity: 0.7;
+    }
+    .reg-deadline {
+      background: var(--color-pink-btn);
+      color: var(--color-text);
+      padding: 14px 20px;
+      border-left: 4px solid var(--color-red);
+      margin: 20px 0 32px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .reg-deadline strong { color: var(--color-red); }
+
+    /* Form sections */
+    .reg-section {
+      background: var(--color-white);
+      border: 1px solid rgba(39, 36, 67, 0.12);
+      padding: 26px 28px;
+      margin-bottom: 22px;
+    }
+    .reg-section-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .reg-section-subtitle {
+      font-size: 15px;
+      color: var(--color-text);
+      opacity: 0.75;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* Field rows */
+    .reg-row { margin-bottom: 18px; }
+    .reg-row-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 520px) {
+      .reg-row-grid-2 { grid-template-columns: 1fr; }
+    }
+    .reg-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .reg-label .req { color: var(--color-red); margin-left: 3px; }
+    .reg-help {
+      display: block;
+      font-size: 13px;
+      color: var(--color-text);
+      opacity: 0.7;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .reg-input, .reg-select, .reg-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: var(--color-text);
+      background: var(--color-white);
+      border: 1.5px solid rgba(39, 36, 67, 0.25);
+      border-radius: 2px;
+      transition: border-color 0.2s;
+    }
+    .reg-input:focus, .reg-select:focus, .reg-textarea:focus {
+      outline: none;
+      border-color: var(--color-red);
+    }
+    .reg-textarea { resize: vertical; min-height: 70px; }
+
+    /* Check rows (radio / checkbox styled boxes) */
+    .reg-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1.5px solid rgba(39, 36, 67, 0.18);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-size: 16px;
+    }
+    .reg-check:hover { border-color: var(--color-red); }
+    .reg-check input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-red);
+      cursor: pointer;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+    .reg-check.checked { border-color: var(--color-red); background: var(--color-pink-btn); }
+
+    /* Trip selection cards */
+    .trip-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 600px) {
+      .trip-cards { grid-template-columns: 1fr; }
+    }
+    .trip-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px 18px;
+      border: 1.5px solid rgba(39, 36, 67, 0.18);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .trip-card:hover { border-color: var(--color-red); }
+    .trip-card.checked { border-color: var(--color-red); background: var(--color-pink-btn); }
+    .trip-card input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-red);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .trip-card-body { flex: 1; line-height: 1.4; }
+    .trip-card-title {
+      font-weight: 700;
+      font-size: 16px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .trip-card-meta {
+      font-size: 14px;
+      color: var(--color-text);
+      opacity: 0.8;
+    }
+    .trip-card-price {
+      font-weight: 700;
+      color: var(--color-red);
+      margin-top: 6px;
+      display: block;
+    }
+    /* Trip details box (revealed after selection) */
+    .trip-details {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-left: 3px solid var(--color-red);
+      background: var(--color-bg);
+      font-size: 14px;
+      line-height: 1.6;
+      display: none;
+    }
+    .trip-details.show { display: block; }
+    .trip-details h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: var(--color-text);
+    }
+    .trip-details h4:not(:first-child) { margin-top: 14px; }
+    .trip-details ul {
+      list-style: disc;
+      padding-left: 22px;
+      margin: 4px 0;
+    }
+
+    /* Conditional / branch-only blocks */
+    .branch-only {
+      display: none;
+    }
+    .branch-only.show { display: block; }
+
+    /* Release */
+    .reg-release {
+      background: var(--color-bg);
+      padding: 20px 24px;
+      margin-bottom: 22px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .reg-release h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 12px 0 4px;
+    }
+    .reg-release h3:first-child { margin-top: 0; }
+    .reg-release p { margin-bottom: 8px; }
+
+    /* Submit */
+    .reg-submit {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      background: var(--color-enroll-bg);
+      color: var(--color-white);
+      font-family: var(--font-nav);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .reg-submit:hover { opacity: 0.9; }
+    .reg-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Status messages */
+    .reg-error {
+      background: #fef0f0;
+      border-left: 4px solid var(--color-red);
+      color: var(--color-red);
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      display: none;
+    }
+    .reg-error.show { display: block; }
+    .reg-success {
+      background: #f0f7f0;
+      border-left: 4px solid #2d7a2d;
+      color: #1a4d1a;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      font-size: 16px;
+      line-height: 1.5;
+      display: none;
+    }
+    .reg-success.show { display: block; }
+
+    /* Back link */
+    .reg-back {
+      display: inline-block;
+      font-size: 15px;
+      color: var(--color-text);
+      opacity: 0.7;
+      text-decoration: none;
+      margin-bottom: 8px;
+    }
+    .reg-back:hover { opacity: 1; color: var(--color-red); }
+
+    /* Signature block */
+    .sig-date {
+      display: inline-block;
+      margin-left: 12px;
+      padding: 6px 10px;
+      background: var(--color-bg);
+      border-radius: 2px;
+      font-size: 14px;
+      color: var(--color-text);
+      opacity: 0.75;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+    <a href="../index.html">River Tech School</a>
+    <div class="sidebar-submenu">
+      <a href="../index.html">About River Tech</a>
+      <a href="elementary-school.html">Elementary School</a>
+      <a href="middle-school.html">Middle School</a>
+      <a href="high-school.html">High School</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="a-la-carte.html">River Tech À La Carte</a>
+    <div class="sidebar-submenu">
+      <a href="a-la-carte.html">Homeschooling</a>
+      <a href="monday-performing-arts.html">Mon: Performing Arts</a>
+      <a href="tuesday-science.html">Tue: Science & Social Studies</a>
+      <a href="thursday-life-skills.html">Thu: Life Skills</a>
+      <a href="friday-technology.html">Fri: Technology</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="why-river-tech.html" class="active">Why River Tech?</a>
+    <div class="sidebar-submenu">
+      <a href="why-river-tech.html">Overview</a>
+      <a href="reviews.html">References & Reviews</a>
+      <a href="technology.html">Technology</a>
+      <a href="performing-arts.html">Performing Arts</a>
+      <a href="sports-fitness.html">Sports & Fitness</a>
+      <a href="fieldtrips.html" class="active">Field Trips</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="enrollment.html">Enrollment</a>
+    <div class="sidebar-submenu">
+      <a href="river-tech-days.html">River Tech Days</a>
+      <a href="enrollment.html">How to Enroll</a>
+      <a href="tuition.html">Tuition</a>
+      <a href="faq.html">FAQs</a>
+      <a href="tax-credit.html">Tax Credit</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="school-resources.html">School Resources</a>
+    <div class="sidebar-submenu">
+      <a href="school-resources.html">Resources Overview</a>
+      <a href="calendar.html">Schedule & Calendar</a>
+      <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+      <a href="scholarships.html">Scholarships</a>
+      <a href="volunteer.html">Volunteer</a>
+      <a href="our-needs.html">Our Needs</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="../pages/gallery.html">Media</a>
+    <div class="sidebar-submenu">
+      <a href="../pages/gallery.html">Photo Gallery</a>
+      <a href="../pages/vlog.html">Video Globe</a>
+    </div>
+    </div>
+  </nav>
+</div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="topbar-ticker-wrap">
+    <div class="topbar-ticker">
+      <span>We're back. After a fire on March 15th, River Tech has relocated to The Heart, 927 E Polston Ave, Post Falls. Classes are in session. Next tours are: Wednesdays at 3 PM.</span>
+      <span>We're back. After a fire on March 15th, River Tech has relocated to The Heart, 927 E Polston Ave, Post Falls. Classes are in session. Next tours are: Wednesdays at 3 PM.</span>
+    </div>
+  </div>
+  <a href="enrollment.html" class="enroll-btn">Enroll Today 📞</a>
+  <div class="social-icons">
+    <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" fill="#c0392b"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.13C5.12 19.56 12 19.56 12 19.56s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon fill="white" points="9.75,15.02 15.5,11.75 9.75,8.48"/></svg>
+    </a>
+    <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" fill="#3b5998"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- Mobile Header -->
+<div class="mobile-header">
+  <a href="../index.html" class="mobile-logo">River Tech</a>
+  <button class="hamburger" aria-label="Open menu">☰</button>
+</div>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav-overlay">
+  <button class="close-btn" aria-label="Close menu">✕</button>
+  <a href="../index.html">River Tech School</a>
+        <div class="mobile-submenu">
+    <a href="../index.html">About River Tech</a>
+    <a href="elementary-school.html">Elementary School</a>
+    <a href="middle-school.html">Middle School</a>
+    <a href="high-school.html">High School</a>
+  </div>
+  <a href="a-la-carte.html">River Tech À La Carte</a>
+        <div class="mobile-submenu">
+    <a href="a-la-carte.html">Homeschooling</a>
+    <a href="monday-performing-arts.html">Mon: Performing Arts</a>
+    <a href="tuesday-science.html">Tue: Science & Social Studies</a>
+    <a href="thursday-life-skills.html">Thu: Life Skills</a>
+    <a href="friday-technology.html">Fri: Technology</a>
+  </div>
+  <a href="why-river-tech.html" class="active">Why River Tech?</a>
+        <div class="mobile-submenu">
+    <a href="why-river-tech.html">Overview</a>
+    <a href="reviews.html">References & Reviews</a>
+    <a href="technology.html">Technology</a>
+    <a href="performing-arts.html">Performing Arts</a>
+    <a href="sports-fitness.html">Sports & Fitness</a>
+    <a href="fieldtrips.html" class="active">Field Trips</a>
+  </div>
+  <a href="enrollment.html">Enrollment</a>
+        <div class="mobile-submenu">
+    <a href="river-tech-days.html">River Tech Days</a>
+    <a href="enrollment.html">How to Enroll</a>
+    <a href="tuition.html">Tuition</a>
+    <a href="faq.html">FAQs</a>
+    <a href="tax-credit.html">Tax Credit</a>
+  </div>
+  <a href="school-resources.html">School Resources</a>
+        <div class="mobile-submenu">
+    <a href="school-resources.html">Resources Overview</a>
+    <a href="calendar.html">Schedule & Calendar</a>
+    <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+    <a href="scholarships.html">Scholarships</a>
+    <a href="volunteer.html">Volunteer</a>
+    <a href="our-needs.html">Our Needs</a>
+  </div>
+  <a href="enrollment.html" style="color: var(--color-red); font-weight: 700; border-bottom: none;">Enroll Today</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="content-area">
+
+    <div class="reg-wrap">
+
+      <a href="fieldtrips.html" class="reg-back">← Back to Field Trips</a>
+
+      <div class="reg-hero">
+        <h1>Field Trip Registration</h1>
+        <p class="reg-subtitle">Wednesday, April 29, 2026</p>
+        <p class="reg-dates">For River Tech students only</p>
+      </div>
+
+      <div class="reg-deadline">
+        <strong>Sign-up deadline: Sunday, April 26.</strong> There will be no school on April 29 — all students who attend on Wednesdays are signing up for one of these two field trips. Spots are limited. Drop-off at the field trip location.
+      </div>
+
+      <div id="reg-error" class="reg-error" role="alert"></div>
+      <div id="reg-success" class="reg-success" role="status"></div>
+
+      <form id="reg-form" novalidate>
+
+        <!-- Section 1 — Trip Selection -->
+        <div class="reg-section">
+          <div class="reg-section-title">Which trip?</div>
+          <p class="reg-section-subtitle">Pick the trip your student will be attending. Each trip has its own drop-off location and schedule.</p>
+
+          <div class="trip-cards">
+            <label class="trip-card" id="trip-card-karate">
+              <input type="radio" name="trip" value="karate" required>
+              <div class="trip-card-body">
+                <span class="trip-card-title">Christian Karate + CDA Park</span>
+                <span class="trip-card-meta">Elementary &amp; Middle School</span>
+                <span class="trip-card-price">$10</span>
+              </div>
+            </label>
+            <label class="trip-card" id="trip-card-nic">
+              <input type="radio" name="trip" value="nic" required>
+              <div class="trip-card-body">
+                <span class="trip-card-title">North Idaho College Tour + CDA Park</span>
+                <span class="trip-card-meta">High School</span>
+                <span class="trip-card-price">Free</span>
+              </div>
+            </label>
+          </div>
+
+          <!-- Karate details -->
+          <div id="trip-details-karate" class="trip-details">
+            <h4>Schedule</h4>
+            <ul>
+              <li>9:45 AM — Drop-off at Christian Karate Coeur d'Alene</li>
+              <li>10:00–11:00 AM — Karate workshop (self-defense, fitness, discipline, character from a Biblical perspective)</li>
+              <li>11:15 AM — School bus to CDA City Park</li>
+              <li>11:30 AM–2:00 PM — Lunch, Fort Sherman playground, beach time</li>
+              <li>2:00 PM — Pickup at Rotary Bandshell (CDA City Park)</li>
+            </ul>
+            <h4>What to bring</h4>
+            <ul>
+              <li>Backpack, comfortable athletic clothes &amp; shoes</li>
+              <li>Large water bottle (or two)</li>
+              <li>Cold lunch and snacks</li>
+              <li>Extra t-shirt (recommended)</li>
+              <li>Sunscreen (weather dependent)</li>
+              <li>Optional: swimsuit + towel</li>
+              <li>No electronic devices</li>
+            </ul>
+            <p style="margin-top:10px;"><strong>Homeschool families:</strong> parents should plan to attend with their student. Responsible students age 11+ may request drop-off permission below.</p>
+          </div>
+
+          <!-- NIC details -->
+          <div id="trip-details-nic" class="trip-details">
+            <h4>Schedule</h4>
+            <ul>
+              <li>10:15 AM — Drop-off at DeArmond College &amp; University Center, 901 W River Ave, Coeur d'Alene, ID</li>
+              <li>10:30–11:45 AM — NIC campus tour (programs, student life, Q&amp;A)</li>
+              <li>11:45 AM — Walk to CDA City Park</li>
+              <li>12:00–2:00 PM — Lunch, beach, volleyball, basketball, playground</li>
+              <li>2:00 PM — Pickup at Rotary Bandshell (CDA City Park)</li>
+            </ul>
+            <h4>What to bring</h4>
+            <ul>
+              <li>Backpack, water bottle, cold lunch</li>
+              <li>Sunscreen (if sunny)</li>
+              <li>Optional: swimsuit + towel</li>
+              <li>No electronic devices (phones allowed for communication if needed)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Section 2 — Parent/Guardian (always visible) -->
+        <div class="reg-section branch-only" id="section-parent">
+          <div class="reg-section-title">Parent / Guardian</div>
+          <p class="reg-section-subtitle">We'll send your confirmation and trip updates here.</p>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="parentFirstName">First name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="parentFirstName" name="parentFirstName" required autocomplete="given-name">
+            </div>
+            <div>
+              <label class="reg-label" for="parentLastName">Last name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="parentLastName" name="parentLastName" required autocomplete="family-name">
+            </div>
+          </div>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="parentEmail">Email<span class="req">*</span></label>
+              <input class="reg-input" type="email" id="parentEmail" name="parentEmail" required autocomplete="email">
+            </div>
+            <div>
+              <label class="reg-label" for="parentPhone">Cell phone<span class="req">*</span></label>
+              <input class="reg-input" type="tel" id="parentPhone" name="parentPhone" required autocomplete="tel">
+            </div>
+          </div>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="emergencyName">Emergency contact name</label>
+              <input class="reg-input" type="text" id="emergencyName" name="emergencyName" autocomplete="name">
+              <span class="reg-help">Only needed if different from parent/guardian above.</span>
+            </div>
+            <div>
+              <label class="reg-label" for="emergencyPhone">Emergency contact phone<span class="req">*</span></label>
+              <input class="reg-input" type="tel" id="emergencyPhone" name="emergencyPhone" required autocomplete="tel">
+              <span class="reg-help">Same as cell above is fine.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3 — Student -->
+        <div class="reg-section branch-only" id="section-student">
+          <div class="reg-section-title">Student</div>
+          <p class="reg-section-subtitle">One student per submission. If you're registering two children, please fill out the form a second time.</p>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="studentFirstName">First name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="studentFirstName" name="studentFirstName" required>
+            </div>
+            <div>
+              <label class="reg-label" for="studentLastName">Last name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="studentLastName" name="studentLastName" required>
+            </div>
+          </div>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="studentGrade">Grade<span class="req">*</span></label>
+              <select class="reg-select" id="studentGrade" name="studentGrade" required>
+                <option value="">Select…</option>
+                <option value="K">Kindergarten</option>
+                <option value="1">1st grade</option>
+                <option value="2">2nd grade</option>
+                <option value="3">3rd grade</option>
+                <option value="4">4th grade</option>
+                <option value="5">5th grade</option>
+                <option value="6">6th grade</option>
+                <option value="7">7th grade</option>
+                <option value="8">8th grade</option>
+                <option value="9">9th grade</option>
+                <option value="10">10th grade</option>
+                <option value="11">11th grade</option>
+                <option value="12">12th grade</option>
+              </select>
+            </div>
+            <div>
+              <label class="reg-label" for="studentAge">Age<span class="req">*</span></label>
+              <input class="reg-input" type="number" min="4" max="19" id="studentAge" name="studentAge" required>
+            </div>
+          </div>
+
+          <!-- Homeschool question: Karate branch only -->
+          <div class="reg-row branch-only" id="homeschool-block">
+            <label class="reg-label">Is your student part of a homeschool family?</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <label class="reg-check">
+                <input type="radio" name="homeschool" value="yes"> Yes
+              </label>
+              <label class="reg-check">
+                <input type="radio" name="homeschool" value="no"> No
+              </label>
+            </div>
+            <span class="reg-help">Homeschool parents should plan to attend. If your student is age 11+ you may request drop-off permission — Mary will follow up.</span>
+
+            <div class="branch-only" id="dropoff-block" style="margin-top: 14px;">
+              <label class="reg-check">
+                <input type="checkbox" id="dropoffRequest" name="dropoffRequest" value="yes">
+                <span>My student is age 11+ and I'd like to request drop-off permission (Mary will contact me).</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4 — Medical -->
+        <div class="reg-section branch-only" id="section-medical">
+          <div class="reg-section-title">Medical</div>
+          <p class="reg-section-subtitle">Help us take good care of your student during the trip.</p>
+
+          <div class="reg-row">
+            <label class="reg-label" for="allergies">Known allergies</label>
+            <textarea class="reg-textarea" id="allergies" name="allergies" rows="2" placeholder="Food, insect, medication, or other. Type 'none' if none."></textarea>
+          </div>
+
+          <div class="reg-row">
+            <label class="reg-label" for="medications">Current medications</label>
+            <textarea class="reg-textarea" id="medications" name="medications" rows="2" placeholder="Any medications your student is taking, including dose/time if relevant. Type 'none' if none."></textarea>
+          </div>
+
+          <div class="reg-row">
+            <label class="reg-label" for="medicalConditions">Medical conditions we should know about</label>
+            <textarea class="reg-textarea" id="medicalConditions" name="medicalConditions" rows="2" placeholder="Asthma, diabetes, seizures, recent injuries, or anything else staff should be aware of. Type 'none' if none."></textarea>
+          </div>
+
+          <div class="reg-row">
+            <label class="reg-label">Do you permit River Tech staff to administer basic first aid and over-the-counter medications (e.g., bandages, ice packs, Tylenol) if needed?<span class="req">*</span></label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <label class="reg-check">
+                <input type="radio" name="firstAidPermission" value="yes" required> Yes
+              </label>
+              <label class="reg-check">
+                <input type="radio" name="firstAidPermission" value="no" required> No
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 5 — Chaperone (Karate only) -->
+        <div class="reg-section branch-only" id="section-chaperone">
+          <div class="reg-section-title">Chaperone volunteering</div>
+          <p class="reg-section-subtitle">Chaperones are especially helpful 11:30 AM–2:00 PM at CDA City Park (lunch, beach, playground). Optional — no pressure.</p>
+
+          <div class="reg-row">
+            <label class="reg-label">Would you like to volunteer as a chaperone?</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+              <label class="reg-check">
+                <input type="radio" name="chaperone" value="yes"> Yes
+              </label>
+              <label class="reg-check">
+                <input type="radio" name="chaperone" value="maybe"> Maybe
+              </label>
+              <label class="reg-check">
+                <input type="radio" name="chaperone" value="no"> No
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 6 — Notes -->
+        <div class="reg-section branch-only" id="section-notes">
+          <div class="reg-section-title">Anything else we should know?</div>
+          <p class="reg-section-subtitle">Anything that helps us take good care of your student. Optional.</p>
+          <textarea class="reg-textarea" id="notes" name="notes" rows="3"></textarea>
+        </div>
+
+        <!-- Section 7 — Release & Permissions -->
+        <div class="reg-section branch-only" id="section-release">
+          <div class="reg-section-title">Release &amp; Permissions</div>
+          <p class="reg-section-subtitle">Please read before checking the box below.</p>
+
+          <div class="reg-release">
+            <h3>Medical Emergency</h3>
+            <p>I authorize River Tech School of Performing Arts &amp; Technology and its staff to seek emergency medical care for my student if needed during this field trip. The medical information I've provided above is current and accurate to the best of my knowledge.</p>
+
+            <h3>Liability Release</h3>
+            <p>I understand that participation in this field trip involves physical activity (walking, playground use, beach time, and for the Karate group a karate workshop), travel to and from the trip locations, and time in public spaces. River Tech School, The Heart, Faithful Five Inc., and their staff and volunteers are not liable for injuries arising from ordinary participation. I release and hold them harmless from claims related to my student's participation, except in cases of gross negligence or willful misconduct.</p>
+
+            <h3 class="branch-only branch-karate">Transportation</h3>
+            <p class="branch-only branch-karate">For the Karate + CDA Park trip, I grant permission for my student to be transported by school bus from Christian Karate Coeur d'Alene to CDA City Park (Rotary Bandshell area) at approximately 11:15 AM on April 29, 2026.</p>
+
+            <h3>Photo / Video Release</h3>
+            <p>I grant permission for River Tech School and Faithful Five Inc. to photograph and record my student during this field trip and to use those images and recordings in print, digital, and social-media materials. If I do not wish my student to be photographed, I will email <a href="mailto:learn@rivertech.me">learn@rivertech.me</a> before April 29.</p>
+
+            <h3>Code of Conduct</h3>
+            <p>I agree that my student will follow the basic expectations at River Tech: treat teachers, volunteers, and other students with respect, participate in good faith, and follow staff instructions. River Tech reserves the right to ask a student to be picked up early for conduct that endangers other children or disrupts the trip.</p>
+
+            <h3>Christian Setting</h3>
+            <p>River Tech is a Christian school. This trip includes Christian framing — in particular the karate workshop (Elementary &amp; Middle group) teaches self-defense, fitness, discipline, and character from a Biblical perspective. I understand and accept that my student may participate in these moments.</p>
+          </div>
+
+          <label class="reg-check" style="border-color: var(--color-red); background: var(--color-pink-btn);">
+            <input type="checkbox" id="releaseAgree" name="releaseAgree" required>
+            <span>I have read and agree to all of the above on behalf of my student.<span class="req">*</span></span>
+          </label>
+        </div>
+
+        <!-- Section 8 — Signature -->
+        <div class="reg-section branch-only" id="section-signature">
+          <div class="reg-section-title">Signature</div>
+          <p class="reg-section-subtitle">Type your full name as parent/guardian to sign this form.</p>
+
+          <div class="reg-row">
+            <label class="reg-label" for="signatureName">Parent/guardian full name<span class="req">*</span></label>
+            <input class="reg-input" type="text" id="signatureName" name="signatureName" required>
+            <span class="reg-help">Date of signature: <span class="sig-date" id="sig-date-display"></span></span>
+          </div>
+        </div>
+
+        <button type="submit" id="reg-submit" class="reg-submit" style="display:none;">Continue →</button>
+        <p id="submit-helper" style="text-align:center; font-size:13px; color:var(--color-text); opacity:0.6; margin-top:12px; display:none;">You'll be taken to Stripe to pay by card. We don't store your card details.</p>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <a href="../index.html" class="footer-logo">rivertechschool.com</a>
+    <div class="footer-tagline">Life is a Stage. <span class="love">Love</span> is our Script.</div>
+  </div>
+
+  <div class="footer-columns">
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>
+      <span>Tel: 425-444-2081</span>
+      <span>The Heart</span>
+      <span>927 E Polston Ave</span>
+      <span>Post Falls, ID 83854</span>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="why-river-tech.html">Why River Tech?</a>
+      <a href="enrollment.html">Enrollment</a>
+      <a href="school-resources.html">School Resources</a>
+      <a href="a-la-carte.html">À La Carte</a>
+    </div>
+    <div class="footer-col">
+      <h4>Social</h4>
+      <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/rivertechschool/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 by Faithful Five Inc. (d.b.a. River Tech and Post Falls Art). <em>Life is a Stage. <span class="love">Love</span> is our Script.</em></p>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js?v=3" defer></script>
+<script src="../assets/js/register-fieldtrip.js?v=1" defer></script>
+
+<button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+(function(){
+  var btn=document.querySelector('.scroll-to-top');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible',window.scrollY>400);
+  });
+})();
+</script>
+</body>
+</html>
