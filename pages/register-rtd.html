@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
+  <title>Register for River Tech Days | River Tech School</title>
+  <meta name="description" content="Register your child for River Tech Days — six afternoons at The Heart in Post Falls, ID, May 5–14, 2026. Pick your days and classes. Pay by card at checkout.">
+
+  <meta property="og:title" content="Register for River Tech Days">
+  <meta property="og:description" content="Register your child for River Tech Days at The Heart in Post Falls, ID. May 5–14, 2026.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.rivertechschool.com/pages/register-rtd.html">
+  <meta property="og:image" content="https://www.rivertechschool.com/assets/images/og-image.png">
+
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/style.css?v=25">
+
+  <link rel="canonical" href="https://www.rivertechschool.com/pages/register-rtd.html">
+
+  <meta name="robots" content="noindex,follow">
+
+  <style>
+    /* --- Register RTD: scoped styles --- */
+    .reg-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 20px 0 60px;
+    }
+    .reg-hero {
+      text-align: center;
+      padding: 30px 0 20px;
+    }
+    .reg-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 5vw, 44px);
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--color-text);
+    }
+    .reg-hero .reg-subtitle {
+      font-size: 18px;
+      color: var(--color-text);
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+    .reg-hero .reg-dates {
+      font-size: 16px;
+      color: var(--color-text);
+      opacity: 0.7;
+    }
+    .reg-deadline {
+      background: var(--color-pink-btn);
+      color: var(--color-text);
+      padding: 14px 20px;
+      border-left: 4px solid var(--color-red);
+      margin: 20px 0 32px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .reg-deadline strong { color: var(--color-red); }
+
+    /* Form sections */
+    .reg-section {
+      background: var(--color-white);
+      border: 1px solid rgba(39, 36, 67, 0.12);
+      padding: 26px 28px;
+      margin-bottom: 22px;
+    }
+    .reg-section-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .reg-section-subtitle {
+      font-size: 15px;
+      color: var(--color-text);
+      opacity: 0.75;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* Field rows */
+    .reg-row {
+      margin-bottom: 18px;
+    }
+    .reg-row-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 520px) {
+      .reg-row-grid-2 { grid-template-columns: 1fr; }
+    }
+    .reg-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .reg-label .req { color: var(--color-red); margin-left: 3px; }
+    .reg-help {
+      display: block;
+      font-size: 13px;
+      color: var(--color-text);
+      opacity: 0.7;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .reg-input, .reg-select, .reg-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: var(--color-text);
+      background: var(--color-white);
+      border: 1.5px solid rgba(39, 36, 67, 0.25);
+      border-radius: 2px;
+      transition: border-color 0.2s;
+    }
+    .reg-input:focus, .reg-select:focus, .reg-textarea:focus {
+      outline: none;
+      border-color: var(--color-red);
+    }
+    .reg-textarea { resize: vertical; min-height: 80px; }
+
+    /* Day checkboxes */
+    .reg-days {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+    }
+    @media (max-width: 520px) {
+      .reg-days { grid-template-columns: 1fr; }
+    }
+    .reg-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1.5px solid rgba(39, 36, 67, 0.18);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-size: 16px;
+    }
+    .reg-check:hover { border-color: var(--color-red); }
+    .reg-check input { width: 18px; height: 18px; accent-color: var(--color-red); cursor: pointer; }
+    .reg-check.checked { border-color: var(--color-red); background: var(--color-pink-btn); }
+
+    /* Child card */
+    .child-card {
+      background: var(--color-white);
+      border: 1px solid rgba(39, 36, 67, 0.12);
+      padding: 24px 26px;
+      margin-bottom: 18px;
+    }
+    .child-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .child-card-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .child-remove {
+      background: none;
+      border: 1.5px solid rgba(39, 36, 67, 0.25);
+      color: var(--color-text);
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .child-remove:hover { border-color: var(--color-red); color: var(--color-red); }
+
+    /* Slot day section inside child */
+    .day-block {
+      border-top: 1px solid rgba(39, 36, 67, 0.08);
+      padding-top: 18px;
+      margin-top: 18px;
+    }
+    .day-block-title {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--color-text);
+      margin-bottom: 12px;
+    }
+    .slot-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 520px) {
+      .slot-row { grid-template-columns: 1fr; gap: 4px; }
+    }
+    .slot-label {
+      font-size: 14px;
+      color: var(--color-text);
+      opacity: 0.75;
+    }
+
+    /* Add child button */
+    .add-child-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: none;
+      border: 2px dashed rgba(39, 36, 67, 0.3);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      margin-bottom: 22px;
+    }
+    .add-child-btn:hover {
+      border-color: var(--color-red);
+      color: var(--color-red);
+    }
+    .add-child-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Summary */
+    .reg-summary {
+      background: var(--color-pink-btn);
+      padding: 20px 24px;
+      border-left: 4px solid var(--color-red);
+      margin-bottom: 22px;
+    }
+    .reg-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+    .reg-summary-row:last-child { margin-bottom: 0; }
+    .reg-summary-total {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-red);
+      border-top: 1px solid rgba(39, 36, 67, 0.2);
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    /* Release */
+    .reg-release {
+      background: var(--color-bg);
+      padding: 20px 24px;
+      margin-bottom: 22px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .reg-release h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 12px 0 4px;
+    }
+    .reg-release h3:first-child { margin-top: 0; }
+    .reg-release p { margin-bottom: 8px; }
+
+    /* Submit */
+    .reg-submit {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      background: var(--color-enroll-bg);
+      color: var(--color-white);
+      font-family: var(--font-nav);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .reg-submit:hover { opacity: 0.9; }
+    .reg-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Status messages */
+    .reg-error {
+      background: #fef0f0;
+      border-left: 4px solid var(--color-red);
+      color: var(--color-red);
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      display: none;
+    }
+    .reg-error.show { display: block; }
+    .reg-success {
+      background: #f0f7f0;
+      border-left: 4px solid #2d7a2d;
+      color: #1a4d1a;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      font-size: 16px;
+      line-height: 1.5;
+      display: none;
+    }
+    .reg-success.show { display: block; }
+
+    /* Back link */
+    .reg-back {
+      display: inline-block;
+      font-size: 15px;
+      color: var(--color-text);
+      opacity: 0.7;
+      text-decoration: none;
+      margin-bottom: 8px;
+    }
+    .reg-back:hover { opacity: 1; color: var(--color-red); }
+
+    /* Loading placeholder for slot dropdowns */
+    .slot-waiting {
+      font-size: 14px;
+      color: var(--color-text);
+      opacity: 0.5;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+    <a href="../index.html">River Tech School</a>
+    <div class="sidebar-submenu">
+      <a href="../index.html">About River Tech</a>
+      <a href="elementary-school.html">Elementary School</a>
+      <a href="middle-school.html">Middle School</a>
+      <a href="high-school.html">High School</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="a-la-carte.html">River Tech À La Carte</a>
+    <div class="sidebar-submenu">
+      <a href="a-la-carte.html">Homeschooling</a>
+      <a href="monday-performing-arts.html">Mon: Performing Arts</a>
+      <a href="tuesday-science.html">Tue: Science & Social Studies</a>
+      <a href="thursday-life-skills.html">Thu: Life Skills</a>
+      <a href="friday-technology.html">Fri: Technology</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="why-river-tech.html">Why River Tech?</a>
+    <div class="sidebar-submenu">
+      <a href="why-river-tech.html">Overview</a>
+      <a href="reviews.html">References & Reviews</a>
+      <a href="technology.html">Technology</a>
+      <a href="performing-arts.html">Performing Arts</a>
+      <a href="sports-fitness.html">Sports & Fitness</a>
+      <a href="fieldtrips.html">Field Trips</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="enrollment.html" class="active">Enrollment</a>
+    <div class="sidebar-submenu">
+      <a href="river-tech-days.html" class="active">River Tech Days</a>
+      <a href="enrollment.html">How to Enroll</a>
+      <a href="tuition.html">Tuition</a>
+      <a href="faq.html">FAQs</a>
+      <a href="tax-credit.html">Tax Credit</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="school-resources.html">School Resources</a>
+    <div class="sidebar-submenu">
+      <a href="school-resources.html">Resources Overview</a>
+      <a href="calendar.html">Schedule & Calendar</a>
+      <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+      <a href="scholarships.html">Scholarships</a>
+      <a href="volunteer.html">Volunteer</a>
+      <a href="our-needs.html">Our Needs</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="../pages/gallery.html">Media</a>
+    <div class="sidebar-submenu">
+      <a href="../pages/gallery.html">Photo Gallery</a>
+      <a href="../pages/vlog.html">Video Globe</a>
+    </div>
+    </div>
+  </nav>
+</div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="topbar-ticker-wrap">
+    <div class="topbar-ticker">
+      <span>We're back. After a fire on March 15th, River Tech has relocated to The Heart, 927 E Polston Ave, Post Falls. Classes are in session. Next tours are: Wednesdays at 3 PM.</span>
+      <span>We're back. After a fire on March 15th, River Tech has relocated to The Heart, 927 E Polston Ave, Post Falls. Classes are in session. Next tours are: Wednesdays at 3 PM.</span>
+    </div>
+  </div>
+  <a href="enrollment.html" class="enroll-btn">Enroll Today 📞</a>
+  <div class="social-icons">
+    <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" fill="#c0392b"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.13C5.12 19.56 12 19.56 12 19.56s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon fill="white" points="9.75,15.02 15.5,11.75 9.75,8.48"/></svg>
+    </a>
+    <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" fill="#3b5998"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- Mobile Header -->
+<div class="mobile-header">
+  <a href="../index.html" class="mobile-logo">River Tech</a>
+  <button class="hamburger" aria-label="Open menu">☰</button>
+</div>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav-overlay">
+  <button class="close-btn" aria-label="Close menu">✕</button>
+  <a href="../index.html">River Tech School</a>
+        <div class="mobile-submenu">
+    <a href="../index.html">About River Tech</a>
+    <a href="elementary-school.html">Elementary School</a>
+    <a href="middle-school.html">Middle School</a>
+    <a href="high-school.html">High School</a>
+  </div>
+  <a href="a-la-carte.html">River Tech À La Carte</a>
+        <div class="mobile-submenu">
+    <a href="a-la-carte.html">Homeschooling</a>
+    <a href="monday-performing-arts.html">Mon: Performing Arts</a>
+    <a href="tuesday-science.html">Tue: Science & Social Studies</a>
+    <a href="thursday-life-skills.html">Thu: Life Skills</a>
+    <a href="friday-technology.html">Fri: Technology</a>
+  </div>
+  <a href="why-river-tech.html">Why River Tech?</a>
+        <div class="mobile-submenu">
+    <a href="why-river-tech.html">Overview</a>
+    <a href="reviews.html">References & Reviews</a>
+    <a href="technology.html">Technology</a>
+    <a href="performing-arts.html">Performing Arts</a>
+    <a href="sports-fitness.html">Sports & Fitness</a>
+    <a href="fieldtrips.html">Field Trips</a>
+  </div>
+  <a href="enrollment.html" class="active">Enrollment</a>
+        <div class="mobile-submenu">
+    <a href="river-tech-days.html" class="active">River Tech Days</a>
+    <a href="enrollment.html">How to Enroll</a>
+    <a href="tuition.html">Tuition</a>
+    <a href="faq.html">FAQs</a>
+    <a href="tax-credit.html">Tax Credit</a>
+  </div>
+  <a href="school-resources.html">School Resources</a>
+        <div class="mobile-submenu">
+    <a href="school-resources.html">Resources Overview</a>
+    <a href="calendar.html">Schedule & Calendar</a>
+    <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+    <a href="scholarships.html">Scholarships</a>
+    <a href="volunteer.html">Volunteer</a>
+    <a href="our-needs.html">Our Needs</a>
+  </div>
+  <a href="enrollment.html" style="color: var(--color-red); font-weight: 700; border-bottom: none;">Enroll Today</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="content-area">
+
+    <div class="reg-wrap">
+
+      <a href="river-tech-days.html" class="reg-back">← Back to River Tech Days</a>
+
+      <div class="reg-hero">
+        <h1>Register for River Tech Days</h1>
+        <p class="reg-subtitle">Six afternoons at The Heart · Post Falls, ID</p>
+        <p class="reg-dates">May 5–7 and May 12–14, 2026 · 1–4 PM</p>
+      </div>
+
+      <div class="reg-deadline">
+        <strong>Registration closes April 30.</strong> Space is limited. You&rsquo;ll hear back from us by May 2 with your confirmed schedule. If a class is full, your registration fee is refunded in full. Please wait for your confirmation email before coming.
+      </div>
+
+      <div id="reg-error" class="reg-error" role="alert"></div>
+      <div id="reg-success" class="reg-success" role="status"></div>
+
+      <form id="reg-form" novalidate>
+
+        <!-- Parent Info -->
+        <div class="reg-section">
+          <div class="reg-section-title">Parent / Guardian</div>
+          <p class="reg-section-subtitle">We&rsquo;ll send your confirmation and updates here.</p>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="parentFirstName">First name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="parentFirstName" name="parentFirstName" required autocomplete="given-name">
+            </div>
+            <div>
+              <label class="reg-label" for="parentLastName">Last name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="parentLastName" name="parentLastName" required autocomplete="family-name">
+            </div>
+          </div>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="parentEmail">Email<span class="req">*</span></label>
+              <input class="reg-input" type="email" id="parentEmail" name="parentEmail" required autocomplete="email">
+            </div>
+            <div>
+              <label class="reg-label" for="parentPhone">Phone<span class="req">*</span></label>
+              <input class="reg-input" type="tel" id="parentPhone" name="parentPhone" required autocomplete="tel">
+            </div>
+          </div>
+
+          <div class="reg-row">
+            <label class="reg-label">Is at least one of your children a full-time student at River Tech?<span class="req">*</span></label>
+            <div class="reg-days" style="grid-template-columns: 1fr 1fr;">
+              <label class="reg-check">
+                <input type="radio" name="fullTimeFamily" value="yes" required> Yes
+              </label>
+              <label class="reg-check">
+                <input type="radio" name="fullTimeFamily" value="no" required> No
+              </label>
+            </div>
+            <span class="reg-help">Full-time students get a reduced &ldquo;stay late&rdquo; rate — $29 for 3 days, $49 for all 6.</span>
+          </div>
+        </div>
+
+        <!-- Children -->
+        <div id="children-container"></div>
+
+        <button type="button" id="add-child-btn" class="add-child-btn">+ Add another child (up to 3)</button>
+
+        <!-- Anything else -->
+        <div class="reg-section">
+          <div class="reg-section-title">Anything else we should know?</div>
+          <p class="reg-section-subtitle">Allergies, accommodations, sibling pairings, or anything that helps us take good care of your child. Optional.</p>
+          <textarea class="reg-textarea" id="notes" name="notes" rows="3"></textarea>
+        </div>
+
+        <!-- Release -->
+        <div class="reg-section">
+          <div class="reg-section-title">Release &amp; Permissions</div>
+          <p class="reg-section-subtitle">Please read before checking the box below.</p>
+
+          <div class="reg-release">
+            <h3>Medical Emergency</h3>
+            <p>I authorize River Tech School of Performing Arts &amp; Technology and its staff to seek emergency medical care for my child if needed during River Tech Days. I will provide current emergency contact information and any critical health notes before the first day of attendance.</p>
+
+            <h3>Liability Release</h3>
+            <p>I understand that participation in River Tech Days involves normal physical activity (classes include drill, dance, and movement) and that River Tech School, The Heart, Faithful Five Inc., and their staff and volunteers are not liable for injuries arising from ordinary participation. I release and hold them harmless from claims related to my child&rsquo;s participation, except in cases of gross negligence or willful misconduct.</p>
+
+            <h3>Photo / Video Release</h3>
+            <p>I grant permission for River Tech School and Faithful Five Inc. to photograph and record my child during River Tech Days and to use those images and recordings in print, digital, and social-media materials. If I do not wish my child to be photographed, I will email <a href="mailto:learn@rivertech.me">learn@rivertech.me</a> before the first day of attendance.</p>
+
+            <h3>Code of Conduct</h3>
+            <p>I agree that my child will follow the basic expectations at River Tech: treat teachers and other students with respect, participate in good faith, and follow staff instructions. River Tech reserves the right to dismiss a student from the program without refund for conduct that endangers other children or disrupts the learning environment.</p>
+
+            <h3>Christian Setting</h3>
+            <p>River Tech is a Christian school. River Tech Days is open to families of any faith or none. Classes may include prayer, biblical references, and Christian framing. I understand and accept that my child may participate in these moments.</p>
+          </div>
+
+          <label class="reg-check" style="border-color: var(--color-red); background: var(--color-pink-btn);">
+            <input type="checkbox" id="releaseAgree" name="releaseAgree" required>
+            <span>I have read and agree to all of the above on behalf of my child / children.<span class="req">*</span></span>
+          </label>
+        </div>
+
+        <!-- Summary -->
+        <div class="reg-section" id="summary-section" style="display:none;">
+          <div class="reg-section-title">Summary</div>
+          <div class="reg-summary" id="summary-box"></div>
+        </div>
+
+        <button type="submit" id="reg-submit" class="reg-submit">Continue to Payment →</button>
+        <p style="text-align:center; font-size:13px; color:var(--color-text); opacity:0.6; margin-top:12px;">You&rsquo;ll be taken to Stripe to pay by card. We don&rsquo;t store your card details.</p>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <a href="../index.html" class="footer-logo">rivertechschool.com</a>
+    <div class="footer-tagline">Life is a Stage. <span class="love">Love</span> is our Script.</div>
+  </div>
+
+  <div class="footer-columns">
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>
+      <span>Tel: 425-444-2081</span>
+      <span>The Heart</span>
+      <span>927 E Polston Ave</span>
+      <span>Post Falls, ID 83854</span>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="why-river-tech.html">Why River Tech?</a>
+      <a href="enrollment.html">Enrollment</a>
+      <a href="school-resources.html">School Resources</a>
+      <a href="a-la-carte.html">À La Carte</a>
+    </div>
+    <div class="footer-col">
+      <h4>Social</h4>
+      <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/rivertechschool/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 by Faithful Five Inc. (d.b.a. River Tech and Post Falls Art). <em>Life is a Stage. <span class="love">Love</span> is our Script.</em></p>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js?v=3" defer></script>
+<script src="../assets/js/register-rtd.js?v=1" defer></script>
+
+<button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+(function(){
+  var btn=document.querySelector('.scroll-to-top');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible',window.scrollY>400);
+  });
+})();
+</script>
+</body>
+</html>
