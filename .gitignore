@@ -1,0 +1,11 @@
+# Internal build notes — don't publish on GitHub Pages
+RTD-FORM-NOTES.md
+*-NOTES.md
+
+# macOS
+.DS_Store
+
+# Editor detritus
+.vscode/
+.idea/
+*.swp

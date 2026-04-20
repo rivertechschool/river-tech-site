@@ -8,7 +8,7 @@
 
   // ---- Configuration ----------------------------------------------------
   // Set this to your deployed Apps Script web-app URL before go-live.
-  const BACKEND_URL = "__BACKEND_URL__";
+  const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwgSapWlp9wDVSwomvzQVu4CajS9J1odPaqWrk8vXgab9xIK6buQSTTFpEYUZdcIMpC/exec";
 
   const PRICING = {
     newFamily: { "3": 75, "6": 99 },
