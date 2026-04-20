@@ -257,6 +257,34 @@ body {
   .enroll-notice { padding: 14px 16px; font-size: 15px; }
 }
 
+/* --- Our Culture callout (values statement) --- */
+.culture-callout {
+  background: #f4f3f7;
+  border: 1px solid #d7d3e3;
+  border-left: 4px solid #272443;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin: 28px 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+.culture-callout h2,
+.culture-callout h3 {
+  margin: 0 0 10px;
+  font-family: 'Playfair Display', Georgia, serif;
+  color: #272443;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+.culture-callout p { margin: 0; }
+.culture-callout p + p { margin-top: 10px; }
+@media (max-width: 640px) {
+  .culture-callout { padding: 16px 18px; font-size: 15px; }
+  .culture-callout h2, .culture-callout h3 { font-size: 20px; }
+}
+
 /* --- Main Content Area --- */
 .main-content {
   margin-left: var(--sidebar-width);
