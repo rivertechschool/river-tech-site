@@ -463,3 +463,13 @@ function selfTest() {
   const r = handleRegistration(fake);
   Logger.log(JSON.stringify(r, null, 2));
 }
+
+
+/** Utility: wipe all non-header rows. Only run manually for test cleanup. */
+function deleteAllDataRows_TESTONLY() {
+  const ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty("SHEET_ID"));
+  const sheet = ss.getSheetByName("Enrollments");
+  const last = sheet.getLastRow();
+  if (last > 1) sheet.deleteRows(2, last - 1);
+  Logger.log("Deleted data rows. Rows now: " + sheet.getLastRow());
+}
