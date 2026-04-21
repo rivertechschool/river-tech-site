@@ -1,6 +1,9 @@
 # Internal build notes — don't publish on GitHub Pages
 RTD-FORM-NOTES.md
 *-NOTES.md
+# EXCEPTION: AGENT-NOTES.md is meta-guidance for AI agents working on this
+# repo. It must be committed so fresh sessions can read it.
+!AGENT-NOTES.md
 
 # macOS
 .DS_Store

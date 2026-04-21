@@ -23,6 +23,18 @@
 
   --content-max: 800px;
   --sidebar-width: 240px;
+
+  /* =====================================================================
+     NAV FADE TIMING — LOCKED (see /AGENT-NOTES.md before editing)
+     ---------------------------------------------------------------------
+     Dan has asked MULTIPLE TIMES for slow menu/submenu fades. Any future
+     agent: DO NOT shorten these durations. Do not replace `ease-in-out`
+     with `ease`. Do not remove the two-stage fade. If the page feels
+     "laggy" to you, that is INTENTIONAL. Leave it alone.
+     If Dan himself asks for faster, change `--nav-fade` and nothing else.
+     ===================================================================== */
+  --nav-fade: 0.7s;
+  --nav-fade-ease: ease-in-out;
 }
 
 /* --- Base --- */
@@ -120,7 +132,9 @@ body {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: max-height 0.5s ease, opacity 0.45s ease;
+  /* LOCKED fade — see /AGENT-NOTES.md. Do not shorten. */
+  transition: max-height var(--nav-fade) var(--nav-fade-ease),
+              opacity var(--nav-fade) var(--nav-fade-ease);
   margin-bottom: 2px;
 }
 
@@ -796,7 +810,9 @@ body {
   -webkit-overflow-scrolling: touch;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.4s ease, visibility 0.4s ease;
+  /* LOCKED fade — see /AGENT-NOTES.md. Do not shorten. */
+  transition: opacity var(--nav-fade) var(--nav-fade-ease),
+              visibility var(--nav-fade) var(--nav-fade-ease);
 }
 
 .mobile-nav-overlay.open {
@@ -834,7 +850,8 @@ body {
   padding-left: 20px;
   background: rgba(0,0,0,0.02);
   opacity: 0;
-  transition: opacity 0.6s ease;
+  /* LOCKED fade — see /AGENT-NOTES.md. Do not shorten. */
+  transition: opacity var(--nav-fade) var(--nav-fade-ease);
 }
 
 .mobile-submenu.open {

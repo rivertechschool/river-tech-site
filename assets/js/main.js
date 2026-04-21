@@ -41,8 +41,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ======================================================================
+  // LOCKED nav fade helpers — see /AGENT-NOTES.md before changing.
+  // Dan has asked repeatedly for SLOW nav fades. Do not shorten the 700ms
+  // timeout. Do not remove the two-stage fade. Do not replace with
+  // transitionend listeners (they fire unreliably on iOS Safari when
+  // display flips). Keep the requestAnimationFrame pattern — it is the
+  // only reliable way to get the opacity transition to actually run on
+  // iOS after toggling display:none → block.
   // Helpers for two-stage fade: .open = display:block (in DOM),
   // .visible = opacity:1 (faded in). Class order avoids iOS clipping.
+  // ======================================================================
+  const NAV_FADE_MS = 700; // matches --nav-fade in style.css. KEEP IN SYNC.
   function openSubmenu(submenu) {
     submenu.classList.add('open');
     // Force layout before adding .visible so the opacity transition runs
@@ -57,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!submenu.classList.contains('visible')) {
         submenu.classList.remove('open');
       }
-    }, 600);
+    }, NAV_FADE_MS);
   }
 
   // Pre-expand the mobile submenu containing the current page's link
