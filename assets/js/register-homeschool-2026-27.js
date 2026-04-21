@@ -127,11 +127,11 @@
       '    </label>',
       '    <label class="reg-check">',
       '      <input type="radio" name="c' + idx + '_grade" value="middle" required>',
-      '      <span><strong>Middle School</strong><br><small>approx. 6&ndash;8</small></span>',
+      '      <span><strong>Middle School</strong><br><small>approx. grades 6&ndash;8</small></span>',
       '    </label>',
       '    <label class="reg-check">',
       '      <input type="radio" name="c' + idx + '_grade" value="high" required>',
-      '      <span><strong>High School</strong><br><small>approx. 9&ndash;12</small></span>',
+      '      <span><strong>High School</strong><br><small>approx. grades 9&ndash;12</small></span>',
       '    </label>',
       '  </div>',
       '</div>',
@@ -180,7 +180,7 @@
 
       // Photo upload
       '<div class="reg-row">',
-      '  <label class="reg-label" for="c' + idx + '_photo">Photo of child (optional)</label>',
+      '  <label class="reg-label" for="c' + idx + '_photo">Photo of child<span class="req">*</span></label>',
       '  <label class="file-drop" id="file-drop-' + idx + '" for="c' + idx + '_photo">',
       '    <span class="file-name">Click to choose a photo</span>',
       '    <span class="file-hint">JPG or PNG, up to 5 MB. Helps us learn names on day one.</span>',
@@ -408,6 +408,7 @@
         if (!c.tabletLevel)  return "Child " + c.index + ": please select a tablet proficiency.";
       }
       if (c.programs.length === 0) return "Child " + c.index + ": please pick at least one program day.";
+      if (!c.photoFile) return "Child " + c.index + ": please upload a photo (helps us learn names on day one).";
       if (c.previousSchooling.indexOf("other") !== -1 && !c.previousSchoolingOther) {
         return "Child " + c.index + ": please describe the other previous schooling.";
       }
