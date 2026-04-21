@@ -2,7 +2,7 @@
 
 Running notebook of hard-earned lessons from building River Tech registration forms. Read this BEFORE starting a new form. Update it AFTER shipping a new form — whatever surprised you, whatever cost time, whatever you wish you'd known.
 
-Forms shipped so far: RTD (Feb 2026), Homeschool 2026-27 (Apr 20), Field Trip (Apr 20), Full-Time 2026-27 (Apr 21).
+Forms shipped so far: RTD (Feb 2026), Homeschool 2026-27 (Apr 20), Field Trip (Apr 20), Full-Time 2026-27 (Apr 21), Re-Enrollment 2026-27 (Apr 21).
 
 ---
 
@@ -57,6 +57,9 @@ Use a live Stripe key so you can see the real Checkout flow, but abandon the ses
 **11. Apps Script curl POST can report failure while succeeding.**
 If you POST to the Apps Script Web App URL via curl and get `Page Not Found` back, the backend MAY HAVE STILL EXECUTED. Check for side effects (new sheet row, new Drive file) BEFORE retrying. Retrying blind cost us 6 duplicate rows on 2026-04-20.
 
+**11a. Verify a POST worked by reading the Executions log, not the curl response.**
+Apps Script → Executions tab shows every invocation with Duration + Status. A completed `doPost` with Duration >2s means the FULL handler ran (Sheet + Stripe API + MailApp all called). A <1s completion usually means it fail-fast bailed early (e.g. missing Script Property). This is faster and more reliable than clicking into the execution for log details.
+
 **12. GitHub Pages caches aggressively.**
 After pushing a change, give it 30–90 seconds to deploy. If you pull a URL too early, you'll get the stale version and chase a bug that doesn't exist. Use a `?v=something-unique` query string to bypass your own browser cache — but the CDN still needs time.
 
@@ -95,3 +98,4 @@ Until every box is checked, the form is not done — it's "almost done", which i
 ## Change log
 
 - **2026-04-21** — initial draft after Full-Time 2026-27 shipped. Captured lessons from RTD, Homeschool, Field Trip, and Full-Time builds.
+- **2026-04-21** — after Re-Enrollment 2026-27 shipped. Added 11a (Executions-log Duration as the fastest E2E-verify signal) and logged Re-Enrollment in the "shipped so far" list. Reconfirmed #11 (curl POST gotcha is real and repeatable).
