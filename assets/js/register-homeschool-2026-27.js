@@ -123,7 +123,7 @@
       '  <div class="reg-grade-bands">',
       '    <label class="reg-check">',
       '      <input type="radio" name="c' + idx + '_grade" value="elementary" required>',
-      '      <span><strong>Elementary</strong><br><small>approx. K&ndash;5</small></span>',
+      '      <span><strong>Elementary</strong><br><small>can read &amp; use a tablet</small></span>',
       '    </label>',
       '    <label class="reg-check">',
       '      <input type="radio" name="c' + idx + '_grade" value="middle" required>',
