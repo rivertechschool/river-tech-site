@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
+  <title>Full-Time Enrollment 2026&ndash;27 | River Tech School</title>
+  <meta name="description" content="Enroll your child full-time at River Tech School for the 2026&ndash;27 school year. Performing Arts Major (Mon&ndash;Thu), Technology Major (Tue&ndash;Fri), or Double Major (Mon&ndash;Fri).">
+
+  <meta property="og:title" content="Full-Time Enrollment 2026&ndash;27 | River Tech School">
+  <meta property="og:description" content="Enroll your child full-time at River Tech School for the 2026&ndash;27 school year.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.rivertechschool.com/pages/register-school-2026-27.html">
+  <meta property="og:image" content="https://www.rivertechschool.com/assets/images/og-image.png">
+
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/style.css?v=25">
+
+  <link rel="canonical" href="https://www.rivertechschool.com/pages/register-school-2026-27.html">
+
+  <meta name="robots" content="noindex,follow">
+
+  <style>
+    /* --- Register Full-Time: scoped styles (matches Homeschool form styling) --- */
+    .reg-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 20px 0 60px;
+    }
+    .reg-hero {
+      text-align: center;
+      padding: 30px 0 20px;
+    }
+    .reg-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 5vw, 44px);
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--color-text);
+    }
+    .reg-hero .reg-subtitle {
+      font-size: 18px;
+      color: var(--color-text);
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+    .reg-hero .reg-dates {
+      font-size: 16px;
+      color: var(--color-text);
+      opacity: 0.7;
+    }
+    .reg-deadline {
+      background: var(--color-pink-btn);
+      color: var(--color-text);
+      padding: 14px 20px;
+      border-left: 4px solid var(--color-red);
+      margin: 20px 0 32px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .reg-deadline strong { color: var(--color-red); }
+
+    /* Intro info card */
+    .reg-info {
+      background: var(--color-bg);
+      padding: 20px 24px;
+      margin-bottom: 22px;
+      border-left: 3px solid var(--color-red);
+    }
+    .reg-info p { margin-bottom: 10px; line-height: 1.55; }
+    .reg-info p:last-child { margin-bottom: 0; }
+    .reg-info ul { margin: 8px 0 12px 20px; line-height: 1.7; }
+    .reg-info a { color: var(--color-red); }
+
+    /* Form sections */
+    .reg-section {
+      background: var(--color-white);
+      border: 1px solid rgba(39, 36, 67, 0.12);
+      padding: 26px 28px;
+      margin-bottom: 22px;
+    }
+    .reg-section-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .reg-section-subtitle {
+      font-size: 15px;
+      color: var(--color-text);
+      opacity: 0.75;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* Field rows */
+    .reg-row { margin-bottom: 18px; }
+    .reg-row-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .reg-row-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 520px) {
+      .reg-row-grid-2, .reg-row-grid-3 { grid-template-columns: 1fr; }
+    }
+    .reg-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .reg-label .req { color: var(--color-red); margin-left: 3px; }
+    .reg-help {
+      display: block;
+      font-size: 13px;
+      color: var(--color-text);
+      opacity: 0.7;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .reg-input, .reg-select, .reg-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: var(--color-text);
+      background: var(--color-white);
+      border: 1.5px solid rgba(39, 36, 67, 0.25);
+      border-radius: 2px;
+      transition: border-color 0.2s;
+    }
+    .reg-input:focus, .reg-select:focus, .reg-textarea:focus {
+      outline: none;
+      border-color: var(--color-red);
+    }
+    .reg-textarea { resize: vertical; min-height: 80px; }
+
+    /* Checkbox groups */
+    .reg-days {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+    }
+    .reg-days-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px 12px;
+    }
+    @media (max-width: 520px) {
+      .reg-days, .reg-days-3 { grid-template-columns: 1fr; }
+    }
+    .reg-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1.5px solid rgba(39, 36, 67, 0.18);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-size: 16px;
+    }
+    .reg-check:hover { border-color: var(--color-red); }
+    .reg-check input { width: 18px; height: 18px; accent-color: var(--color-red); cursor: pointer; }
+    .reg-check.checked { border-color: var(--color-red); background: var(--color-pink-btn); }
+
+    /* Schedule options (3 big radio cards) */
+    .schedule-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 720px) {
+      .schedule-options { grid-template-columns: 1fr; }
+    }
+    .schedule-options .reg-check {
+      align-items: flex-start;
+      padding: 14px 16px;
+      flex-direction: row;
+    }
+    .schedule-options .reg-check span { line-height: 1.4; }
+    .schedule-options .reg-check small {
+      display: block;
+      font-size: 13px;
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    /* Interests — sub-sections */
+    .interests-block {
+      padding: 14px 16px;
+      border-left: 3px solid rgba(39, 36, 67, 0.15);
+      background: var(--color-bg);
+      margin-bottom: 12px;
+    }
+    .interests-block .interests-label {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--color-text);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    /* Child card */
+    .child-card {
+      background: var(--color-white);
+      border: 1px solid rgba(39, 36, 67, 0.12);
+      padding: 24px 26px;
+      margin-bottom: 18px;
+    }
+    .child-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .child-card-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    /* File upload */
+    .file-drop {
+      display: block;
+      padding: 14px 16px;
+      border: 1.5px dashed rgba(39, 36, 67, 0.3);
+      border-radius: 2px;
+      background: var(--color-bg);
+      font-size: 14px;
+      color: var(--color-text);
+      cursor: pointer;
+      text-align: center;
+    }
+    .file-drop:hover { border-color: var(--color-red); }
+    .file-drop.has-file { border-style: solid; border-color: var(--color-red); background: var(--color-pink-btn); }
+    .file-drop input[type="file"] { display: none; }
+    .file-drop .file-name {
+      display: inline-block;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+    .file-drop .file-hint { font-size: 12px; opacity: 0.65; margin-top: 4px; display: block; }
+
+    /* Pickup person slots — stacked */
+    .pickup-slot {
+      padding: 14px 16px;
+      border: 1px solid rgba(39, 36, 67, 0.12);
+      margin-bottom: 12px;
+      background: var(--color-bg);
+    }
+    .pickup-slot-title {
+      font-weight: 600;
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 10px;
+    }
+
+    /* Summary */
+    .reg-summary {
+      background: var(--color-pink-btn);
+      padding: 20px 24px;
+      border-left: 4px solid var(--color-red);
+      margin-bottom: 22px;
+    }
+    .reg-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+    .reg-summary-row:last-child { margin-bottom: 0; }
+    .reg-summary-total {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-red);
+      border-top: 1px solid rgba(39, 36, 67, 0.2);
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    /* Release */
+    .reg-release {
+      background: var(--color-bg);
+      padding: 20px 24px;
+      margin-bottom: 22px;
+      font-size: 14px;
+      line-height: 1.6;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+    .reg-release h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 12px 0 4px;
+    }
+    .reg-release h3:first-child { margin-top: 0; }
+    .reg-release p { margin-bottom: 8px; }
+
+    /* Submit */
+    .reg-submit {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      background: var(--color-enroll-bg);
+      color: var(--color-white);
+      font-family: var(--font-nav);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .reg-submit:hover { opacity: 0.9; }
+    .reg-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Status messages */
+    .reg-error {
+      background: #fef0f0;
+      border-left: 4px solid var(--color-red);
+      color: var(--color-red);
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      display: none;
+    }
+    .reg-error.show { display: block; }
+    .reg-success {
+      background: #f0f7f0;
+      border-left: 4px solid #2d7a2d;
+      color: #1a4d1a;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      font-size: 16px;
+      line-height: 1.5;
+      display: none;
+    }
+    .reg-success.show { display: block; }
+
+    /* Back link */
+    .reg-back {
+      display: inline-block;
+      font-size: 15px;
+      color: var(--color-text);
+      opacity: 0.7;
+      text-decoration: none;
+      margin-bottom: 8px;
+    }
+    .reg-back:hover { opacity: 1; color: var(--color-red); }
+
+    /* Progress indicator */
+    .upload-progress {
+      display: none;
+      margin: 10px 0 0;
+      font-size: 13px;
+      color: var(--color-text);
+      opacity: 0.75;
+    }
+    .upload-progress.show { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+    <a href="../index.html" class="active">River Tech School</a>
+    <div class="sidebar-submenu">
+      <a href="../index.html">About River Tech</a>
+      <a href="elementary-school.html">Elementary School</a>
+      <a href="middle-school.html">Middle School</a>
+      <a href="high-school.html">High School</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="a-la-carte.html">River Tech À La Carte</a>
+    <div class="sidebar-submenu">
+      <a href="a-la-carte.html">Homeschooling</a>
+      <a href="monday-performing-arts.html">Mon: Performing Arts</a>
+      <a href="tuesday-science.html">Tue: Science &amp; Social Studies</a>
+      <a href="thursday-life-skills.html">Thu: Life Skills</a>
+      <a href="friday-technology.html">Fri: Technology</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="why-river-tech.html">Why River Tech?</a>
+    <div class="sidebar-submenu">
+      <a href="why-river-tech.html">Overview</a>
+      <a href="reviews.html">References &amp; Reviews</a>
+      <a href="technology.html">Technology</a>
+      <a href="performing-arts.html">Performing Arts</a>
+      <a href="sports-fitness.html">Sports &amp; Fitness</a>
+      <a href="fieldtrips.html">Field Trips</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="enrollment.html" class="active">Enrollment</a>
+    <div class="sidebar-submenu">
+      <a href="river-tech-days.html">River Tech Days</a>
+      <a href="enrollment.html">How to Enroll</a>
+      <a href="tuition.html">Tuition</a>
+      <a href="faq.html">FAQs</a>
+      <a href="tax-credit.html">Tax Credit</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="school-resources.html">School Resources</a>
+    <div class="sidebar-submenu">
+      <a href="school-resources.html">Resources Overview</a>
+      <a href="calendar.html">Schedule &amp; Calendar</a>
+      <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+      <a href="scholarships.html">Scholarships</a>
+      <a href="volunteer.html">Volunteer</a>
+      <a href="our-needs.html">Our Needs</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="../pages/gallery.html">Media</a>
+    <div class="sidebar-submenu">
+      <a href="../pages/gallery.html">Photo Gallery</a>
+      <a href="../pages/vlog.html">Video Globe</a>
+    </div>
+    </div>
+  </nav>
+</div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="topbar-ticker-wrap">
+    <div class="topbar-ticker">
+      <span>We're back. After a fire on March 15th, River Tech has relocated to The Heart, 927 E Polston Ave, Post Falls. Classes are in session. Next tours are: Wednesdays at 3 PM.</span>
+      <span>We're back. After a fire on March 15th, River Tech has relocated to The Heart, 927 E Polston Ave, Post Falls. Classes are in session. Next tours are: Wednesdays at 3 PM.</span>
+    </div>
+  </div>
+  <a href="enrollment.html" class="enroll-btn">Enroll Today 📞</a>
+  <div class="social-icons">
+    <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" fill="#c0392b"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.13C5.12 19.56 12 19.56 12 19.56s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon fill="white" points="9.75,15.02 15.5,11.75 9.75,8.48"/></svg>
+    </a>
+    <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" fill="#3b5998"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- Mobile Header -->
+<div class="mobile-header">
+  <a href="../index.html" class="mobile-logo">River Tech</a>
+  <button class="hamburger" aria-label="Open menu">☰</button>
+</div>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav-overlay">
+  <button class="close-btn" aria-label="Close menu">✕</button>
+  <a href="../index.html">River Tech School</a>
+        <div class="mobile-submenu">
+    <a href="../index.html">About River Tech</a>
+    <a href="elementary-school.html">Elementary School</a>
+    <a href="middle-school.html">Middle School</a>
+    <a href="high-school.html">High School</a>
+  </div>
+  <a href="a-la-carte.html">River Tech À La Carte</a>
+        <div class="mobile-submenu">
+    <a href="a-la-carte.html">Homeschooling</a>
+    <a href="monday-performing-arts.html">Mon: Performing Arts</a>
+    <a href="tuesday-science.html">Tue: Science &amp; Social Studies</a>
+    <a href="thursday-life-skills.html">Thu: Life Skills</a>
+    <a href="friday-technology.html">Fri: Technology</a>
+  </div>
+  <a href="why-river-tech.html">Why River Tech?</a>
+        <div class="mobile-submenu">
+    <a href="why-river-tech.html">Overview</a>
+    <a href="reviews.html">References &amp; Reviews</a>
+    <a href="technology.html">Technology</a>
+    <a href="performing-arts.html">Performing Arts</a>
+    <a href="sports-fitness.html">Sports &amp; Fitness</a>
+    <a href="fieldtrips.html">Field Trips</a>
+  </div>
+  <a href="enrollment.html" class="active">Enrollment</a>
+        <div class="mobile-submenu">
+    <a href="river-tech-days.html">River Tech Days</a>
+    <a href="enrollment.html">How to Enroll</a>
+    <a href="tuition.html">Tuition</a>
+    <a href="faq.html">FAQs</a>
+    <a href="tax-credit.html">Tax Credit</a>
+  </div>
+  <a href="school-resources.html">School Resources</a>
+        <div class="mobile-submenu">
+    <a href="school-resources.html">Resources Overview</a>
+    <a href="calendar.html">Schedule &amp; Calendar</a>
+    <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+    <a href="scholarships.html">Scholarships</a>
+    <a href="volunteer.html">Volunteer</a>
+    <a href="our-needs.html">Our Needs</a>
+  </div>
+  <a href="enrollment.html" style="color: var(--color-red); font-weight: 700; border-bottom: none;">Enroll Today</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="content-area">
+
+    <div class="reg-wrap">
+
+      <a href="enrollment.html" class="reg-back">← Back to Enrollment</a>
+
+      <div class="reg-hero">
+        <h1>Full-Time Enrollment &mdash; 2026&ndash;27</h1>
+        <p class="reg-subtitle">River Tech School of Performing Arts &amp; Technology</p>
+        <p class="reg-dates">School year begins Tuesday, September 1, 2026</p>
+      </div>
+
+      <div class="reg-info">
+        <p><strong>Welcome to River Tech.</strong> This form enrolls your child full-time for the 2026&ndash;27 school year. If you&rsquo;re enrolling in our 1&ndash;4 day homeschool program instead, please use the <a href="register-homeschool-2026-27.html">Homeschool Enrollment Form</a>.</p>
+        <p>Full-time students choose one of three tracks:</p>
+        <ul>
+          <li><strong>Performing Arts Major</strong> &mdash; Monday through Thursday</li>
+          <li><strong>Technology Major</strong> &mdash; Tuesday through Friday</li>
+          <li><strong>Double Major</strong> &mdash; Monday through Friday (Performing Arts + Technology)</li>
+        </ul>
+        <p>This form takes about 15 minutes for family info, plus 25&ndash;40 minutes per child. A non-refundable <strong>$250 Household Registration Fee</strong> is charged at submit. Tuition is billed separately. Questions? <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>.</p>
+      </div>
+
+      <div id="reg-error" class="reg-error" role="alert"></div>
+      <div id="reg-success" class="reg-success" role="status"></div>
+
+      <form id="reg-form" novalidate>
+
+        <!-- Parent/Guardian 1 -->
+        <div class="reg-section">
+          <div class="reg-section-title">Parent / Guardian</div>
+          <p class="reg-section-subtitle">We&rsquo;ll send your enrollment confirmation and updates here.</p>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="parentFirstName">First name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="parentFirstName" name="parentFirstName" required autocomplete="given-name">
+            </div>
+            <div>
+              <label class="reg-label" for="parentLastName">Last name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="parentLastName" name="parentLastName" required autocomplete="family-name">
+            </div>
+          </div>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="parentEmail">Email<span class="req">*</span></label>
+              <input class="reg-input" type="email" id="parentEmail" name="parentEmail" required autocomplete="email">
+            </div>
+            <div>
+              <label class="reg-label" for="parentPhone">Phone<span class="req">*</span></label>
+              <input class="reg-input" type="tel" id="parentPhone" name="parentPhone" required autocomplete="tel">
+            </div>
+          </div>
+
+          <div class="reg-row">
+            <label class="reg-label" for="parentAddress">Home address<span class="req">*</span></label>
+            <input class="reg-input" type="text" id="parentAddress" name="parentAddress" required autocomplete="street-address" placeholder="Street, City, State, ZIP">
+          </div>
+
+          <div class="reg-row">
+            <label class="reg-check">
+              <input type="checkbox" id="addParent2Toggle" name="addParent2Toggle">
+              <span>Add a second parent / guardian</span>
+            </label>
+          </div>
+
+          <div id="parent2-block" style="display:none; margin-top: 8px; padding-top: 16px; border-top: 1px solid rgba(39,36,67,0.1);">
+            <div class="reg-row-grid-2">
+              <div>
+                <label class="reg-label" for="parent2FirstName">First name</label>
+                <input class="reg-input" type="text" id="parent2FirstName" name="parent2FirstName">
+              </div>
+              <div>
+                <label class="reg-label" for="parent2LastName">Last name</label>
+                <input class="reg-input" type="text" id="parent2LastName" name="parent2LastName">
+              </div>
+            </div>
+            <div class="reg-row-grid-2">
+              <div>
+                <label class="reg-label" for="parent2Email">Email</label>
+                <input class="reg-input" type="email" id="parent2Email" name="parent2Email">
+              </div>
+              <div>
+                <label class="reg-label" for="parent2Phone">Phone</label>
+                <input class="reg-input" type="tel" id="parent2Phone" name="parent2Phone">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Emergency Contact -->
+        <div class="reg-section">
+          <div class="reg-section-title">Emergency Contact</div>
+          <p class="reg-section-subtitle">A person we can reach if we can&rsquo;t reach you &mdash; ideally someone who can come pick up your child in a pinch.</p>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="emergencyName">Full name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="emergencyName" name="emergencyName" required>
+            </div>
+            <div>
+              <label class="reg-label" for="emergencyRelationship">Relationship to child<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="emergencyRelationship" name="emergencyRelationship" required placeholder="Grandparent, aunt, neighbor…">
+            </div>
+          </div>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="emergencyPhone">Primary phone<span class="req">*</span></label>
+              <input class="reg-input" type="tel" id="emergencyPhone" name="emergencyPhone" required>
+            </div>
+            <div>
+              <label class="reg-label" for="emergencyAltPhone">Alternate phone</label>
+              <input class="reg-input" type="tel" id="emergencyAltPhone" name="emergencyAltPhone">
+            </div>
+          </div>
+        </div>
+
+        <!-- Insurance -->
+        <div class="reg-section">
+          <div class="reg-section-title">Insurance Information</div>
+          <p class="reg-section-subtitle">Used only if we need to take your child to urgent care. We keep this strictly confidential.</p>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="insuranceProvider">Insurance provider<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="insuranceProvider" name="insuranceProvider" required placeholder="Blue Cross, Aetna, etc.">
+            </div>
+            <div>
+              <label class="reg-label" for="insurancePrimary">Primary insured&rsquo;s full name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="insurancePrimary" name="insurancePrimary" required>
+            </div>
+          </div>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="insurancePolicy">Policy number<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="insurancePolicy" name="insurancePolicy" required>
+            </div>
+            <div>
+              <label class="reg-label" for="insuranceGroup">Group number</label>
+              <input class="reg-input" type="text" id="insuranceGroup" name="insuranceGroup">
+            </div>
+          </div>
+        </div>
+
+        <!-- Authorized Pickup Persons -->
+        <div class="reg-section">
+          <div class="reg-section-title">Authorized Pickup Persons</div>
+          <p class="reg-section-subtitle">People &mdash; other than you &mdash; who are allowed to pick up your child from school. We will ask for photo ID if we don&rsquo;t recognize them. You can add up to three.</p>
+
+          <div class="pickup-slot">
+            <div class="pickup-slot-title">Pickup Person 1</div>
+            <div class="reg-row-grid-3">
+              <div>
+                <label class="reg-label" for="pickup1Name">Full name</label>
+                <input class="reg-input" type="text" id="pickup1Name" name="pickup1Name">
+              </div>
+              <div>
+                <label class="reg-label" for="pickup1Relationship">Relationship</label>
+                <input class="reg-input" type="text" id="pickup1Relationship" name="pickup1Relationship">
+              </div>
+              <div>
+                <label class="reg-label" for="pickup1Phone">Phone</label>
+                <input class="reg-input" type="tel" id="pickup1Phone" name="pickup1Phone">
+              </div>
+            </div>
+          </div>
+
+          <div class="pickup-slot">
+            <div class="pickup-slot-title">Pickup Person 2 (optional)</div>
+            <div class="reg-row-grid-3">
+              <div>
+                <label class="reg-label" for="pickup2Name">Full name</label>
+                <input class="reg-input" type="text" id="pickup2Name" name="pickup2Name">
+              </div>
+              <div>
+                <label class="reg-label" for="pickup2Relationship">Relationship</label>
+                <input class="reg-input" type="text" id="pickup2Relationship" name="pickup2Relationship">
+              </div>
+              <div>
+                <label class="reg-label" for="pickup2Phone">Phone</label>
+                <input class="reg-input" type="tel" id="pickup2Phone" name="pickup2Phone">
+              </div>
+            </div>
+          </div>
+
+          <div class="pickup-slot">
+            <div class="pickup-slot-title">Pickup Person 3 (optional)</div>
+            <div class="reg-row-grid-3">
+              <div>
+                <label class="reg-label" for="pickup3Name">Full name</label>
+                <input class="reg-input" type="text" id="pickup3Name" name="pickup3Name">
+              </div>
+              <div>
+                <label class="reg-label" for="pickup3Relationship">Relationship</label>
+                <input class="reg-input" type="text" id="pickup3Relationship" name="pickup3Relationship">
+              </div>
+              <div>
+                <label class="reg-label" for="pickup3Phone">Phone</label>
+                <input class="reg-input" type="tel" id="pickup3Phone" name="pickup3Phone">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Number of children -->
+        <div class="reg-section">
+          <div class="reg-section-title">How many children are you enrolling?</div>
+          <p class="reg-section-subtitle">You can add up to 6 children in one form.</p>
+          <div class="reg-row">
+            <select class="reg-select" id="childCount" name="childCount" required style="max-width: 200px;">
+              <option value="">Select…</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Children -->
+        <div id="children-container"></div>
+
+        <!-- Release -->
+        <div class="reg-section">
+          <div class="reg-section-title">Release &amp; Acknowledgment</div>
+          <p class="reg-section-subtitle">Please read before checking the box below.</p>
+
+          <div class="reg-release">
+            <h3>Acknowledgment of Program Participation and Risks</h3>
+            <p>I, the undersigned parent/guardian, understand that my child(ren) (the &ldquo;Participants&rdquo;) will be engaging in various activities as part of River Tech School&rsquo;s Program. These activities range from low-energy, intellectual pursuits such as coding and design, to higher-energy physical activities including sports, physical education, and field trips. I recognize that these activities inherently carry risks, including but not limited to injury or harm from equipment use and physical exertion.</p>
+
+            <h3>Assumption of Risk</h3>
+            <p>River Tech includes active play, P.E., group games, hands-on projects, and occasional field trips. Kids will run, climb, build, and move &mdash; and sometimes that means bumps, scrapes, or the occasional twisted ankle. I understand that participation in these activities carries inherent risks, and I accept them as part of a full and engaged school day. I agree that River Tech School, its staff, and its volunteers are not liable for injuries or incidents that occur in the normal course of these activities, except in cases of gross negligence.</p>
+
+            <h3>Personal Belongings and Valuables</h3>
+            <p>I understand that while River Tech School takes reasonable measures to safeguard personal belongings, it cannot be held responsible for lost, damaged, or stolen personal items, including electronic devices and other valuables. I acknowledge the importance of the student labeling their personal items with their name for easy identification and recovery. Bringing valuable items to school is at the student&rsquo;s and parent&rsquo;s/guardian&rsquo;s risk.</p>
+
+            <h3>Waiver and Release</h3>
+            <p>In consideration of the Participants&rsquo; opportunity to engage in the Program, I hereby release and forever discharge River Tech School, its employees, officers, and volunteers (collectively, &ldquo;Releasees&rdquo;) from any and all liability, claims, demands, actions, and causes of action whatsoever directly or indirectly arising out of or related to any loss, damage, injury, or death, that may be sustained by the Participants or any property belonging to the Participants while participating in such activities.</p>
+
+            <h3>Medical Authorization</h3>
+            <p>In the event of a medical emergency involving my child, I authorize River Tech staff to secure emergency medical care and transport. I will make every reasonable effort to be reached, but if I cannot be reached, I authorize qualified medical personnel to administer treatment they deem necessary. I agree to be financially responsible for any medical expenses incurred on behalf of my child.</p>
+
+            <h3>Media Release</h3>
+            <p>I grant River Tech School the right to use photographs, videos, and other media captures of my child(ren) exclusively for legitimate school purposes, such as in school publications, on the River Tech website, and the school&rsquo;s official social media platforms. I trust that all media will be used respectfully, preserving the dignity and integrity of my child(ren). I understand this consent can be revoked in writing at any time.</p>
+
+            <h3>Accuracy of Information</h3>
+            <p>I certify that all information provided on this form is true, complete, and accurate to the best of my knowledge. I understand that any false or misleading information may result in the rejection of this application.</p>
+          </div>
+
+          <label class="reg-check" style="border-color: var(--color-red); background: var(--color-pink-btn);">
+            <input type="checkbox" id="releaseAgree" name="releaseAgree" required>
+            <span>I have read and agree to the Release &amp; Acknowledgment above on behalf of my child / children.<span class="req">*</span></span>
+          </label>
+        </div>
+
+        <!-- School Culture Acknowledgment -->
+        <div class="reg-section">
+          <div class="reg-section-title">School Culture Acknowledgment</div>
+          <p class="reg-section-subtitle">River Tech is an explicitly Christian school. Full-time enrollment carries a deeper culture commitment than our à la carte days. Please read carefully.</p>
+
+          <div class="reg-release" style="max-height: none;">
+            <p>River Tech School is a Christian school built on biblical principles. Prayer, worship, and gratitude are woven into daily life. We affirm God, family, community, personal responsibility, patriotism, merit, grit, and entrepreneurship. We do not adopt the ideological frameworks of contemporary progressive culture &mdash; including but not limited to gender ideology, critical race theory, victim mentality, and cancel culture.</p>
+
+            <p>Full-time students participate in weekly chapel, daily prayer, scripture reading, and faith-formative conversations across the curriculum. Families do not need to share our faith to enroll, but they do need to be comfortable with their child being immersed in it daily. If this is new for your family, we&rsquo;d love to talk before you submit &mdash; write <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>.</p>
+          </div>
+
+          <label class="reg-check" style="border-color: var(--color-red); background: var(--color-pink-btn);">
+            <input type="checkbox" id="cultureAgree" name="cultureAgree" required>
+            <span>I affirm River Tech&rsquo;s school culture as described above, and I consent to my child&rsquo;s participation in its daily rhythms of prayer, worship, and scripture.<span class="req">*</span></span>
+          </label>
+        </div>
+
+        <!-- Signature -->
+        <div class="reg-section">
+          <div class="reg-section-title">Signature</div>
+          <p class="reg-section-subtitle">By signing, you confirm the information is accurate and understand the $250 Household Registration Fee will be charged at submission. Tuition is billed separately.</p>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="signature">Typed full name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="signature" name="signature" required placeholder="Type your full legal name">
+            </div>
+            <div>
+              <label class="reg-label" for="signatureDate">Today&rsquo;s date<span class="req">*</span></label>
+              <input class="reg-input" type="date" id="signatureDate" name="signatureDate" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary / Household Fee -->
+        <div class="reg-section" id="summary-section">
+          <div class="reg-section-title">Household Registration Fee</div>
+          <p class="reg-section-subtitle">A one-time, non-refundable household fee per enrollment, covering application review, family onboarding, and preparation for the year. Tuition is billed separately.</p>
+          <div class="reg-summary" id="summary-box">
+            <div class="reg-summary-row"><span>Children enrolled</span><span id="summary-child-count">0</span></div>
+            <div class="reg-summary-row reg-summary-total"><span>Household Registration Fee</span><span>$250</span></div>
+          </div>
+        </div>
+
+        <button type="submit" id="reg-submit" class="reg-submit">Continue to Payment →</button>
+        <p id="upload-progress" class="upload-progress"></p>
+        <p style="text-align:center; font-size:13px; color:var(--color-text); opacity:0.6; margin-top:12px;">You&rsquo;ll be taken to Stripe to pay by card. We don&rsquo;t store your card details.</p>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <a href="../index.html" class="footer-logo">rivertechschool.com</a>
+    <div class="footer-tagline">Life is a Stage. <span class="love">Love</span> is our Script.</div>
+  </div>
+
+  <div class="footer-columns">
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>
+      <span>Tel: 425-444-2081</span>
+      <span>The Heart</span>
+      <span>927 E Polston Ave</span>
+      <span>Post Falls, ID 83854</span>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="why-river-tech.html">Why River Tech?</a>
+      <a href="enrollment.html">Enrollment</a>
+      <a href="school-resources.html">School Resources</a>
+      <a href="a-la-carte.html">À La Carte</a>
+    </div>
+    <div class="footer-col">
+      <h4>Social</h4>
+      <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/rivertechschool/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 by Faithful Five Inc. (d.b.a. River Tech and Post Falls Art). <em>Life is a Stage. <span class="love">Love</span> is our Script.</em></p>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js?v=3" defer></script>
+<script src="../assets/js/register-school-2026-27.js?v=1" defer></script>
+
+<button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+(function(){
+  var btn=document.querySelector('.scroll-to-top');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible',window.scrollY>400);
+  });
+})();
+</script>
+</body>
+</html>
