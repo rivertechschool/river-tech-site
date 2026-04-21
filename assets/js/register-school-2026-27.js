@@ -526,10 +526,7 @@
     }
 
     const release = form.querySelector("#releaseAgree");
-    if (!release.checked) return "Please read and agree to the Release & Acknowledgment before continuing.";
-
-    const culture = form.querySelector("#cultureAgree");
-    if (!culture.checked) return "Please read and affirm the School Culture Acknowledgment before continuing.";
+    if (!release.checked) return "Please read and agree to the Release and Acknowledgment before continuing.";
 
     const sig = form.querySelector("#signature");
     if (!sig.value.trim()) return "Please type your full legal name as signature.";
