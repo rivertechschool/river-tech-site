@@ -1,0 +1,465 @@
+/**
+ * River Tech — Homeschool Enrollment 2026-27 Backend
+ * Google Apps Script web app.
+ *
+ * Deploy with:
+ *   Deploy > New deployment > Type: Web app
+ *   Execute as: Me (learn@rivertech.me)
+ *   Who has access: Anyone
+ *
+ * Per submission:
+ *   1. Upload each child's photo (if any) to Drive folder DRIVE_FOLDER_ID.
+ *   2. Append a row to the Sheet (SHEET_ID) with photo URLs embedded.
+ *   3. Create a Stripe Checkout Session for the Annual Family Setup Fee.
+ *   4. Email the parent + notify admin.
+ *   5. Return { ok, checkoutUrl, registrationId } to the browser.
+ *
+ * Script Properties required:
+ *   SHEET_ID           — Google Sheet ID (folder: My Drive / RTS Website Forms /)
+ *   STRIPE_SECRET_KEY  — sk_test_... for testing, sk_live_... for launch
+ *   DRIVE_FOLDER_ID    — Drive folder for uploaded child photos
+ */
+
+// ---- Config helpers -----------------------------------------------------
+function cfg(key) {
+  return PropertiesService.getScriptProperties().getProperty(key);
+}
+
+const NOTIFY_EMAILS = ["learn@rivertech.me", "dhegelund@gmail.com"];
+const SCHOOL_NAME = "River Tech School of Performing Arts & Technology";
+const FORM_PAGE_URL = "https://www.rivertechschool.com/pages/register-homeschool-2026-27.html";
+const SUCCESS_URL = "https://www.rivertechschool.com/pages/register-homeschool-2026-27-success.html?session_id={CHECKOUT_SESSION_ID}";
+const CANCEL_URL = "https://www.rivertechschool.com/pages/register-homeschool-2026-27.html";
+
+// Sheet columns: 16 family + (14 per child × 6) = 100 columns.
+const MAX_CHILDREN = 6;
+const CHILD_COLS = 14;
+
+// ---- Web-app entrypoints -----------------------------------------------
+function doPost(e) {
+  try {
+    const payload = JSON.parse(e.postData.contents);
+    const result = handleRegistration(payload);
+    return json_(result);
+  } catch (err) {
+    Logger.log("doPost error: " + err + "\n" + (err.stack || ""));
+    return json_({ ok: false, error: "Server error: " + err.message });
+  }
+}
+
+function doGet() {
+  return json_({ ok: true, message: "Homeschool 2026-27 backend is alive." });
+}
+
+function json_(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// ---- Core handler -------------------------------------------------------
+function handleRegistration(p) {
+  if (!p || !p.parent || !Array.isArray(p.children) || p.children.length === 0) {
+    return { ok: false, error: "Registration data was incomplete." };
+  }
+  if (!p.releaseAgreed) {
+    return { ok: false, error: "Release must be agreed to before submitting." };
+  }
+  if (p.children.length > MAX_CHILDREN) {
+    return { ok: false, error: "Too many children in one submission (max " + MAX_CHILDREN + ")." };
+  }
+
+  const registrationId = "HS-" + Utilities.formatDate(new Date(), "America/Los_Angeles", "yyyyMMdd-HHmmss")
+    + "-" + Math.floor(Math.random() * 1000).toString().padStart(3, "0");
+
+  // 1. Upload photos to Drive first — collect URLs to embed in the sheet row.
+  const photoUrls = p.children.map(function (c, i) {
+    return uploadPhotoToDrive_(c.photo, registrationId, i + 1, c.firstName, c.lastName);
+  });
+
+  // 2. Write to Sheet (photos already uploaded → URL in each row)
+  writeToSheet_(registrationId, p, photoUrls);
+
+  // 3. Create Stripe Checkout session
+  const checkoutUrl = createStripeSession_(registrationId, p);
+
+  // 4. Emails — parent gets a receipt-of-registration note, admin gets full detail.
+  sendParentEmail_(registrationId, p);
+  sendNotificationEmail_(registrationId, p, photoUrls);
+
+  return { ok: true, registrationId: registrationId, checkoutUrl: checkoutUrl };
+}
+
+// ---- Drive photo upload -------------------------------------------------
+function uploadPhotoToDrive_(photo, registrationId, childIdx, firstName, lastName) {
+  if (!photo || !photo.base64) return "";
+  const folderId = cfg("DRIVE_FOLDER_ID");
+  if (!folderId) {
+    Logger.log("DRIVE_FOLDER_ID not configured — skipping photo upload.");
+    return "";
+  }
+  try {
+    const folder = DriveApp.getFolderById(folderId);
+    const ext = extFromMime_(photo.type) || extFromName_(photo.name) || "jpg";
+    const cleanFirst = (firstName || "Child" + childIdx).replace(/[^A-Za-z0-9_-]/g, "");
+    const cleanLast = (lastName || "").replace(/[^A-Za-z0-9_-]/g, "");
+    const filename = [registrationId, "c" + childIdx, cleanFirst, cleanLast].filter(String).join("_") + "." + ext;
+    const bytes = Utilities.base64Decode(photo.base64);
+    const blob = Utilities.newBlob(bytes, photo.type || "image/jpeg", filename);
+    const file = folder.createFile(blob);
+    return file.getUrl();
+  } catch (err) {
+    Logger.log("Photo upload failed for child " + childIdx + ": " + err);
+    return "";
+  }
+}
+
+function extFromMime_(mime) {
+  if (!mime) return "";
+  if (mime === "image/jpeg") return "jpg";
+  if (mime === "image/png") return "png";
+  if (mime === "image/heic") return "heic";
+  if (mime === "image/webp") return "webp";
+  return "";
+}
+
+function extFromName_(name) {
+  if (!name) return "";
+  const m = /\.([a-z0-9]+)$/i.exec(name);
+  return m ? m[1].toLowerCase() : "";
+}
+
+// ---- Sheet write --------------------------------------------------------
+function writeToSheet_(registrationId, p, photoUrls) {
+  const sheetId = cfg("SHEET_ID");
+  if (!sheetId) throw new Error("SHEET_ID is not configured in Script Properties.");
+  const ss = SpreadsheetApp.openById(sheetId);
+  const sh = ss.getSheetByName("Enrollments") || ss.getSheets()[0];
+
+  // Auto-header on first write.
+  if (sh.getLastRow() === 0) {
+    const header = [
+      "Registration ID", "Submitted (UTC)", "Status",
+      "Parent 1 First", "Parent 1 Last", "Parent 1 Email", "Parent 1 Phone", "Parent 1 Address",
+      "Parent 2 First", "Parent 2 Last", "Parent 2 Email", "Parent 2 Phone",
+      "Children Count", "Max Days", "Family Fee (USD)",
+      "Signature", "Signature Date"
+    ];
+    for (let n = 1; n <= MAX_CHILDREN; n++) {
+      header.push(
+        "Child " + n + " Name",
+        "Child " + n + " DOB",
+        "Child " + n + " Gender",
+        "Child " + n + " Grade",
+        "Child " + n + " Reading",
+        "Child " + n + " Tablet",
+        "Child " + n + " Programs",
+        "Child " + n + " Previous Schooling",
+        "Child " + n + " Prev Schooling Other",
+        "Child " + n + " Attitude",
+        "Child " + n + " Health",
+        "Child " + n + " Hopes",
+        "Child " + n + " Notes",
+        "Child " + n + " Photo URL"
+      );
+    }
+    sh.appendRow(header);
+    sh.getRange(1, 1, 1, header.length).setFontWeight("bold");
+    sh.setFrozenRows(1);
+  }
+
+  const children = p.children;
+  const p2 = p.parent2 || {};
+
+  const row = [
+    registrationId,
+    p.submittedAt || new Date().toISOString(),
+    "Submitted (awaiting payment)",
+    p.parent.firstName || "",
+    p.parent.lastName  || "",
+    p.parent.email     || "",
+    p.parent.phone     || "",
+    p.parent.address   || "",
+    p2.firstName || "",
+    p2.lastName  || "",
+    p2.email     || "",
+    p2.phone     || "",
+    children.length,
+    p.maxDays || 0,
+    p.familyFee || 0,
+    p.signature || "",
+    p.signatureDate || ""
+  ];
+
+  for (let i = 0; i < MAX_CHILDREN; i++) {
+    const c = children[i];
+    if (c) {
+      row.push(
+        ((c.firstName || "") + " " + (c.lastName || "")).trim(),
+        c.dob || "",
+        c.gender || "",
+        c.grade || "",
+        c.readingLevel || "",
+        c.tabletLevel || "",
+        (c.programs || []).join(", "),
+        (c.previousSchooling || []).join(", "),
+        c.previousSchoolingOther || "",
+        c.attitude || "",
+        c.health || "",
+        c.hopes || "",
+        c.notes || "",
+        photoUrls[i] || ""
+      );
+    } else {
+      for (let k = 0; k < CHILD_COLS; k++) row.push("");
+    }
+  }
+
+  sh.appendRow(row);
+}
+
+// ---- Stripe Checkout ----------------------------------------------------
+function createStripeSession_(registrationId, p) {
+  const secretKey = cfg("STRIPE_SECRET_KEY");
+  if (!secretKey) {
+    Logger.log("No Stripe key configured — returning null checkout URL.");
+    return null;
+  }
+
+  const amount = Math.round((p.familyFee || p.totalAmount || 0) * 100); // cents
+  if (amount <= 0) throw new Error("Amount must be greater than zero. Please select at least one program day.");
+
+  const parentName = ((p.parent.firstName || "") + " " + (p.parent.lastName || "")).trim();
+  const childNames = (p.children || [])
+    .map(function (c) { return (c.firstName || "").trim(); })
+    .filter(String).join(", ");
+  const childWord = p.children.length === 1 ? "child" : "children";
+  const description = "River Tech Homeschool 2026-27 enrollment — " + childNames +
+    " (" + p.children.length + " " + childWord + ", " + p.maxDays + "-day rate)";
+
+  const params = {
+    "mode": "payment",
+    "success_url": SUCCESS_URL,
+    "cancel_url": CANCEL_URL,
+    "customer_email": p.parent.email,
+    "client_reference_id": registrationId,
+    "metadata[registrationId]": registrationId,
+    "metadata[parentName]": parentName,
+    "metadata[parentEmail]": p.parent.email || "",
+    "metadata[parentPhone]": p.parent.phone || "",
+    "metadata[childCount]": String(p.children.length),
+    "metadata[maxDays]": String(p.maxDays || 0),
+    "metadata[schoolYear]": p.schoolYear || "2026-27",
+    "line_items[0][price_data][currency]": "usd",
+    "line_items[0][price_data][product_data][name]": "Homeschool Annual Family Setup Fee (" + (p.maxDays || 0) + "-day rate)",
+    "line_items[0][price_data][product_data][description]": description,
+    "line_items[0][price_data][unit_amount]": String(amount),
+    "line_items[0][quantity]": "1"
+  };
+
+  const response = UrlFetchApp.fetch("https://api.stripe.com/v1/checkout/sessions", {
+    method: "post",
+    headers: { "Authorization": "Bearer " + secretKey },
+    payload: params,
+    muteHttpExceptions: true
+  });
+
+  const body = response.getContentText();
+  const status = response.getResponseCode();
+  if (status < 200 || status >= 300) {
+    Logger.log("Stripe error (" + status + "): " + body);
+    throw new Error("Payment system error. Please try again or email learn@rivertech.me.");
+  }
+
+  const session = JSON.parse(body);
+  return session.url;
+}
+
+// ---- Emails -------------------------------------------------------------
+function sendParentEmail_(registrationId, p) {
+  const kidNames = (p.children || [])
+    .map(function (c) { return (c.firstName || "").trim(); })
+    .filter(String);
+  const kidsStr = kidNames.length === 0 ? "your child" :
+                  kidNames.length === 1 ? kidNames[0] :
+                  kidNames.length === 2 ? kidNames[0] + " and " + kidNames[1] :
+                  kidNames.slice(0, -1).join(", ") + ", and " + kidNames[kidNames.length - 1];
+
+  const subject = "River Tech Homeschool 2026-27 — we received your enrollment";
+  const body = [
+    "Hi " + (p.parent.firstName || "") + ",",
+    "",
+    "Thanks for enrolling " + kidsStr + " in River Tech's homeschool program for the 2026-27 school year. We have your details.",
+    "",
+    "Your confirmation reference: " + registrationId,
+    "Annual Family Setup Fee: $" + (p.familyFee || 0) + " (" + (p.maxDays || 0) + "-day rate)",
+    "",
+    "What happens next:",
+    "• Once your Stripe payment is complete, your enrollment is locked in.",
+    "• We'll follow up before the school year starts (Tuesday, September 2, 2026) with class details, supply lists, and any logistics.",
+    "• Tuition for the program days you selected will be billed separately.",
+    "",
+    "If you need to change anything — add a day, adjust an answer, or ask a question — reply to this email or write learn@rivertech.me.",
+    "",
+    "Welcome to River Tech.",
+    "",
+    SCHOOL_NAME,
+    "927 E Polston Ave, Post Falls, ID 83854",
+    FORM_PAGE_URL
+  ].join("\n");
+
+  try {
+    MailApp.sendEmail({
+      to: p.parent.email,
+      replyTo: "learn@rivertech.me",
+      subject: subject,
+      body: body,
+      name: "River Tech School"
+    });
+  } catch (err) {
+    Logger.log("Parent email failed: " + err);
+  }
+}
+
+function sendNotificationEmail_(registrationId, p, photoUrls) {
+  const subject = "[Homeschool 26-27] " + (p.parent.firstName || "") + " " + (p.parent.lastName || "") +
+    " — " + p.children.length + " child" + (p.children.length === 1 ? "" : "ren") + " — $" + (p.familyFee || 0);
+
+  const childSummary = (p.children || []).map(function (c, i) {
+    const lines = [
+      "Child " + (i + 1) + ": " + (c.firstName || "") + " " + (c.lastName || ""),
+      "  DOB: " + (c.dob || "(not given)") + (c.gender ? " · Gender: " + c.gender : ""),
+      "  Grade: " + (c.grade || "") +
+        (c.readingLevel ? " · Reading: " + c.readingLevel : "") +
+        (c.tabletLevel  ? " · Tablet: "  + c.tabletLevel  : ""),
+      "  Programs: " + ((c.programs || []).join(", ") || "(none)"),
+      "  Previous: " + ((c.previousSchooling || []).join(", ") || "(none)") +
+        (c.previousSchoolingOther ? " (" + c.previousSchoolingOther + ")" : ""),
+      "  Photo: " + (photoUrls[i] || "(none uploaded)")
+    ];
+    if (c.attitude) lines.push("  Attitude/style: " + c.attitude);
+    if (c.health)   lines.push("  Health: " + c.health);
+    if (c.hopes)    lines.push("  Hopes: " + c.hopes);
+    if (c.notes)    lines.push("  Notes: " + c.notes);
+    return lines.join("\n");
+  }).join("\n\n");
+
+  const p2 = p.parent2 || null;
+  const parent2Lines = p2 ? [
+    "Parent 2: " + (p2.firstName || "") + " " + (p2.lastName || ""),
+    "  Email: " + (p2.email || "") + " · Phone: " + (p2.phone || "")
+  ] : ["Parent 2: (not added)"];
+
+  const body = [
+    "New homeschool enrollment for 2026-27.",
+    "",
+    "Reference: " + registrationId,
+    "Submitted: " + (p.submittedAt || new Date().toISOString()),
+    "Max days: " + (p.maxDays || 0),
+    "Family Setup Fee: $" + (p.familyFee || 0),
+    "",
+    "Parent 1: " + (p.parent.firstName || "") + " " + (p.parent.lastName || ""),
+    "  Email: " + (p.parent.email || "") + " · Phone: " + (p.parent.phone || ""),
+    "  Address: " + (p.parent.address || ""),
+    "",
+    parent2Lines.join("\n"),
+    "",
+    childSummary,
+    "",
+    "Signature: " + (p.signature || "") + " · Date: " + (p.signatureDate || ""),
+    "",
+    "Row appended to enrollment sheet. Payment status will remain 'Submitted (awaiting payment)' until the Stripe session completes."
+  ].join("\n");
+
+  try {
+    MailApp.sendEmail({
+      to: NOTIFY_EMAILS.join(","),
+      subject: subject,
+      body: body,
+      name: "River Tech Enrollments"
+    });
+  } catch (err) {
+    Logger.log("Notification email failed: " + err);
+  }
+}
+
+// ---- One-time setup helpers (run from the editor) ----------------------
+/**
+ * Run this once to create the enrollment Sheet + photos folder.
+ * Stores the new IDs in Script Properties. Safe to re-run (idempotent
+ * by folder/file name — rename the existing ones first if you want to
+ * start fresh).
+ */
+function setupHomeschoolBackend_ONCE() {
+  const props = PropertiesService.getScriptProperties();
+
+  // Sheet
+  let sheetId = props.getProperty("SHEET_ID");
+  if (!sheetId) {
+    const ss = SpreadsheetApp.create("Homeschool Enrollment 2026-27");
+    ss.getSheets()[0].setName("Enrollments");
+    sheetId = ss.getId();
+    props.setProperty("SHEET_ID", sheetId);
+    Logger.log("Created Sheet. ID: " + sheetId + " — URL: " + ss.getUrl());
+    Logger.log("Move it into 'My Drive / RTS Website Forms /' manually.");
+  } else {
+    Logger.log("SHEET_ID already set: " + sheetId);
+  }
+
+  // Photos folder
+  let folderId = props.getProperty("DRIVE_FOLDER_ID");
+  if (!folderId) {
+    const folder = DriveApp.createFolder("Homeschool 2026-27 — Child Photos");
+    folderId = folder.getId();
+    props.setProperty("DRIVE_FOLDER_ID", folderId);
+    Logger.log("Created photos folder. ID: " + folderId + " — URL: " + folder.getUrl());
+    Logger.log("Move it into 'My Drive / RTS Website Forms /' manually and share with Dan.");
+  } else {
+    Logger.log("DRIVE_FOLDER_ID already set: " + folderId);
+  }
+
+  if (!props.getProperty("STRIPE_SECRET_KEY")) {
+    Logger.log("⚠ STRIPE_SECRET_KEY not yet set — add it in Project Settings > Script Properties.");
+  }
+}
+
+/**
+ * Pretend-submit a registration to exercise the sheet, photos (skipped —
+ * no base64 here), emails, and Stripe session. Check Logger output and
+ * your inbox.
+ */
+function selfTest() {
+  const fake = {
+    submittedAt: new Date().toISOString(),
+    schoolYear: "2026-27",
+    parent: {
+      firstName: "Test", lastName: "Parent",
+      email: Session.getActiveUser().getEmail() || "dhegelund@gmail.com",
+      phone: "555-0100",
+      address: "927 E Polston Ave, Post Falls, ID 83854"
+    },
+    parent2: null,
+    children: [
+      {
+        firstName: "Ada", lastName: "Parent",
+        dob: "2018-05-12", gender: "female",
+        grade: "elementary", readingLevel: "independent", tabletLevel: "independent",
+        programs: ["monday", "tuesday"],
+        previousSchooling: ["homeschool"], previousSchoolingOther: "",
+        attitude: "Curious and focused.",
+        health: "No known allergies.",
+        hopes: "Wants to learn piano and make friends.",
+        notes: "",
+        photo: null
+      }
+    ],
+    maxDays: 2,
+    familyFee: 100,
+    totalAmount: 100,
+    signature: "Test Parent",
+    signatureDate: Utilities.formatDate(new Date(), "America/Los_Angeles", "yyyy-MM-dd"),
+    releaseAgreed: true
+  };
+  const r = handleRegistration(fake);
+  Logger.log(JSON.stringify(r, null, 2));
+}
