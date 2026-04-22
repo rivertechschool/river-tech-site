@@ -1904,3 +1904,102 @@ body {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
+/* ================================================================
+   Quick Facts section (homepage, bottom)
+   ================================================================ */
+.quick-facts {
+  margin: 60px 0 40px;
+}
+
+.quick-facts .quick-facts-intro {
+  text-align: center;
+  color: var(--color-text);
+  opacity: 0.72;
+  margin: -6px 0 28px;
+  font-size: 1.02rem;
+  font-style: italic;
+}
+
+.qf-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 18px;
+  margin: 0;
+  padding: 0;
+}
+
+.qf-item {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid rgba(39, 36, 67, 0.08);
+  border-left: 3px solid var(--color-red);
+  border-radius: 6px;
+  padding: 16px 20px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.qf-item:hover {
+  box-shadow: 0 4px 14px rgba(39, 36, 67, 0.08);
+  transform: translateY(-1px);
+}
+
+.qf-item dt {
+  font-family: var(--font-nav);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-red);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.qf-item dd {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.qf-item dd a {
+  color: var(--color-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.qf-item dd a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Contact tile spans both columns on desktop and is centered */
+.qf-item--contact {
+  grid-column: 1 / -1;
+  text-align: center;
+  border-left-color: transparent;
+  border-top: 3px solid var(--color-red);
+  padding: 18px 20px;
+}
+
+.qf-item--contact dt {
+  margin-bottom: 10px;
+}
+
+.qf-item--contact dd {
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+  .qf-grid {
+    grid-template-columns: 1fr;
+  }
+  .qf-item {
+    padding: 14px 16px;
+  }
+}
+
+.qf-item--wide {
+  grid-column: 1 / -1;
+}
