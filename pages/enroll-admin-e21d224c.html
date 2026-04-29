@@ -70,9 +70,12 @@
     .tile-kid .kid-text { flex: 1; min-width: 0; }
     .tile-foot { margin-top: 6px; font-size: 11px; color: var(--ink-soft); display: flex; justify-content: space-between; }
 
-    /* Child avatar — small (tile) and large (modal) */
-    .avatar { flex: none; border-radius: 50%; background: rgba(0,0,0,0.08); overflow: hidden; display: inline-flex; align-items: center; justify-content: center; color: var(--ink-soft); font-weight: 700; }
-    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* Child avatar — small (tile) and large (modal). Layered: an initial-letter
+       fallback sits underneath; if the Drive thumbnail loads, its <img>
+       (position:absolute) covers it. If it fails, onerror removes the img and
+       the initial shows. */
+    .avatar { position: relative; flex: none; border-radius: 50%; background: rgba(0,0,0,0.08); overflow: hidden; display: inline-flex; align-items: center; justify-content: center; color: var(--ink-soft); font-weight: 700; }
+    .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: rgba(0,0,0,0.04); }
     .avatar.s-sm { width: 28px; height: 28px; font-size: 11px; }
     .avatar.s-lg { width: 84px; height: 84px; font-size: 28px; flex: none; }
     .child-card-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 6px; }
@@ -410,11 +413,13 @@
       const initial = (child.preferredName || child.name || "?").trim().charAt(0).toUpperCase();
       const thumb = driveThumbnail(child.photoUrl, size === "lg" ? 200 : 80);
       const cls = "avatar s-" + size;
-      if (thumb) {
-        // onerror clears the broken image so the initial fallback shows
-        return `<span class="${cls}"><img loading="lazy" referrerpolicy="no-referrer" src="${escapeHtml(thumb)}" alt="" onerror="this.remove()"></span>`;
-      }
-      return `<span class="${cls}">${escapeHtml(initial)}</span>`;
+      // Initial is always present as a fallback. If a photo URL exists, layer the
+      // <img> on top — when it loads it covers the initial; if it errors, onerror
+      // removes the <img> and the initial shows through.
+      const imgHtml = thumb
+        ? `<img loading="lazy" referrerpolicy="no-referrer" src="${escapeHtml(thumb)}" alt="" onerror="this.remove()">`
+        : "";
+      return `<span class="${cls}">${escapeHtml(initial)}${imgHtml}</span>`;
     }
 
     function renderTile(family) {
