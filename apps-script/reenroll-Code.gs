@@ -20,10 +20,10 @@
  *   STRIPE_SECRET_KEY  — sk_live_... (same key as Full-Time; see SECRETS.md)
  *
  * Fee swap:
- *   HOUSEHOLD_FEE_USD starts at 200. On Saturday 2026-04-25 at 3:00 PM Pacific
- *   Dan will ask Henry to flip this constant (and the matching one in the JS +
- *   the hero banner + intro copy) to 250. No auto-swap by design — keeps the
- *   audit trail clean.
+ *   Flipped 200 → 250 on 2026-04-29 (early-bird window closed Saturday
+ *   2026-04-25 at 3:00 PM Pacific). HOUSEHOLD_FEE_USD here, HOUSEHOLD_FEE in
+ *   the JS, hero banner copy, and meta description all moved together.
+ *   No auto-swap by design — keeps the audit trail clean.
  */
 
 // ---- Config helpers -----------------------------------------------------
@@ -37,9 +37,9 @@ const FORM_PAGE_URL = "https://www.rivertechschool.com/pages/register-school-ree
 const SUCCESS_URL = "https://www.rivertechschool.com/pages/register-school-reenroll-2026-27-success.html?session_id={CHECKOUT_SESSION_ID}";
 const CANCEL_URL = "https://www.rivertechschool.com/pages/register-school-reenroll-2026-27.html";
 
-// Household Re-Enrollment Fee. $200 through Saturday 2026-04-25 3:00 PM Pacific,
-// then manually flipped to 250. See header comment on "Fee swap".
-const HOUSEHOLD_FEE_USD = 200;
+// Household Re-Enrollment Fee. Flipped 200 → 250 on 2026-04-29 after the
+// early-bird window closed. See header comment on "Fee swap".
+const HOUSEHOLD_FEE_USD = 250;
 
 // Sheet columns: 34 family + (10 per child × 6) = 94 columns.
 const MAX_CHILDREN = 6;

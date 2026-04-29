@@ -7,9 +7,8 @@
    text box per child.
 
    POSTs to the Re-Enrollment Apps Script backend, which creates a Stripe
-   Checkout session for the Household Re-Enrollment Fee (currently $200;
-   Dan flips to $250 by hand on Saturday 2026-04-25 at 3:00 PM Pacific)
-   and returns its URL. */
+   Checkout session for the Household Re-Enrollment Fee ($250 since
+   2026-04-29, after the early-bird window closed) and returns its URL. */
 (function () {
   "use strict";
 
@@ -18,13 +17,13 @@
   const BACKEND_URL = "https://script.google.com/macros/s/AKfycbz7duCV6kqLV8brjz0ujhgsoqY7LOMW7501hjUg_oX42xykAZ-6NSY8I_kBzx93fcO1/exec";
 
   // Household Re-Enrollment Fee — NOT per child.
-  //   $200 at launch (Early Re-Enrollment).
-  //   Dan manually changes this to 250 on Saturday 2026-04-25 at 3:00 PM Pacific.
-  //   When flipping, ALSO change:
+  //   Flipped 200 → 250 on 2026-04-29 after the early-bird window closed.
+  //   If the fee ever changes again, ALSO change:
   //     - HOUSEHOLD_FEE_USD in apps-script/reenroll-Code.gs
   //     - Hero banner text in pages/register-school-reenroll-2026-27.html
-  //     - Intro copy mentioning $200 in pages/register-school-reenroll-2026-27.html
-  const HOUSEHOLD_FEE = 200;
+  //     - Meta description in pages/register-school-reenroll-2026-27.html
+  //     - Hardcoded $ in summary row of pages/register-school-reenroll-2026-27.html
+  const HOUSEHOLD_FEE = 250;
 
   const MAX_CHILDREN = 6;
 
@@ -77,8 +76,8 @@
     }
 
     // Reflect current HOUSEHOLD_FEE in the summary (defensive — the HTML
-    // hardcodes $200, but if Dan flips the fee here and forgets to update
-    // the template, the summary stays honest).
+    // hardcodes the dollar amount, but if the fee ever changes here and the
+    // template is missed, this keeps the summary honest).
     const feeEl = document.getElementById("summary-fee");
     if (feeEl) feeEl.textContent = "$" + HOUSEHOLD_FEE;
 
