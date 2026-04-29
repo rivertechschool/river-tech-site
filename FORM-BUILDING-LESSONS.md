@@ -60,6 +60,9 @@ If you POST to the Apps Script Web App URL via curl and get `Page Not Found` bac
 **11a. Verify a POST worked by reading the Executions log, not the curl response.**
 Apps Script → Executions tab shows every invocation with Duration + Status. A completed `doPost` with Duration >2s means the FULL handler ran (Sheet + Stripe API + MailApp all called). A <1s completion usually means it fail-fast bailed early (e.g. missing Script Property). This is faster and more reliable than clicking into the execution for log details.
 
+**11b. Apps Script editor needs the OWNER account signed into Chrome to redeploy.**
+If the script is owned by `learn@rivertech.me` but Cowork's Chrome session is signed in only as `dhegelund@gmail.com`, opening `script.google.com/d/<id>/edit` returns "Access Denied — You're signed in as dhegelund@gmail.com." Tried `?authuser=1` but `myaccount.google.com/u/1/` also resolved to dhegelund — meaning the second account simply isn't in Chrome at all. Discovered when trying to flip the Re-Enrollment fee 200→250 on 2026-04-29. Workaround: ask Dan to sign learn@rivertech.me into Chrome once (then future Henry sessions can drive Apps Script redeploys autonomously), OR ask Dan to do the in-editor edit + redeploy himself when access is blocked. The on-disk `apps-script/<form>-Code.gs` does NOT auto-sync to the cloud — local edits are useless to Stripe Checkout until pushed into the editor and a new version is deployed.
+
 **12. GitHub Pages caches aggressively.**
 After pushing a change, give it 30–90 seconds to deploy. If you pull a URL too early, you'll get the stale version and chase a bug that doesn't exist. Use a `?v=something-unique` query string to bypass your own browser cache — but the CDN still needs time.
 
@@ -99,3 +102,4 @@ Until every box is checked, the form is not done — it's "almost done", which i
 
 - **2026-04-21** — initial draft after Full-Time 2026-27 shipped. Captured lessons from RTD, Homeschool, Field Trip, and Full-Time builds.
 - **2026-04-21** — after Re-Enrollment 2026-27 shipped. Added 11a (Executions-log Duration as the fastest E2E-verify signal) and logged Re-Enrollment in the "shipped so far" list. Reconfirmed #11 (curl POST gotcha is real and repeatable).
+- **2026-04-29** — after flipping Re-Enrollment fee 200→250. Added 11b (Apps Script redeploy requires OWNER account signed into Chrome — Cowork's Chrome session was on dhegelund@gmail.com only, blocking access to a script owned by learn@rivertech.me). Frontend flipped successfully (commit `de594e5`); backend redeploy handed back to Dan as a Dan-action.
