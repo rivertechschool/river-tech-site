@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Enrollment Review &mdash; River Tech 2026&ndash;27</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f5f2;
+      --panel: #ffffff;
+      --ink: #272443;
+      --ink-soft: #6b6883;
+      --line: rgba(39, 36, 67, 0.12);
+      --rt-red: #d63232;
+      --rt-red-soft: #fbe6e3;
+      --hs-green: #2f8a5a;
+      --hs-green-soft: #e2f2e9;
+      --re-blue: #4a78c2;
+      --re-blue-soft: #e3ecf6;
+      --neutral: #8a8aa0;
+      --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.04);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-size: 14px; line-height: 1.4; }
+
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: var(--panel); border-bottom: 1px solid var(--line); }
+    .topbar h1 { margin: 0; font-size: 18px; font-weight: 700; }
+    .topbar .meta { font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 12px; }
+    .topbar .refresh-btn { background: var(--rt-red); color: white; border: none; border-radius: 4px; padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .topbar .refresh-btn:hover { background: #b82828; }
+    .topbar .refresh-btn:disabled { opacity: 0.5; cursor: wait; }
+
+    .tabs { display: flex; gap: 2px; padding: 10px 14px 0; background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+    .tab { background: transparent; border: 1px solid transparent; border-bottom: 2px solid transparent; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--ink-soft); cursor: pointer; border-radius: 4px 4px 0 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+    .tab:hover { background: rgba(0,0,0,0.04); color: var(--ink); }
+    .tab.active { color: var(--ink); border-bottom-color: var(--rt-red); }
+    .tab[data-source="homeschool"].active { border-bottom-color: var(--hs-green); }
+    .tab[data-source="re-enrollment"].active { border-bottom-color: var(--re-blue); }
+    .tab[data-source="declined"].active { border-bottom-color: var(--neutral); }
+    .tab .count { display: inline-block; margin-left: 4px; font-size: 11px; padding: 1px 7px; border-radius: 10px; background: rgba(0,0,0,0.08); color: var(--ink-soft); font-weight: 700; }
+    .tab.active .count { background: var(--rt-red-soft); color: var(--rt-red); }
+    .tab[data-source="homeschool"].active .count { background: var(--hs-green-soft); color: var(--hs-green); }
+    .tab[data-source="re-enrollment"].active .count { background: var(--re-blue-soft); color: var(--re-blue); }
+
+    .pipeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 14px; }
+    .pipeline.declined-view { grid-template-columns: 1fr; max-width: 700px; margin: 0 auto; }
+
+    .col { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; min-height: 200px; display: flex; flex-direction: column; }
+    .col-head { padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); display: flex; justify-content: space-between; align-items: center; }
+    .col-head .col-count { font-size: 11px; color: var(--ink); background: rgba(0,0,0,0.06); padding: 1px 7px; border-radius: 10px; }
+    .col-body { padding: 8px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .col-empty { color: var(--ink-soft); font-style: italic; padding: 14px 8px; font-size: 12px; text-align: center; }
+
+    .tile { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--rt-red); border-radius: 4px; padding: 10px 12px; cursor: pointer; transition: box-shadow 0.15s, transform 0.05s, border-color 0.15s; }
+    .tile:hover { box-shadow: var(--shadow); border-color: var(--rt-red); }
+    .tile:active { transform: translateY(1px); }
+    .tile.src-homeschool { border-left-color: var(--hs-green); background: var(--hs-green-soft); }
+    .tile.src-homeschool:hover { border-color: var(--hs-green); }
+    .tile.src-re-enrollment { border-left-color: var(--re-blue); background: var(--re-blue-soft); }
+    .tile.src-re-enrollment:hover { border-color: var(--re-blue); }
+    .tile.src-declined { border-left-color: var(--neutral); background: rgba(0,0,0,0.04); opacity: 0.85; }
+
+    .tile-fam { font-weight: 700; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
+    .tile-email { font-size: 11px; color: var(--ink-soft); margin-bottom: 6px; word-break: break-all; }
+    .tile-kid { font-size: 12px; color: var(--ink); padding: 2px 0; }
+    .tile-kid .kid-name { font-weight: 600; }
+    .tile-kid .kid-meta { color: var(--ink-soft); font-size: 11px; }
+    .tile-foot { margin-top: 6px; font-size: 11px; color: var(--ink-soft); display: flex; justify-content: space-between; }
+
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: none; align-items: flex-start; justify-content: center; z-index: 100; padding: 30px 20px; overflow-y: auto; }
+    .overlay.open { display: flex; }
+    .modal { background: var(--panel); border-radius: 8px; max-width: 720px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .modal-head { padding: 14px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .modal-head h2 { margin: 0; font-size: 18px; }
+    .modal-head .close { background: transparent; border: 1px solid var(--line); border-radius: 4px; width: 28px; height: 28px; cursor: pointer; font-size: 16px; line-height: 1; color: var(--ink-soft); }
+    .modal-head .close:hover { background: rgba(0,0,0,0.05); color: var(--ink); }
+    .modal-body { padding: 18px 20px; }
+    .modal-body section { margin-bottom: 18px; }
+    .modal-body h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); font-weight: 700; }
+    .modal-body .kv { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; font-size: 13px; }
+    .modal-body .kv dt { color: var(--ink-soft); }
+    .modal-body .kv dd { margin: 0; word-break: break-word; }
+    .modal-body .child-card { background: var(--bg); border-radius: 4px; padding: 10px 12px; margin-bottom: 8px; }
+    .modal-body .child-card-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+    .modal-body .stage-badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; background: var(--rt-red-soft); color: var(--rt-red); font-weight: 700; }
+    .modal-body .stage-Decided { background: #fff4d6; color: #b07b00; }
+    .modal-body .stage-Confirmed { background: #d8eed1; color: #2f7d3a; }
+    .modal-body .stage-Committed { background: #d2e6f8; color: #1e5da6; }
+    .modal-body .stage-Declined { background: #e5e5e5; color: #555; }
+    .modal-body a { color: var(--rt-red); }
+
+    .action-bar { display: flex; gap: 10px; padding: 14px 20px; border-top: 1px solid var(--line); background: var(--bg); border-radius: 0 0 8px 8px; flex-wrap: wrap; }
+    .action-btn { font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 4px; cursor: pointer; border: 1px solid var(--line); background: white; color: var(--ink); }
+    .action-btn:hover { background: var(--rt-red-soft); border-color: var(--rt-red); color: var(--rt-red); }
+    .action-btn.primary { background: var(--rt-red); border-color: var(--rt-red); color: white; }
+    .action-btn.primary:hover { background: #b82828; border-color: #b82828; }
+    .action-btn.secondary { background: white; }
+    .action-btn.danger { color: #a73838; border-color: #e6c0c0; }
+    .action-btn.danger:hover { background: #fae9e9; border-color: #a73838; }
+    .action-btn:disabled { opacity: 0.4; cursor: wait; }
+
+    .loader { padding: 40px; text-align: center; color: var(--ink-soft); }
+    .loader .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid var(--line); border-top-color: var(--rt-red); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 10px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-banner { background: #fae9e9; border-left: 3px solid #a73838; color: #a73838; padding: 10px 14px; margin: 14px; font-size: 13px; }
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--ink); color: white; padding: 10px 16px; border-radius: 4px; font-size: 13px; z-index: 200; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+    .toast.show { opacity: 1; }
+    .toast.error { background: #a73838; }
+
+    @media (max-width: 1100px) { .pipeline { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .pipeline { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>River Tech Enrollment 2026&ndash;27</h1>
+    <div class="meta">
+      <span id="meta-line">Loading&hellip;</span>
+      <button class="refresh-btn" id="refresh-btn" onclick="loadData()">Refresh</button>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="pipeline" id="pipeline">
+    <div class="loader"><span class="spinner"></span>Loading enrollment data&hellip;</div>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="if (event.target.id==='overlay') closeModal()">
+    <div class="modal" id="modal"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ===== Configuration ===================================================
+    const PIPELINE_TOKEN = "8ff4851af82ed79c4a3b75ff454b12172c67fac5fbdfffb9";
+    const BACKENDS = {
+      "full-time":     "https://script.google.com/macros/s/AKfycbwggeLDK4kzV0HOXXhfqW7aX2ow5zUZwuOpET8RmXuZCOhmiWSGP-OSPrrH9ouqkZxC/exec",
+      "homeschool":    "https://script.google.com/macros/s/AKfycbxbZ8U_EhvQTJLrXLLo1EsS45grDHTtCRnOJbU_Di_o16Rc4bJSSV0Kf3yTOQk9dbEUDQ/exec",
+      "re-enrollment": "https://script.google.com/macros/s/AKfycbz7duCV6kqLV8brjz0ujhgsoqY7LOMW7501hjUg_oX42xykAZ-6NSY8I_kBzx93fcO1/exec"
+    };
+
+    const SCHEDULE_LABELS = {
+      "performing-arts": "Performing Arts Major — Mon–Thu (4 days)",
+      "technology":      "Technology Major — Tue–Fri (4 days)",
+      "double-major":    "Double Major — Mon–Fri (5 days)"
+    };
+    const STAGES = ["Inbox", "Decided", "Confirmed", "Committed"];
+
+    // ===== State ============================================================
+    let DATA = {};
+    let ALL = { "full-time": [], "homeschool": [], "re-enrollment": [] };
+    let currentSource = "full-time";
+    let openModalRegId = null; // re-open same modal after refresh
+
+    // ===== Data fetching ====================================================
+    async function loadData() {
+      const refreshBtn = document.getElementById("refresh-btn");
+      refreshBtn.disabled = true;
+      const meta = document.getElementById("meta-line");
+      meta.textContent = "Refreshing…";
+      try {
+        const results = await Promise.all(Object.entries(BACKENDS).map(async ([source, url]) => {
+          const res = await fetch(`${url}?action=list&token=${encodeURIComponent(PIPELINE_TOKEN)}`);
+          if (!res.ok) throw new Error(`${source}: HTTP ${res.status}`);
+          const j = await res.json();
+          if (!j.ok) throw new Error(`${source}: ${j.error || "unknown error"}`);
+          return [source, j];
+        }));
+        DATA = {};
+        for (const [source, j] of results) DATA[source] = { headers: j.headers, rows: j.rows };
+        ALL = parseAll();
+        const total = Object.values(ALL).reduce((s, arr) => s + arr.length, 0);
+        const now = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+        meta.textContent = `${total} families · refreshed ${now}`;
+        renderTabs();
+        renderPipeline();
+        if (openModalRegId) {
+          // Re-open the same family's modal if it was open
+          const found = Object.values(ALL).flat().find(f => f.regId === openModalRegId);
+          if (found) openModal(found);
+        }
+      } catch (err) {
+        meta.textContent = "Error";
+        document.getElementById("pipeline").innerHTML = `<div class="error-banner">Failed to load: ${escapeHtml(err.message)}<br><br>Check that the page URL token is correct, and that the Apps Script Web Apps are deployed.</div>`;
+        console.error(err);
+      } finally {
+        refreshBtn.disabled = false;
+      }
+    }
+
+    async function postAction(source, action, params) {
+      const url = BACKENDS[source];
+      const body = new URLSearchParams({ token: PIPELINE_TOKEN, ...params });
+      // Use text/plain to avoid CORS preflight; Apps Script reads e.parameter from form-encoded body anyway
+      const res = await fetch(`${url}?action=${encodeURIComponent(action)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString()
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const j = await res.json();
+      if (!j.ok) throw new Error(j.error || "unknown error");
+      return j;
+    }
+
+    async function advanceFamily(family, toStage) {
+      const btn = event && event.target;
+      if (btn) btn.disabled = true;
+      try {
+        await postAction(family.source, "advance", { regId: family.regId, toStage });
+        toast(`${family.parent1.lastName}: → ${toStage}`);
+        await loadData();
+      } catch (err) {
+        toast(`Failed: ${err.message}`, true);
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    async function declineFamily(family) {
+      if (!confirm(`Decline ${family.parent1.lastName}? They’ll move to the Declined tab.`)) return;
+      const btn = event && event.target;
+      if (btn) btn.disabled = true;
+      try {
+        await postAction(family.source, "advance", { regId: family.regId, toStage: "Declined" });
+        toast(`${family.parent1.lastName}: declined`);
+        closeModal();
+        await loadData();
+      } catch (err) {
+        toast(`Failed: ${err.message}`, true);
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function toast(msg, isError) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.className = "toast show" + (isError ? " error" : "");
+      setTimeout(() => { t.className = "toast"; }, 2400);
+    }
+
+    // ===== Parsing helpers ==================================================
+    function ageFromDob(dob) {
+      if (!dob) return "";
+      const d = new Date(dob);
+      if (isNaN(d.getTime())) return "";
+      const today = new Date();
+      let age = today.getFullYear() - d.getFullYear();
+      const m = today.getMonth() - d.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < d.getDate())) age--;
+      return age;
+    }
+
+    function fmtSubmitted(iso) {
+      if (!iso) return "";
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return iso;
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    }
+
+    function getCol(row, headers, name) {
+      const idx = headers.indexOf(name);
+      return idx >= 0 ? row[idx] : "";
+    }
+
+    function parseFamily(source, headers, row) {
+      const get = (n) => getCol(row, headers, n);
+      const childCount = parseInt(get("Children Count")) || 0;
+      const children = [];
+      for (let i = 1; i <= 6; i++) {
+        const name = get(`Child ${i} Name`);
+        if (!name) continue;
+        const dob = get(`Child ${i} DOB`);
+        const grade = get(`Child ${i} Grade`);
+        const c = { name, preferredName: get(`Child ${i} Preferred Name`), dob, age: ageFromDob(dob),
+                    gender: get(`Child ${i} Gender`), grade,
+                    livesWith: get(`Child ${i} Lives With`),
+                    livesWithNotes: get(`Child ${i} Lives With Notes`),
+                    health: get(`Child ${i} Health`),
+                    notes: get(`Child ${i} Notes`) || get(`Child ${i} Notes for New Year`) };
+        if (source === "homeschool") {
+          c.reading = get(`Child ${i} Reading`);
+          c.tablet  = get(`Child ${i} Tablet`);
+          c.programs = get(`Child ${i} Programs`);
+          c.previousSchooling = get(`Child ${i} Previous Schooling`);
+          c.attitude = get(`Child ${i} Attitude`);
+          c.hopes = get(`Child ${i} Hopes`);
+          c.photoUrl = get(`Child ${i} Photo URL`);
+        } else {
+          c.schedule = get(`Child ${i} Schedule`);
+          c.scheduleLabel = SCHEDULE_LABELS[c.schedule] || c.schedule;
+          c.attitude = get(`Child ${i} Attitude`);
+          c.approach = get(`Child ${i} Approach`);
+          c.hopes = get(`Child ${i} Hopes`);
+          c.fav = get(`Child ${i} Favorite Subjects`);
+          c.curiosities = get(`Child ${i} Curiosities`);
+          c.photoUrl = get(`Child ${i} Photo URL`);
+          c.reportCardUrl = get(`Child ${i} Report Card URL`);
+        }
+        children.push(c);
+      }
+      return {
+        source,
+        regId: String(get("Registration ID") || ""),
+        submittedAt: get("Submitted (UTC)"),
+        stage: get("Pipeline Stage") || "Inbox",
+        decidedDate: get("Decided Date"),
+        confirmedDate: get("Confirmed Date"),
+        committedDate: get("Committed Date"),
+        declinedDate: get("Declined Date"),
+        parent1: { firstName: get("Parent 1 First"), lastName: get("Parent 1 Last"), email: get("Parent 1 Email"), phone: get("Parent 1 Phone"), address: get("Parent 1 Address") },
+        parent2: { firstName: get("Parent 2 First"), lastName: get("Parent 2 Last"), email: get("Parent 2 Email"), phone: get("Parent 2 Phone") },
+        emergency: { name: get("Emergency Name"), relationship: get("Emergency Relationship"), phone: get("Emergency Phone"), altPhone: get("Emergency Alt Phone") },
+        insurance: { provider: get("Insurance Provider"), primary: get("Insurance Primary Insured"), policy: get("Insurance Policy"), group: get("Insurance Group") },
+        pickup: [
+          { name: get("Pickup 1 Name"), relationship: get("Pickup 1 Relationship"), phone: get("Pickup 1 Phone") },
+          { name: get("Pickup 2 Name"), relationship: get("Pickup 2 Relationship"), phone: get("Pickup 2 Phone") },
+          { name: get("Pickup 3 Name"), relationship: get("Pickup 3 Relationship"), phone: get("Pickup 3 Phone") }
+        ],
+        maxDays: source === "homeschool" ? get("Max Days") : null,
+        signature: get("Signature"),
+        signatureDate: get("Signature Date"),
+        childrenCount: childCount,
+        children
+      };
+    }
+
+    function parseAll() {
+      const out = { "full-time": [], "homeschool": [], "re-enrollment": [] };
+      for (const src of Object.keys(out)) {
+        const block = DATA[src];
+        if (!block || !block.rows) continue;
+        for (const row of block.rows) out[src].push(parseFamily(src, block.headers, row));
+      }
+      return out;
+    }
+
+    // ===== Render: tabs =====================================================
+    function renderTabs() {
+      const sources = [
+        { id: "full-time", label: "Full-Time" },
+        { id: "homeschool", label: "Homeschool" },
+        { id: "re-enrollment", label: "Re-Enrollment" },
+        { id: "declined", label: "Declined" }
+      ];
+      const tabsEl = document.getElementById("tabs");
+      tabsEl.innerHTML = "";
+      for (const src of sources) {
+        let count;
+        if (src.id === "declined") {
+          count = ["full-time","homeschool","re-enrollment"].reduce((s, k) => s + ALL[k].filter(f => f.stage === "Declined").length, 0);
+        } else {
+          count = ALL[src.id].filter(f => f.stage !== "Declined").length;
+        }
+        const btn = document.createElement("button");
+        btn.className = "tab" + (src.id === currentSource ? " active" : "");
+        btn.dataset.source = src.id;
+        btn.innerHTML = `${src.label} <span class="count">${count}</span>`;
+        btn.onclick = () => { currentSource = src.id; renderTabs(); renderPipeline(); };
+        tabsEl.appendChild(btn);
+      }
+    }
+
+    function gradeLabel(g) {
+      if (!g && g !== 0) return "";
+      if (g === "K") return "K";
+      const n = parseInt(g);
+      if (!isNaN(n)) return `gr ${n}`;
+      return String(g);
+    }
+
+    function scheduleLine(family) {
+      if (family.source === "homeschool") {
+        const max = family.maxDays;
+        if (max) return `Up to ${max} day${max > 1 ? "s" : ""}/week`;
+        return "";
+      }
+      if (family.children.length && family.children[0].scheduleLabel) {
+        const kids = family.children;
+        const allSame = kids.every(k => k.schedule === kids[0].schedule);
+        if (allSame) return SCHEDULE_LABELS[kids[0].schedule] || kids[0].schedule;
+        return "Mixed schedules";
+      }
+      return "";
+    }
+
+    function renderTile(family) {
+      const fam = family.parent1.lastName || "(no last name)";
+      const p1 = (family.parent1.firstName + " " + family.parent1.lastName).trim();
+      const kidsLine = family.children.map(c => {
+        const name = c.preferredName || (c.name ? c.name.split(" ")[0] : "");
+        const age = (c.age !== "" && c.age !== null && c.age !== undefined) ? `, ${c.age}` : "";
+        return `<div class="tile-kid"><span class="kid-name">${escapeHtml(name)}${age}</span> <span class="kid-meta">${escapeHtml(gradeLabel(c.grade))}</span></div>`;
+      }).join("");
+      const schedSummary = scheduleLine(family);
+      const tile = document.createElement("div");
+      tile.className = "tile src-" + family.source;
+      tile.innerHTML = `
+        <div class="tile-fam">${escapeHtml(fam)} — ${escapeHtml(p1)}</div>
+        <div class="tile-email">${escapeHtml(family.parent1.email)}</div>
+        ${kidsLine}
+        ${schedSummary ? `<div class="tile-kid kid-meta" style="margin-top:4px;font-style:italic;">${escapeHtml(schedSummary)}</div>` : ""}
+        <div class="tile-foot"><span>${escapeHtml(fmtSubmitted(family.submittedAt))}</span><span>${escapeHtml((family.regId || "").replace(/^[A-Z]+-/, ""))}</span></div>
+      `;
+      tile.onclick = () => openModal(family);
+      return tile;
+    }
+
+    function renderPipeline() {
+      const root = document.getElementById("pipeline");
+      root.innerHTML = "";
+      if (currentSource === "declined") {
+        root.classList.add("declined-view");
+        const declined = ["full-time","homeschool","re-enrollment"].flatMap(k => ALL[k].filter(f => f.stage === "Declined"));
+        const col = document.createElement("div");
+        col.className = "col";
+        col.innerHTML = `<div class="col-head"><span>Declined</span><span class="col-count">${declined.length}</span></div>`;
+        const body = document.createElement("div");
+        body.className = "col-body";
+        if (declined.length === 0) body.innerHTML = '<div class="col-empty">No families have been declined.</div>';
+        else for (const f of declined) body.appendChild(renderTile(f));
+        col.appendChild(body);
+        root.appendChild(col);
+        return;
+      }
+      root.classList.remove("declined-view");
+      const families = ALL[currentSource].filter(f => f.stage !== "Declined");
+      for (const stage of STAGES) {
+        const col = document.createElement("div");
+        col.className = "col";
+        const inStage = families.filter(f => f.stage === stage);
+        col.innerHTML = `<div class="col-head"><span>${stage}</span><span class="col-count">${inStage.length}</span></div>`;
+        const body = document.createElement("div");
+        body.className = "col-body";
+        if (inStage.length === 0) body.innerHTML = '<div class="col-empty">—</div>';
+        else for (const f of inStage) body.appendChild(renderTile(f));
+        col.appendChild(body);
+        root.appendChild(col);
+      }
+    }
+
+    // ===== Modal: family detail =============================================
+    function openModal(family) {
+      openModalRegId = family.regId;
+      document.getElementById("modal").innerHTML = renderModal(family);
+      document.getElementById("overlay").classList.add("open");
+      // Wire up action buttons
+      window.__currentFamily = family;
+    }
+    function closeModal() {
+      openModalRegId = null;
+      document.getElementById("overlay").classList.remove("open");
+    }
+
+    function nextStage(stage) {
+      const map = { "Inbox": "Decided", "Decided": "Confirmed", "Confirmed": "Committed" };
+      return map[stage] || null;
+    }
+
+    function advanceLabel(stage) {
+      const labels = {
+        "Inbox":     "Mark as Decided (acceptance email sent)",
+        "Decided":   "Mark as Confirmed (first package sent)",
+        "Confirmed": "Mark as Committed (Q1 paid, larger package sent)"
+      };
+      return labels[stage] || null;
+    }
+
+    function renderModal(family) {
+      const f = family;
+      const fam = (f.parent1.firstName + " " + f.parent1.lastName).trim();
+      const submittedFull = f.submittedAt ? new Date(f.submittedAt).toLocaleString("en-US", { dateStyle: "long", timeStyle: "short" }) : "(unknown)";
+      const childrenHtml = f.children.map((c, i) => renderChild(c, i + 1, f.source)).join("");
+      const sourceLabel = f.source === "full-time" ? "Full-Time" : f.source === "homeschool" ? "Homeschool" : "Re-Enrollment";
+      const ns = nextStage(f.stage);
+      const advLbl = advanceLabel(f.stage);
+      let actionBar = '';
+      if (f.stage === "Declined") {
+        actionBar = `
+          <div class="action-bar">
+            <button class="action-btn" onclick='advanceFamily(window.__currentFamily, "Inbox")'>Restore to Inbox</button>
+            <button class="action-btn secondary" onclick="closeModal()">Close</button>
+          </div>`;
+      } else if (f.stage === "Committed") {
+        actionBar = `
+          <div class="action-bar">
+            <span style="color:var(--ink-soft);font-size:13px;align-self:center;">Already at the end of the pipeline.</span>
+            <button class="action-btn secondary" onclick="closeModal()" style="margin-left:auto;">Close</button>
+          </div>`;
+      } else {
+        actionBar = `
+          <div class="action-bar">
+            <button class="action-btn primary" onclick='advanceFamily(window.__currentFamily, "${ns}")'>${escapeHtml(advLbl)}</button>
+            ${f.stage === "Inbox" ? `<button class="action-btn danger" onclick="declineFamily(window.__currentFamily)">Decline</button>` : ""}
+            <button class="action-btn secondary" onclick="closeModal()" style="margin-left:auto;">Close</button>
+          </div>`;
+      }
+      return `
+        <div class="modal-head">
+          <h2>${escapeHtml(f.parent1.lastName)} family <span style="font-weight:400;font-size:14px;color:var(--ink-soft);">— ${escapeHtml(sourceLabel)}</span></h2>
+          <button class="close" onclick="closeModal()" title="Close">×</button>
+        </div>
+        <div class="modal-body">
+          <section>
+            <div class="kv">
+              <dt>Submitted:</dt><dd>${escapeHtml(submittedFull)}</dd>
+              <dt>Stage:</dt><dd><span class="stage-badge stage-${escapeHtml(f.stage)}">${escapeHtml(f.stage)}</span></dd>
+              <dt>Reg ID:</dt><dd><code style="font-size:11px;">${escapeHtml(f.regId)}</code></dd>
+              ${f.decidedDate ? `<dt>Decided:</dt><dd>${escapeHtml(f.decidedDate)}</dd>` : ""}
+              ${f.confirmedDate ? `<dt>Confirmed:</dt><dd>${escapeHtml(f.confirmedDate)}</dd>` : ""}
+              ${f.committedDate ? `<dt>Committed:</dt><dd>${escapeHtml(f.committedDate)}</dd>` : ""}
+              ${f.declinedDate ? `<dt>Declined:</dt><dd>${escapeHtml(f.declinedDate)}</dd>` : ""}
+            </div>
+          </section>
+          <section>
+            <h3>Parent 1</h3>
+            <div class="kv">
+              <dt>Name:</dt><dd>${escapeHtml(fam)}</dd>
+              <dt>Email:</dt><dd><a href="mailto:${escapeHtml(f.parent1.email)}">${escapeHtml(f.parent1.email)}</a></dd>
+              <dt>Phone:</dt><dd>${escapeHtml(f.parent1.phone)}</dd>
+              ${f.parent1.address ? `<dt>Address:</dt><dd>${escapeHtml(f.parent1.address)}</dd>` : ""}
+            </div>
+          </section>
+          ${f.parent2.firstName ? `
+          <section>
+            <h3>Parent 2</h3>
+            <div class="kv">
+              <dt>Name:</dt><dd>${escapeHtml((f.parent2.firstName + " " + f.parent2.lastName).trim())}</dd>
+              <dt>Email:</dt><dd>${f.parent2.email ? `<a href="mailto:${escapeHtml(f.parent2.email)}">${escapeHtml(f.parent2.email)}</a>` : ""}</dd>
+              <dt>Phone:</dt><dd>${escapeHtml(f.parent2.phone)}</dd>
+            </div>
+          </section>
+          ` : ""}
+          <section>
+            <h3>Children (${f.children.length})</h3>
+            ${childrenHtml}
+          </section>
+          ${f.emergency.name ? `
+          <section>
+            <h3>Emergency Contact</h3>
+            <div class="kv">
+              <dt>Name:</dt><dd>${escapeHtml(f.emergency.name)} ${f.emergency.relationship ? `(${escapeHtml(f.emergency.relationship)})` : ""}</dd>
+              <dt>Phone:</dt><dd>${escapeHtml(f.emergency.phone)} ${f.emergency.altPhone ? `/ alt: ${escapeHtml(f.emergency.altPhone)}` : ""}</dd>
+            </div>
+          </section>` : ""}
+          ${f.insurance.provider ? `
+          <section>
+            <h3>Insurance</h3>
+            <div class="kv">
+              <dt>Provider:</dt><dd>${escapeHtml(f.insurance.provider)}</dd>
+              ${f.insurance.primary ? `<dt>Primary insured:</dt><dd>${escapeHtml(f.insurance.primary)}</dd>` : ""}
+              ${f.insurance.policy ? `<dt>Policy:</dt><dd>${escapeHtml(f.insurance.policy)}</dd>` : ""}
+              ${f.insurance.group ? `<dt>Group:</dt><dd>${escapeHtml(f.insurance.group)}</dd>` : ""}
+            </div>
+          </section>` : ""}
+          ${f.pickup.some(p => p.name) ? `
+          <section>
+            <h3>Authorized pickup</h3>
+            <div class="kv">
+              ${f.pickup.filter(p => p.name).map(p => `<dt>${escapeHtml(p.name)}</dt><dd>${escapeHtml(p.relationship)} · ${escapeHtml(p.phone)}</dd>`).join("")}
+            </div>
+          </section>` : ""}
+        </div>
+        ${actionBar}
+      `;
+    }
+
+    function renderChild(c, n, source) {
+      const ageStr = (c.age !== "" && c.age !== null && c.age !== undefined) ? `${c.age} yo` : "";
+      const gradeStr = gradeLabel(c.grade);
+      const subtitle = [ageStr, gradeStr].filter(Boolean).join(" · ");
+      let scheduleStr = "";
+      if (source === "homeschool") {
+        scheduleStr = c.programs ? `Programs: ${c.programs}` : "";
+      } else {
+        scheduleStr = c.scheduleLabel || "";
+      }
+      const links = [];
+      if (c.photoUrl) links.push(`<a href="${escapeHtml(c.photoUrl)}" target="_blank" rel="noopener">Photo</a>`);
+      if (c.reportCardUrl) links.push(`<a href="${escapeHtml(c.reportCardUrl)}" target="_blank" rel="noopener">Report card</a>`);
+      const linkHtml = links.length ? `<div style="margin-top:6px;font-size:12px;">${links.join(" · ")}</div>` : "";
+      const livesWithMap = { "both": "Both parents (same household)", "shared": "Both parents (shared custody)", "mother": "Mother primarily", "father": "Father primarily", "other": "Other" };
+      return `
+        <div class="child-card">
+          <div class="child-card-title">${escapeHtml(c.preferredName || c.name)} ${c.preferredName && c.name && c.name !== c.preferredName ? `<span style="font-weight:400;color:var(--ink-soft);font-size:12px;">(${escapeHtml(c.name)})</span>` : ""}</div>
+          <div style="font-size:12px;color:var(--ink-soft);margin-bottom:6px;">${escapeHtml(subtitle)}</div>
+          ${scheduleStr ? `<div style="font-size:13px;margin-bottom:4px;">${escapeHtml(scheduleStr)}</div>` : ""}
+          ${c.livesWith ? `<div style="font-size:12px;color:var(--ink-soft);">Lives with: ${escapeHtml(livesWithMap[c.livesWith] || c.livesWith)}${c.livesWithNotes ? ` (${escapeHtml(c.livesWithNotes)})` : ""}</div>` : ""}
+          ${c.health ? `<div style="font-size:12px;color:var(--ink-soft);margin-top:4px;"><strong>Health:</strong> ${escapeHtml(c.health)}</div>` : ""}
+          ${c.notes ? `<div style="font-size:12px;color:var(--ink-soft);margin-top:4px;"><strong>Notes:</strong> ${escapeHtml(c.notes)}</div>` : ""}
+          ${c.attitude ? `<div style="font-size:12px;color:var(--ink-soft);margin-top:4px;"><strong>Attitude:</strong> ${escapeHtml(c.attitude)}</div>` : ""}
+          ${c.hopes ? `<div style="font-size:12px;color:var(--ink-soft);margin-top:4px;"><strong>Hopes:</strong> ${escapeHtml(c.hopes)}</div>` : ""}
+          ${linkHtml}
+        </div>
+      `;
+    }
+
+    function escapeHtml(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+    }
+
+    // ===== Boot =============================================================
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+    loadData();
+  </script>
+</body>
+</html>
