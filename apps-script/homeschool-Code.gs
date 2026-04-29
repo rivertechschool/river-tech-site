@@ -63,6 +63,17 @@ function doPost(e) {
         params.toStage || body.toStage
       ));
     }
+    if (params.action === "import") {
+      let body = {};
+      if (e.postData && e.postData.contents) {
+        try { body = JSON.parse(e.postData.contents); } catch (_) {}
+      }
+      return json_(pipelineImport_(
+        params.token || body.token,
+        body.rows || [],
+        body.dryRun === true
+      ));
+    }
     const payload = JSON.parse(e.postData.contents);
     const result = handleRegistration(payload);
     return json_(result);
@@ -554,6 +565,87 @@ function pipelineAdvance_(token, regId, toStage) {
     }
   }
   return { ok: false, error: "regId not found: " + regId };
+}
+
+/**
+ * One-shot historical import. Accepts rows keyed by sheet header name.
+ * Dedups by Parent 1 Email. Idempotent.
+ *
+ * Body: { token, rows: [{<header>: <value>}, ...], dryRun?: true }
+ */
+function pipelineImport_(token, rows, dryRun) {
+  if (!pipelineCheckToken_(token)) return { ok: false, error: "Bad token" };
+  if (!Array.isArray(rows)) return { ok: false, error: "rows array required" };
+  if (rows.length === 0) return { ok: true, source: PIPELINE_SOURCE, imported: 0, skippedDupes: 0, skippedNoEmail: 0, errors: [], totalProvided: 0, dryRun: !!dryRun };
+
+  const sh = pipelineSheet_();
+  const lastRow = sh.getLastRow();
+  const lastCol = sh.getLastColumn();
+  if (lastRow === 0 || lastCol === 0) {
+    return { ok: false, error: "Sheet has no headers — submit at least one form first" };
+  }
+  const headers = sh.getRange(1, 1, 1, lastCol).getValues()[0];
+
+  const emailColIdx = headers.indexOf("Parent 1 Email");
+  const existingEmails = {};
+  if (emailColIdx >= 0 && lastRow >= 2) {
+    const emailValues = sh.getRange(2, emailColIdx + 1, lastRow - 1, 1).getValues();
+    for (let i = 0; i < emailValues.length; i++) {
+      const e = String(emailValues[i][0] || "").trim().toLowerCase();
+      if (e) existingEmails[e] = true;
+    }
+  }
+
+  let imported = 0, skippedDupes = 0, skippedNoEmail = 0;
+  const errors = [];
+  const newRows = [];
+  const acceptedRegIds = [];
+
+  for (let i = 0; i < rows.length; i++) {
+    const obj = rows[i];
+    if (!obj || typeof obj !== "object") {
+      errors.push({ index: i, error: "row is not an object" });
+      continue;
+    }
+    const email = String(obj["Parent 1 Email"] || "").trim().toLowerCase();
+    if (!email) {
+      skippedNoEmail++;
+    } else if (existingEmails[email]) {
+      skippedDupes++;
+      continue;
+    } else {
+      existingEmails[email] = true;
+    }
+    const row = headers.map(function (h) {
+      const v = obj[h];
+      if (v === undefined || v === null) return "";
+      if (h === "Pipeline Stage" && (v === "" || v === undefined)) return "Inbox";
+      return v;
+    });
+    const stageIdx = headers.indexOf("Pipeline Stage");
+    if (stageIdx >= 0 && (row[stageIdx] === "" || row[stageIdx] === undefined || row[stageIdx] === null)) {
+      row[stageIdx] = "Inbox";
+    }
+    newRows.push(row);
+    imported++;
+    if (obj["Registration ID"]) acceptedRegIds.push(obj["Registration ID"]);
+  }
+
+  if (!dryRun && newRows.length > 0) {
+    sh.getRange(sh.getLastRow() + 1, 1, newRows.length, headers.length).setValues(newRows);
+  }
+
+  return {
+    ok: true,
+    source: PIPELINE_SOURCE,
+    imported: imported,
+    skippedDupes: skippedDupes,
+    skippedNoEmail: skippedNoEmail,
+    errors: errors,
+    totalProvided: rows.length,
+    dryRun: !!dryRun,
+    sampleAcceptedRegIds: acceptedRegIds.slice(0, 5)
+  };
 }
 
 function pipelineMigrate_(token) {
