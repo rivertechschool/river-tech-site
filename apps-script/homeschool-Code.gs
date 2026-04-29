@@ -35,9 +35,34 @@ const CANCEL_URL = "https://www.rivertechschool.com/pages/register-homeschool-20
 const MAX_CHILDREN = 6;
 const CHILD_COLS = 14;
 
+// ---- Pipeline (Enrollment-Review app) constants ------------------------
+const PIPELINE_SOURCE = "homeschool";
+const SHEET_TAB_NAME = "Enrollments";
+const PIPELINE_STAGES = ["Inbox", "Decided", "Confirmed", "Committed", "Declined"];
+const PIPELINE_DATE_COL_FOR = {
+  "Decided":   "Decided Date",
+  "Confirmed": "Confirmed Date",
+  "Committed": "Committed Date",
+  "Declined":  "Declined Date"
+};
+const PIPELINE_NEW_HEADERS = ["Decided Date", "Confirmed Date", "Committed Date", "Declined Date"];
+
 // ---- Web-app entrypoints -----------------------------------------------
 function doPost(e) {
   try {
+    const params = (e && e.parameter) || {};
+    if (params.action === "migrate") return json_(pipelineMigrate_(params.token));
+    if (params.action === "advance") {
+      let body = {};
+      if (e.postData && e.postData.contents) {
+        try { body = JSON.parse(e.postData.contents); } catch (_) {}
+      }
+      return json_(pipelineAdvance_(
+        params.token  || body.token,
+        params.regId  || body.regId,
+        params.toStage || body.toStage
+      ));
+    }
     const payload = JSON.parse(e.postData.contents);
     const result = handleRegistration(payload);
     return json_(result);
@@ -47,7 +72,9 @@ function doPost(e) {
   }
 }
 
-function doGet() {
+function doGet(e) {
+  const params = (e && e.parameter) || {};
+  if (params.action === "list") return json_(pipelineList_(params.token));
   return json_({ ok: true, message: "Homeschool 2026-27 backend is alive." });
 }
 
@@ -139,7 +166,7 @@ function writeToSheet_(registrationId, p, photoUrls) {
   // Auto-header on first write.
   if (sh.getLastRow() === 0) {
     const header = [
-      "Registration ID", "Submitted (UTC)", "Status",
+      "Registration ID", "Submitted (UTC)", "Pipeline Stage",
       "Parent 1 First", "Parent 1 Last", "Parent 1 Email", "Parent 1 Phone", "Parent 1 Address",
       "Parent 2 First", "Parent 2 Last", "Parent 2 Email", "Parent 2 Phone",
       "Children Count", "Max Days", "Family Fee (USD)",
@@ -174,7 +201,7 @@ function writeToSheet_(registrationId, p, photoUrls) {
   const row = [
     registrationId,
     p.submittedAt || new Date().toISOString(),
-    "Submitted (awaiting payment)",
+    "Inbox",
     p.parent.firstName || "",
     p.parent.lastName  || "",
     p.parent.email     || "",
@@ -472,4 +499,107 @@ function deleteAllDataRows_TESTONLY() {
   const last = sheet.getLastRow();
   if (last > 1) sheet.deleteRows(2, last - 1);
   Logger.log("Deleted data rows. Rows now: " + sheet.getLastRow());
+}
+
+// ==== Pipeline (Enrollment-Review app) ===================================
+// Endpoints used by the Enrollment-Review Cowork artifact:
+//   GET  ?action=list&token=XXX                      → list rows + headers
+//   POST ?action=advance + body{token,regId,toStage} → write stage transition
+//   POST ?action=migrate&token=XXX                   → one-shot schema migration
+//
+// Shared secret in Script Property PIPELINE_TOKEN. Same value across all 3 backends in v1.
+
+function pipelineSheet_() {
+  const ss = SpreadsheetApp.openById(cfg("SHEET_ID"));
+  return ss.getSheetByName(SHEET_TAB_NAME) || ss.getSheets()[0];
+}
+
+function pipelineCheckToken_(token) {
+  const expected = cfg("PIPELINE_TOKEN");
+  return expected && token && token === expected;
+}
+
+function pipelineList_(token) {
+  if (!pipelineCheckToken_(token)) return { ok: false, error: "Bad token" };
+  const sh = pipelineSheet_();
+  const lastRow = sh.getLastRow();
+  const lastCol = sh.getLastColumn();
+  if (lastRow < 2) return { ok: true, source: PIPELINE_SOURCE, headers: [], rows: [] };
+  const all = sh.getRange(1, 1, lastRow, lastCol).getValues();
+  return { ok: true, source: PIPELINE_SOURCE, headers: all[0], rows: all.slice(1) };
+}
+
+function pipelineAdvance_(token, regId, toStage) {
+  if (!pipelineCheckToken_(token)) return { ok: false, error: "Bad token" };
+  if (!regId || !toStage) return { ok: false, error: "regId and toStage required" };
+  if (PIPELINE_STAGES.indexOf(toStage) === -1) return { ok: false, error: "Unknown stage: " + toStage };
+  const sh = pipelineSheet_();
+  const lastRow = sh.getLastRow();
+  const lastCol = sh.getLastColumn();
+  if (lastRow < 2) return { ok: false, error: "Sheet empty" };
+  const all = sh.getRange(1, 1, lastRow, lastCol).getValues();
+  const headers = all[0];
+  const stageCol = headers.indexOf("Pipeline Stage") >= 0 ? headers.indexOf("Pipeline Stage") : headers.indexOf("Status");
+  if (stageCol < 0) return { ok: false, error: "Pipeline Stage column not found — run migrate first" };
+  const dateColName = PIPELINE_DATE_COL_FOR[toStage];
+  const dateCol = dateColName ? headers.indexOf(dateColName) : -1;
+  for (let r = 1; r < all.length; r++) {
+    if (String(all[r][0]) === String(regId)) {
+      sh.getRange(r + 1, stageCol + 1).setValue(toStage);
+      if (dateCol >= 0) {
+        const stamp = Utilities.formatDate(new Date(), "America/Los_Angeles", "yyyy-MM-dd");
+        sh.getRange(r + 1, dateCol + 1).setValue(stamp);
+      }
+      return { ok: true, regId: regId, newStage: toStage, stamped: dateColName || null };
+    }
+  }
+  return { ok: false, error: "regId not found: " + regId };
+}
+
+function pipelineMigrate_(token) {
+  // Trust-on-first-use bootstrap: if PIPELINE_TOKEN isn't set yet, the first
+  // caller establishes it. Web App URL is hard to guess; acceptable for v1.
+  const props = PropertiesService.getScriptProperties();
+  if (!props.getProperty("PIPELINE_TOKEN")) {
+    if (!token) return { ok: false, error: "Token required for first migrate" };
+    props.setProperty("PIPELINE_TOKEN", token);
+  }
+  if (!pipelineCheckToken_(token)) return { ok: false, error: "Bad token" };
+  const sh = pipelineSheet_();
+  const lastCol = sh.getLastColumn();
+  if (lastCol === 0) return { ok: true, message: "Sheet empty — nothing to migrate" };
+  const headers = sh.getRange(1, 1, 1, lastCol).getValues()[0];
+  let renamed = false;
+  let rewrittenInbox = 0;
+  const addedColumns = [];
+  const statusIdx = headers.indexOf("Status");
+  if (statusIdx >= 0) {
+    sh.getRange(1, statusIdx + 1).setValue("Pipeline Stage");
+    headers[statusIdx] = "Pipeline Stage";
+    renamed = true;
+  }
+  const stageColIdx = headers.indexOf("Pipeline Stage");
+  if (stageColIdx >= 0) {
+    const lastRow = sh.getLastRow();
+    if (lastRow >= 2) {
+      const range = sh.getRange(2, stageColIdx + 1, lastRow - 1, 1);
+      const data = range.getValues();
+      const updated = data.map(function (r) {
+        if (r[0] === "Submitted (awaiting payment)") { rewrittenInbox++; return ["Inbox"]; }
+        return r;
+      });
+      range.setValues(updated);
+    }
+  }
+  let nextCol = sh.getLastColumn() + 1;
+  for (let i = 0; i < PIPELINE_NEW_HEADERS.length; i++) {
+    const colName = PIPELINE_NEW_HEADERS[i];
+    if (headers.indexOf(colName) === -1) {
+      sh.getRange(1, nextCol).setValue(colName);
+      sh.getRange(1, nextCol).setFontWeight("bold");
+      addedColumns.push(colName);
+      nextCol++;
+    }
+  }
+  return { ok: true, source: PIPELINE_SOURCE, renamed: renamed, rewrittenInbox: rewrittenInbox, addedColumns: addedColumns };
 }
