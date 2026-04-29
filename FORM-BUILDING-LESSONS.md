@@ -106,3 +106,41 @@ Until every box is checked, the form is not done — it's "almost done", which i
 - **2026-04-21** — initial draft after Full-Time 2026-27 shipped. Captured lessons from RTD, Homeschool, Field Trip, and Full-Time builds.
 - **2026-04-21** — after Re-Enrollment 2026-27 shipped. Added 11a (Executions-log Duration as the fastest E2E-verify signal) and logged Re-Enrollment in the "shipped so far" list. Reconfirmed #11 (curl POST gotcha is real and repeatable).
 - **2026-04-29** — after flipping Re-Enrollment fee 200→250. Added 11b (Apps Script redeploy requires OWNER account signed into Chrome). Dan signed in `learn@rivertech.me` mid-session, then Henry drove the full edit + save + redeploy from JS in Chrome (Version 2 deployed, doPost confirmed at 2.445s). Added 11c (the function-run picker is the one part of the IDE that won't accept synthesized clicks — `isTrusted` filter).
+- **2026-04-29** — Cognito historical import (33 families). Added the next four lessons.
+
+---
+
+## Cognito + Apps Script deploys (added 2026-04-29 from the historical import)
+
+**15. Cognito "All Fields" export = multiple worksheets, one per repeating section.**
+The first sheet has only the parent-level fields (parent name, agreement checkboxes, payment summary). Per-family contact (FamilyInformation), per-child blocks (ChildInformationAndDetails), pickup persons (AuthorizedPickupAndDropoffInfor), per-child health (ChildSpecificHealthInformationS), educational history, and uploaded-file metadata all sit on **separate sheets within the same .xlsx**, joined to the parent row by `<FormName>_Id`. Read every sheet, not just `wb.active`. Burned 30 minutes thinking the export was thin when it wasn't.
+
+**16. Pushing >25k-char Apps Script files into the live editor — use raw.githubusercontent.com.**
+Steps:
+1. Save edits locally.
+2. From the Mac (osascript — sandbox git is broken per #13), `git add` + `git commit` + `git push origin main` so the new file is on GitHub.
+3. In the Apps Script editor (Chrome MCP), run a small `javascript_tool` snippet that fetches the raw URL and assigns it via Monaco's API:
+```js
+(async () => {
+  const r = await fetch('https://raw.githubusercontent.com/rivertechschool/river-tech-site/main/apps-script/<file>.gs');
+  monaco.editor.getModels()[0].setValue(await r.text());
+  return 'set, len=' + monaco.editor.getModels()[0].getValue().length;
+})()
+```
+raw.githubusercontent.com sets `Access-Control-Allow-Origin: *`, so cross-origin fetch from script.google.com works. Single round trip. No clipboard, no chunking.
+
+**17. The "New version" dropdown in Manage Deployments will silently roll you back if you misclick.**
+The dropdown contains: `New version`, then every existing `Version N on …` ordered newest-first. The "currently deployed" version is highlighted with a gray background — easy to misread as "selected New version" on a quick glance. Hit deploy after the misclick and you've **rolled the live URL back to that older version, with the same Web App URL**. Symptom: `?action=list` (or any new endpoint added after that older version) suddenly returns wrong/missing fields. Recovery: open Manage Deployments again, edit pencil, dropdown, click `New version` for real, deploy. After every redeploy, *verify* with a known endpoint (`curl ?action=list&token=…` via Python urllib — see #18).
+
+**18. Verify Apps Script doPost via Python urllib, not curl.**
+curl follows the 302 → googleusercontent.com redirect with method GET (dropping the body), gets 405. Apps Script's doPost actually executes on the *first* request before the redirect, so the side-effect lands; but the curl response is misleading. Python's `urllib.request` handles the redirect cleanly and returns the JSON the doPost produced. Use it for any one-off endpoint check:
+```python
+req = urllib.request.Request(URL + '?action=import', data=body, method='POST',
+                             headers={'Content-Type': 'application/json'})
+with urllib.request.urlopen(req, timeout=60) as r:
+    print(json.loads(r.read().decode()))
+```
+This is the same gotcha as #11 from a different angle — the doPost works, just curl doesn't show it.
+
+**19. Idempotent server-side dedup is the safe primitive for one-shot imports.**
+The Apps Script `pipelineImport_` accepts an array of row objects keyed by sheet header name and dedups by lowercased `Parent 1 Email` against the live sheet. Re-running the same payload writes nothing. Combined with `dryRun: true` — which performs the same dedup logic but skips the append — this gives a safe rehearsal before commit. Always do `--dry` before `--commit`.
