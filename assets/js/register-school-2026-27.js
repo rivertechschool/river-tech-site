@@ -2,7 +2,7 @@
    Renders N child cards based on #childCount selector, collects child
    details + optional photo + report-card uploads, and POSTs to the
    Apps Script backend which creates a Stripe Checkout session for the
-   flat $300 Household Registration Fee and returns its URL.
+   flat $250 Household Registration Fee and returns its URL.
    Files are sent as base64 and uploaded to Drive on the backend. */
 (function () {
   "use strict";
@@ -12,7 +12,7 @@
   const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwggeLDK4kzV0HOXXhfqW7aX2ow5zUZwuOpET8RmXuZCOhmiWSGP-OSPrrH9ouqkZxC/exec";
 
   // Flat household registration fee — NOT per child.
-  const HOUSEHOLD_FEE = 300;
+  const HOUSEHOLD_FEE = 250;
 
   const MAX_CHILDREN = 6;
 

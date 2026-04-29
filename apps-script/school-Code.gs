@@ -10,7 +10,7 @@
  * Per submission:
  *   1. Upload each child's photo + report card (if any) to Drive folders.
  *   2. Append a row to the Sheet (SHEET_ID) with file URLs embedded.
- *   3. Create a Stripe Checkout Session for the flat $300 Household
+ *   3. Create a Stripe Checkout Session for the flat $250 Household
  *      Registration Fee.
  *   4. Email the parent + notify admin.
  *   5. Return { ok, checkoutUrl, registrationId } to the browser.
@@ -33,7 +33,7 @@ const FORM_PAGE_URL = "https://www.rivertechschool.com/pages/register-school-202
 const SUCCESS_URL = "https://www.rivertechschool.com/pages/register-school-2026-27-success.html?session_id={CHECKOUT_SESSION_ID}";
 const CANCEL_URL = "https://www.rivertechschool.com/pages/register-school-2026-27.html";
 
-const HOUSEHOLD_FEE_USD = 300;
+const HOUSEHOLD_FEE_USD = 250;
 
 // Sheet columns: 35 family + (21 per child × 6) = 161 columns.
 const MAX_CHILDREN = 6;
