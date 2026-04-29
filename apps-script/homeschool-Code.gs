@@ -74,6 +74,27 @@ function doPost(e) {
         body.dryRun === true
       ));
     }
+    if (params.action === "uploadphoto") {
+      let body = {};
+      if (e.postData && e.postData.contents) {
+        try { body = JSON.parse(e.postData.contents); } catch (_) {}
+      }
+      return json_(pipelineUploadPhoto_(
+        params.token || body.token,
+        body.regId,
+        body.childIdx,
+        body.filename,
+        body.mimeType,
+        body.base64
+      ));
+    }
+    if (params.action === "fixphotosharing") {
+      let body = {};
+      if (e.postData && e.postData.contents) {
+        try { body = JSON.parse(e.postData.contents); } catch (_) {}
+      }
+      return json_(pipelineFixPhotoSharing_(params.token || body.token));
+    }
     const payload = JSON.parse(e.postData.contents);
     const result = handleRegistration(payload);
     return json_(result);
@@ -646,6 +667,95 @@ function pipelineImport_(token, rows, dryRun) {
     dryRun: !!dryRun,
     sampleAcceptedRegIds: acceptedRegIds.slice(0, 5)
   };
+}
+
+/**
+ * Upload a photo for a specific child on an existing row. Used by the
+ * Cognito-photo backfill driver.
+ *
+ * Body: { token, regId, childIdx, filename, mimeType, base64 }
+ *
+ * - Decodes base64 → blob → uploads to DRIVE_FOLDER_ID.
+ * - Sets file sharing to ANYONE_WITH_LINK / VIEW.
+ * - Locates row by regId, writes the file URL into "Child N Photo URL".
+ * - Returns the URL.
+ */
+function pipelineUploadPhoto_(token, regId, childIdx, filename, mimeType, b64) {
+  if (!pipelineCheckToken_(token)) return { ok: false, error: "Bad token" };
+  if (!regId)    return { ok: false, error: "regId required" };
+  if (!childIdx) return { ok: false, error: "childIdx required" };
+  if (!b64)      return { ok: false, error: "base64 required" };
+
+  const folderId = cfg("DRIVE_FOLDER_ID");
+  if (!folderId) return { ok: false, error: "DRIVE_FOLDER_ID not set" };
+
+  const cleanName = (filename || ("c" + childIdx + ".jpg")).replace(/[^A-Za-z0-9._-]/g, "_");
+  const finalName = regId + "_c" + childIdx + "_" + cleanName;
+  const bytes = Utilities.base64Decode(b64);
+  const blob = Utilities.newBlob(bytes, mimeType || "image/jpeg", finalName);
+  const folder = DriveApp.getFolderById(folderId);
+  const file = folder.createFile(blob);
+  try {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (err) {
+    Logger.log("setSharing failed: " + err);
+  }
+  const url = file.getUrl();
+
+  const sh = pipelineSheet_();
+  const lastRow = sh.getLastRow();
+  const lastCol = sh.getLastColumn();
+  if (lastRow < 2) return { ok: false, error: "Sheet empty" };
+  const all = sh.getRange(1, 1, lastRow, lastCol).getValues();
+  const headers = all[0];
+  const colName = "Child " + childIdx + " Photo URL";
+  const colIdx = headers.indexOf(colName);
+  if (colIdx < 0) return { ok: false, error: "Column not found: " + colName };
+  for (let r = 1; r < all.length; r++) {
+    if (String(all[r][0]) === String(regId)) {
+      sh.getRange(r + 1, colIdx + 1).setValue(url);
+      return { ok: true, regId: regId, childIdx: childIdx, url: url, fileId: file.getId() };
+    }
+  }
+  return { ok: false, error: "regId not found in sheet" };
+}
+
+/**
+ * One-time helper: walk every "Child N Photo URL" cell in the sheet and
+ * flip the underlying Drive file to ANYONE_WITH_LINK / VIEW.
+ */
+function pipelineFixPhotoSharing_(token) {
+  if (!pipelineCheckToken_(token)) return { ok: false, error: "Bad token" };
+  const sh = pipelineSheet_();
+  const lastRow = sh.getLastRow();
+  const lastCol = sh.getLastColumn();
+  if (lastRow < 2) return { ok: true, fixed: 0, errors: [] };
+  const all = sh.getRange(1, 1, lastRow, lastCol).getValues();
+  const headers = all[0];
+  const photoColIdxs = [];
+  for (let n = 1; n <= MAX_CHILDREN; n++) {
+    const idx = headers.indexOf("Child " + n + " Photo URL");
+    if (idx >= 0) photoColIdxs.push(idx);
+  }
+  let fixed = 0;
+  const errors = [];
+  for (let r = 1; r < all.length; r++) {
+    for (const idx of photoColIdxs) {
+      const url = String(all[r][idx] || "");
+      if (!url) continue;
+      const m = /\/file\/d\/([^\/?]+)/.exec(url);
+      if (!m) continue;
+      const fileId = m[1];
+      try {
+        const file = DriveApp.getFileById(fileId);
+        file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+        fixed++;
+      } catch (err) {
+        errors.push({ row: r + 1, fileId: fileId, error: String(err) });
+      }
+    }
+  }
+  return { ok: true, source: PIPELINE_SOURCE, fixed: fixed, errors: errors };
 }
 
 function pipelineMigrate_(token) {
