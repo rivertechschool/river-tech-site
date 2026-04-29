@@ -64,10 +64,19 @@
 
     .tile-fam { font-weight: 700; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
     .tile-email { font-size: 11px; color: var(--ink-soft); margin-bottom: 6px; word-break: break-all; }
-    .tile-kid { font-size: 12px; color: var(--ink); padding: 2px 0; }
+    .tile-kid { font-size: 12px; color: var(--ink); padding: 2px 0; display: flex; align-items: center; gap: 7px; }
     .tile-kid .kid-name { font-weight: 600; }
     .tile-kid .kid-meta { color: var(--ink-soft); font-size: 11px; }
+    .tile-kid .kid-text { flex: 1; min-width: 0; }
     .tile-foot { margin-top: 6px; font-size: 11px; color: var(--ink-soft); display: flex; justify-content: space-between; }
+
+    /* Child avatar — small (tile) and large (modal) */
+    .avatar { flex: none; border-radius: 50%; background: rgba(0,0,0,0.08); overflow: hidden; display: inline-flex; align-items: center; justify-content: center; color: var(--ink-soft); font-weight: 700; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .avatar.s-sm { width: 28px; height: 28px; font-size: 11px; }
+    .avatar.s-lg { width: 84px; height: 84px; font-size: 28px; flex: none; }
+    .child-card-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 6px; }
+    .child-card-head .child-card-text { flex: 1; min-width: 0; }
 
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: none; align-items: flex-start; justify-content: center; z-index: 100; padding: 30px 20px; overflow-y: auto; }
     .overlay.open { display: flex; }
@@ -387,13 +396,34 @@
       return "";
     }
 
+    // Drive photo URL → thumbnail URL. Drive returns URLs like
+    // https://drive.google.com/file/d/{FILE_ID}/view?... ; the thumbnail
+    // endpoint is content-friendly for cross-origin <img>.
+    function driveThumbnail(url, sz) {
+      if (!url) return "";
+      const m = /\/file\/d\/([^\/?]+)/.exec(url);
+      if (!m) return "";
+      return `https://drive.google.com/thumbnail?id=${encodeURIComponent(m[1])}&sz=w${sz || 200}`;
+    }
+
+    function avatarHtml(child, size /* "sm" | "lg" */) {
+      const initial = (child.preferredName || child.name || "?").trim().charAt(0).toUpperCase();
+      const thumb = driveThumbnail(child.photoUrl, size === "lg" ? 200 : 80);
+      const cls = "avatar s-" + size;
+      if (thumb) {
+        // onerror clears the broken image so the initial fallback shows
+        return `<span class="${cls}"><img loading="lazy" referrerpolicy="no-referrer" src="${escapeHtml(thumb)}" alt="" onerror="this.remove()"></span>`;
+      }
+      return `<span class="${cls}">${escapeHtml(initial)}</span>`;
+    }
+
     function renderTile(family) {
       const fam = family.parent1.lastName || "(no last name)";
       const p1 = (family.parent1.firstName + " " + family.parent1.lastName).trim();
       const kidsLine = family.children.map(c => {
         const name = c.preferredName || (c.name ? c.name.split(" ")[0] : "");
         const age = (c.age !== "" && c.age !== null && c.age !== undefined) ? `, ${c.age}` : "";
-        return `<div class="tile-kid"><span class="kid-name">${escapeHtml(name)}${age}</span> <span class="kid-meta">${escapeHtml(gradeLabel(c.grade))}</span></div>`;
+        return `<div class="tile-kid">${avatarHtml(c, "sm")}<span class="kid-text"><span class="kid-name">${escapeHtml(name)}${age}</span> <span class="kid-meta">${escapeHtml(gradeLabel(c.grade))}</span></span></div>`;
       }).join("");
       const schedSummary = scheduleLine(family);
       const tile = document.createElement("div");
@@ -583,12 +613,19 @@
       if (c.reportCardUrl) links.push(`<a href="${escapeHtml(c.reportCardUrl)}" target="_blank" rel="noopener">Report card</a>`);
       const linkHtml = links.length ? `<div style="margin-top:6px;font-size:12px;">${links.join(" · ")}</div>` : "";
       const livesWithMap = { "both": "Both parents (same household)", "shared": "Both parents (shared custody)", "mother": "Mother primarily", "father": "Father primarily", "other": "Other" };
+      const headHtml = `
+        <div class="child-card-head">
+          ${avatarHtml(c, "lg")}
+          <div class="child-card-text">
+            <div class="child-card-title">${escapeHtml(c.preferredName || c.name)} ${c.preferredName && c.name && c.name !== c.preferredName ? `<span style="font-weight:400;color:var(--ink-soft);font-size:12px;">(${escapeHtml(c.name)})</span>` : ""}</div>
+            <div style="font-size:12px;color:var(--ink-soft);margin-bottom:6px;">${escapeHtml(subtitle)}</div>
+            ${scheduleStr ? `<div style="font-size:13px;margin-bottom:4px;">${escapeHtml(scheduleStr)}</div>` : ""}
+            ${c.livesWith ? `<div style="font-size:12px;color:var(--ink-soft);">Lives with: ${escapeHtml(livesWithMap[c.livesWith] || c.livesWith)}${c.livesWithNotes ? ` (${escapeHtml(c.livesWithNotes)})` : ""}</div>` : ""}
+          </div>
+        </div>`;
       return `
         <div class="child-card">
-          <div class="child-card-title">${escapeHtml(c.preferredName || c.name)} ${c.preferredName && c.name && c.name !== c.preferredName ? `<span style="font-weight:400;color:var(--ink-soft);font-size:12px;">(${escapeHtml(c.name)})</span>` : ""}</div>
-          <div style="font-size:12px;color:var(--ink-soft);margin-bottom:6px;">${escapeHtml(subtitle)}</div>
-          ${scheduleStr ? `<div style="font-size:13px;margin-bottom:4px;">${escapeHtml(scheduleStr)}</div>` : ""}
-          ${c.livesWith ? `<div style="font-size:12px;color:var(--ink-soft);">Lives with: ${escapeHtml(livesWithMap[c.livesWith] || c.livesWith)}${c.livesWithNotes ? ` (${escapeHtml(c.livesWithNotes)})` : ""}</div>` : ""}
+          ${headHtml}
           ${c.health ? `<div style="font-size:12px;color:var(--ink-soft);margin-top:4px;"><strong>Health:</strong> ${escapeHtml(c.health)}</div>` : ""}
           ${c.notes ? `<div style="font-size:12px;color:var(--ink-soft);margin-top:4px;"><strong>Notes:</strong> ${escapeHtml(c.notes)}</div>` : ""}
           ${c.attitude ? `<div style="font-size:12px;color:var(--ink-soft);margin-top:4px;"><strong>Attitude:</strong> ${escapeHtml(c.attitude)}</div>` : ""}
