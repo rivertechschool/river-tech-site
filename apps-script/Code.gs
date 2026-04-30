@@ -30,6 +30,9 @@ const CANCEL_URL = "https://www.rivertechschool.com/pages/register-rtd.html";
 // ---- Web-app entrypoint --------------------------------------------------
 function doPost(e) {
   try {
+    const params = (e && e.parameter) || {};
+    if (params.action === "migrate") return json_(rtdMigrate_(params.token));
+    // Default: form submission.
     const payload = JSON.parse(e.postData.contents);
     const result = handleRegistration(payload);
     return json_(result);
@@ -39,8 +42,48 @@ function doPost(e) {
   }
 }
 
-function doGet() {
+function doGet(e) {
+  const params = (e && e.parameter) || {};
+  if (params.action === "list") return json_(rtdList_(params.token));
   return json_({ ok: true, message: "River Tech Days backend is alive." });
+}
+
+// ---- Pipeline (RTD admin app) -------------------------------------------
+// Mirrors the pattern used by school/homeschool/reenroll backends. Token
+// stored in Script Property PIPELINE_TOKEN (same value across all backends
+// for v1). doGet?action=list returns sheet headers + rows.
+
+function rtdSheet_() {
+  const ss = SpreadsheetApp.openById(cfg("SHEET_ID"));
+  return ss.getSheetByName("Registrations") || ss.getSheets()[0];
+}
+
+function rtdCheckToken_(token) {
+  const expected = cfg("PIPELINE_TOKEN");
+  return expected && token && token === expected;
+}
+
+function rtdList_(token) {
+  if (!rtdCheckToken_(token)) return { ok: false, error: "Bad token" };
+  const sh = rtdSheet_();
+  const lastRow = sh.getLastRow();
+  const lastCol = sh.getLastColumn();
+  if (lastRow < 2) return { ok: true, source: "rtd", headers: [], rows: [] };
+  const all = sh.getRange(1, 1, lastRow, lastCol).getValues();
+  return { ok: true, source: "rtd", headers: all[0], rows: all.slice(1) };
+}
+
+function rtdMigrate_(token) {
+  // Trust-on-first-use bootstrap so the same token used by the other backends
+  // can be planted on this one without manual Script Properties editing.
+  const props = PropertiesService.getScriptProperties();
+  if (!props.getProperty("PIPELINE_TOKEN")) {
+    if (!token) return { ok: false, error: "Token required for first migrate" };
+    props.setProperty("PIPELINE_TOKEN", token);
+    return { ok: true, message: "PIPELINE_TOKEN set" };
+  }
+  if (!rtdCheckToken_(token)) return { ok: false, error: "Bad token" };
+  return { ok: true, message: "PIPELINE_TOKEN already set" };
 }
 
 function json_(obj) {
