@@ -32,6 +32,7 @@ function doPost(e) {
   try {
     const params = (e && e.parameter) || {};
     if (params.action === "migrate") return json_(rtdMigrate_(params.token));
+    if (params.action === "stripeWebhook") return json_(rtdStripeWebhook_(e));
     // Default: form submission.
     const payload = JSON.parse(e.postData.contents);
     const result = handleRegistration(payload);
@@ -71,6 +72,110 @@ function rtdList_(token) {
   if (lastRow < 2) return { ok: true, source: "rtd", headers: [], rows: [] };
   const all = sh.getRange(1, 1, lastRow, lastCol).getValues();
   return { ok: true, source: "rtd", headers: all[0], rows: all.slice(1) };
+}
+
+/**
+ * Stripe webhook handler — flips Status to "Paid" on checkout.session.completed.
+ *
+ * Auth has two layers because Apps Script doPost(e) can't read the
+ * Stripe-Signature header (no HMAC verification possible):
+ *   1. URL secret. Stripe is configured to call us at
+ *      .../exec?action=stripeWebhook&secret=<random>. The secret matches
+ *      Script Property STRIPE_WEBHOOK_SECRET. First-pass defense against
+ *      anyone POSTing to this URL.
+ *   2. Out-of-band verify. We use STRIPE_SECRET_KEY to fetch the event
+ *      back from Stripe's API by ID. If Stripe returns the same event,
+ *      it's authentic. This is the recommended pattern when signature
+ *      verification isn't possible (per Stripe's own webhook docs).
+ *
+ * Idempotent on retries: if the row's Status is already "Paid", we
+ * return success without rewriting.
+ */
+function rtdStripeWebhook_(e) {
+  const params = (e && e.parameter) || {};
+  const expectedSecret = cfg("STRIPE_WEBHOOK_SECRET");
+  if (!expectedSecret) {
+    Logger.log("stripeWebhook: STRIPE_WEBHOOK_SECRET not configured");
+    return { ok: false, error: "Webhook secret not configured" };
+  }
+  if (!params.secret || params.secret !== expectedSecret) {
+    Logger.log("stripeWebhook: bad/missing secret in URL");
+    return { ok: false, error: "Forbidden" };
+  }
+
+  let event;
+  try {
+    event = JSON.parse(e.postData.contents);
+  } catch (err) {
+    Logger.log("stripeWebhook: body parse error: " + err);
+    return { ok: false, error: "Invalid body" };
+  }
+  if (!event || !event.id || !event.type) {
+    return { ok: false, error: "Event missing id/type" };
+  }
+
+  // Out-of-band verify: ask Stripe API for this event by ID.
+  const stripeKey = cfg("STRIPE_SECRET_KEY");
+  if (!stripeKey) return { ok: false, error: "STRIPE_SECRET_KEY not configured" };
+  let verifiedEvent;
+  try {
+    const verifyRes = UrlFetchApp.fetch(
+      "https://api.stripe.com/v1/events/" + encodeURIComponent(event.id),
+      { method: "get", headers: { "Authorization": "Bearer " + stripeKey }, muteHttpExceptions: true }
+    );
+    if (verifyRes.getResponseCode() !== 200) {
+      Logger.log("stripeWebhook: verify GET returned " + verifyRes.getResponseCode() + " for event " + event.id);
+      return { ok: false, error: "Event verification failed" };
+    }
+    verifiedEvent = JSON.parse(verifyRes.getContentText());
+  } catch (err) {
+    Logger.log("stripeWebhook: verify fetch failed: " + err);
+    return { ok: false, error: "Event verification network error" };
+  }
+  if (verifiedEvent.id !== event.id) {
+    return { ok: false, error: "Verified event ID mismatch" };
+  }
+
+  // Only act on checkout.session.completed. Other events are acknowledged
+  // (so Stripe stops retrying) but otherwise ignored.
+  if (verifiedEvent.type !== "checkout.session.completed") {
+    return { ok: true, message: "Event ignored (not checkout.session.completed): " + verifiedEvent.type };
+  }
+
+  const session = verifiedEvent.data && verifiedEvent.data.object;
+  if (!session) return { ok: false, error: "Event data.object missing" };
+
+  // We set client_reference_id = registrationId at session creation in
+  // createStripeSession_. That's our key back to the sheet row.
+  const regId = session.client_reference_id;
+  if (!regId) {
+    Logger.log("stripeWebhook: session has no client_reference_id; session id=" + session.id);
+    return { ok: false, error: "No client_reference_id on session" };
+  }
+
+  // Find the row, flip Status. Idempotent: skip if already Paid.
+  const sh = rtdSheet_();
+  const lastRow = sh.getLastRow();
+  const lastCol = sh.getLastColumn();
+  if (lastRow < 2) return { ok: false, error: "Sheet empty" };
+  const all = sh.getRange(1, 1, lastRow, lastCol).getValues();
+  const headers = all[0];
+  const statusIdx = headers.indexOf("Status");
+  if (statusIdx < 0) return { ok: false, error: "Status column not found" };
+
+  for (let r = 1; r < all.length; r++) {
+    if (String(all[r][0]) === String(regId)) {
+      const currentStatus = String(all[r][statusIdx] || "");
+      if (/^paid$/i.test(currentStatus)) {
+        return { ok: true, message: "Already Paid (idempotent)", regId: regId, eventId: event.id };
+      }
+      sh.getRange(r + 1, statusIdx + 1).setValue("Paid");
+      Logger.log("stripeWebhook: marked " + regId + " Paid (event " + event.id + ")");
+      return { ok: true, regId: regId, newStatus: "Paid", eventId: event.id };
+    }
+  }
+  Logger.log("stripeWebhook: regId not found in sheet: " + regId);
+  return { ok: false, error: "regId not found: " + regId };
 }
 
 function rtdMigrate_(token) {
