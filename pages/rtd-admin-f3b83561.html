@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>RTD Class Rosters &mdash; May 2026</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f5f2;
+      --panel: #ffffff;
+      --ink: #272443;
+      --ink-soft: #6b6883;
+      --line: rgba(39, 36, 67, 0.12);
+      --rt-red: #d63232;
+      --rt-red-soft: #fbe6e3;
+      /* Grade-band colors mirror rtd-schedule.json meta.gradeBands */
+      --band-elementary: #e8a33d;
+      --band-elementary-soft: #fbeed6;
+      --band-middle: #3a7fc9;
+      --band-middle-soft: #dfecf8;
+      --band-highmiddle: #b84a70;
+      --band-highmiddle-soft: #f6dee6;
+      --band-high: #b04442;
+      --band-high-soft: #f5dad8;
+      --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.04);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-size: 14px; line-height: 1.4; }
+
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: var(--panel); border-bottom: 1px solid var(--line); }
+    .topbar h1 { margin: 0; font-size: 18px; font-weight: 700; }
+    .topbar .meta { font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 12px; }
+    .topbar .refresh-btn { background: var(--rt-red); color: white; border: none; border-radius: 4px; padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .topbar .refresh-btn:hover { background: #b82828; }
+    .topbar .refresh-btn:disabled { opacity: 0.5; cursor: wait; }
+
+    .tabs { display: flex; gap: 2px; padding: 10px 14px 0; background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+    .tab { background: transparent; border: 1px solid transparent; border-bottom: 2px solid transparent; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--ink-soft); cursor: pointer; border-radius: 4px 4px 0 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+    .tab:hover { background: rgba(0,0,0,0.04); color: var(--ink); }
+    .tab.active { color: var(--ink); border-bottom-color: var(--rt-red); }
+    .tab .count { display: inline-block; margin-left: 4px; font-size: 11px; padding: 1px 7px; border-radius: 10px; background: rgba(0,0,0,0.08); color: var(--ink-soft); font-weight: 700; }
+    .tab.active .count { background: var(--rt-red-soft); color: var(--rt-red); }
+
+    .filter-row { display: flex; gap: 6px; padding: 10px 14px; background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; align-items: center; }
+    .filter-row .filter-label { font-size: 12px; color: var(--ink-soft); margin-right: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+    .chip { font-size: 12px; padding: 4px 10px; border-radius: 14px; background: rgba(0,0,0,0.06); color: var(--ink); border: 1px solid transparent; cursor: pointer; transition: background 0.15s, border-color 0.15s; font-weight: 600; }
+    .chip:hover { background: rgba(0,0,0,0.1); }
+    .chip.active { background: var(--ink); color: white; }
+    .chip.band-elementary.active { background: var(--band-elementary); }
+    .chip.band-middle.active     { background: var(--band-middle); }
+    .chip.band-highmiddle.active { background: var(--band-highmiddle); }
+    .chip.band-high.active       { background: var(--band-high); }
+
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 14px; }
+    .grid > .col-head { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); padding: 4px 6px; }
+
+    .cell { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; min-height: 100px; display: flex; flex-direction: column; gap: 8px; }
+    .cell-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-bottom: 4px; }
+    .cell-head .slot-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink); }
+    .cell-head .slot-time { font-size: 11px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+    .band-group { border-left: 3px solid; padding-left: 8px; }
+    .band-group.band-elementary { border-color: var(--band-elementary); }
+    .band-group.band-middle     { border-color: var(--band-middle); }
+    .band-group.band-highmiddle { border-color: var(--band-highmiddle); }
+    .band-group.band-high       { border-color: var(--band-high); }
+    .band-group .band-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); margin-bottom: 4px; }
+
+    .class-card { background: var(--bg); border-radius: 4px; padding: 8px 10px; margin-bottom: 6px; }
+    .class-card .class-title { font-size: 13px; font-weight: 700; color: var(--ink); }
+    .class-card .class-teacher { font-size: 11px; color: var(--ink-soft); margin-left: 4px; font-weight: 500; }
+    .class-card .class-empty { font-size: 11px; font-style: italic; color: var(--ink-soft); }
+    .class-card ul { margin: 4px 0 0; padding: 0; list-style: none; }
+    .class-card li { font-size: 12px; padding: 1px 0; color: var(--ink); }
+    .class-card li .age { font-size: 11px; color: var(--ink-soft); margin-left: 4px; font-variant-numeric: tabular-nums; }
+    .class-card li .grade-pill { display: inline-block; font-size: 9px; padding: 1px 5px; border-radius: 8px; margin-left: 6px; vertical-align: middle; font-weight: 700; }
+    .class-card.band-elementary .class-title { color: #8a5e1f; }
+    .class-card.band-middle     .class-title { color: #2257a0; }
+    .class-card.band-highmiddle .class-title { color: #94284e; }
+    .class-card.band-high       .class-title { color: #8c2c2a; }
+
+    .pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; margin-left: 6px; vertical-align: middle; }
+    .pill.paid       { background: #d8eed1; color: #2f7d3a; }
+    .pill.unpaid     { background: #fff4d6; color: #b07b00; }
+    .pill.refunded   { background: #e5e5e5; color: #555; }
+
+    .loader { padding: 40px; text-align: center; color: var(--ink-soft); }
+    .loader .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid var(--line); border-top-color: var(--rt-red); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 10px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-banner { background: #fae9e9; border-left: 3px solid #a73838; color: #a73838; padding: 10px 14px; margin: 14px; font-size: 13px; }
+
+    .summary-bar { display: flex; gap: 18px; padding: 8px 20px; background: rgba(0,0,0,0.02); border-bottom: 1px solid var(--line); font-size: 12px; color: var(--ink-soft); }
+    .summary-bar strong { color: var(--ink); font-size: 13px; }
+
+    @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>River Tech Days &mdash; Class Rosters &middot; May 2026</h1>
+    <div class="meta">
+      <span id="meta-line">Loading&hellip;</span>
+      <button class="refresh-btn" id="refresh-btn" onclick="loadAll()">Refresh</button>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="filter-row" id="filter-row"></div>
+
+  <div class="summary-bar" id="summary-bar"></div>
+
+  <div id="grid-root">
+    <div class="loader"><span class="spinner"></span>Loading registrations and schedule&hellip;</div>
+  </div>
+
+  <script>
+    // ===== Configuration ===================================================
+    const PIPELINE_TOKEN = "8ff4851af82ed79c4a3b75ff454b12172c67fac5fbdfffb9";
+    const RTD_BACKEND = "https://script.google.com/macros/s/AKfycbwgSapWlp9wDVSwomvzQVu4CajS9J1odPaqWrk8vXgab9xIK6buQSTTFpEYUZdcIMpC/exec";
+    const SCHEDULE_URL = "../assets/data/rtd-schedule.json";
+
+    const WEEKS = [
+      { id: "w1", label: "Week 1 (May 5–7)", days: ["tue-may-5",  "wed-may-6",  "thu-may-7"]  },
+      { id: "w2", label: "Week 2 (May 12–14)", days: ["tue-may-12", "wed-may-13", "thu-may-14"] }
+    ];
+    const SLOT_IDS = ["slot-1", "slot-2", "slot-3"];
+    const BANDS = [
+      { id: "elementary", label: "Elementary" },
+      { id: "middle",     label: "Middle School" },
+      { id: "highmiddle", label: "Middle+High" },
+      { id: "high",       label: "High School" }
+    ];
+
+    // ===== State ============================================================
+    let SCHEDULE = null;          // rtd-schedule.json
+    let REGISTRATIONS = [];       // parsed from RTD ?action=list
+    let CURRENT_WEEK = "w1";
+    let CURRENT_BAND = "all";     // "all" | one of BANDS[].id
+
+    // ===== Boot =============================================================
+    loadAll();
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && Date.now() - lastAutoRefreshAt > 60_000) {
+        lastAutoRefreshAt = Date.now();
+        loadAll();
+      }
+    });
+    let lastAutoRefreshAt = Date.now();
+
+    // ===== Data fetching ====================================================
+    async function loadAll() {
+      const refreshBtn = document.getElementById("refresh-btn");
+      refreshBtn.disabled = true;
+      const meta = document.getElementById("meta-line");
+      meta.textContent = "Refreshing…";
+      try {
+        const [scheduleRes, regRes] = await Promise.all([
+          SCHEDULE
+            ? Promise.resolve(SCHEDULE)
+            : fetch(SCHEDULE_URL).then(r => {
+                if (!r.ok) throw new Error("Schedule fetch failed: " + r.status);
+                return r.json();
+              }),
+          fetch(`${RTD_BACKEND}?action=list&token=${encodeURIComponent(PIPELINE_TOKEN)}`)
+            .then(r => {
+              if (!r.ok) throw new Error("RTD list fetch failed: " + r.status);
+              return r.json();
+            })
+        ]);
+        SCHEDULE = scheduleRes;
+        if (!regRes.ok) throw new Error("RTD list error: " + (regRes.error || "unknown"));
+        REGISTRATIONS = parseRegistrations(regRes.headers, regRes.rows);
+        const now = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+        meta.textContent = `${REGISTRATIONS.length} families · refreshed ${now}`;
+        renderTabs();
+        renderFilterRow();
+        renderSummaryBar();
+        renderGrid();
+      } catch (err) {
+        meta.textContent = "Error";
+        document.getElementById("grid-root").innerHTML =
+          `<div class="error-banner">Failed to load: ${escapeHtml(err.message)}<br><br>Check the page URL token + that the RTD backend is deployed with ?action=list.</div>`;
+        console.error(err);
+      } finally {
+        refreshBtn.disabled = false;
+      }
+    }
+
+    // ===== Parse the RTD sheet =============================================
+    function parseRegistrations(headers, rows) {
+      const get = (row, name) => {
+        const i = headers.indexOf(name);
+        return i >= 0 ? row[i] : "";
+      };
+      const out = [];
+      for (const row of rows) {
+        const status = String(get(row, "Status") || "");
+        const fam = {
+          regId: String(get(row, "Registration ID") || ""),
+          submittedAt: get(row, "Submitted (UTC)"),
+          status: status,
+          isPaid: /paid/i.test(status) && !/awaiting/i.test(status),
+          parent: {
+            first: get(row, "Parent First"),
+            last:  get(row, "Parent Last"),
+            email: get(row, "Parent Email"),
+            phone: get(row, "Parent Phone")
+          },
+          familyTier: get(row, "Family Tier"),
+          totalAmount: get(row, "Total Amount (USD)"),
+          notes: get(row, "Notes"),
+          children: []
+        };
+        for (let n = 1; n <= 6; n++) {
+          const name = get(row, `Child ${n} Name`);
+          if (!name) continue;
+          const child = {
+            childIdx: n,
+            name: String(name).trim(),
+            grade: String(get(row, `Child ${n} Grade`) || ""),
+            age: parseInt(get(row, `Child ${n} Age`)) || null,
+            days: parseDayList(get(row, `Child ${n} Days`)),
+            picks: parseClassPicks(get(row, `Child ${n} Classes`))
+          };
+          fam.children.push(child);
+        }
+        out.push(fam);
+      }
+      return out;
+    }
+
+    function parseDayList(s) {
+      return String(s || "")
+        .split(/[,\s]+/)
+        .map(x => x.trim())
+        .filter(Boolean);
+    }
+
+    // Parse: "tue-may-5 — Slot 1: Title (Teacher); Slot 2: ... | tue-may-12 — ..."
+    // Returns: { "tue-may-5": { "slot-1": {title, teacher}, "slot-2": ..., "slot-3": ... }, ... }
+    function parseClassPicks(s) {
+      const out = {};
+      if (!s) return out;
+      const dayChunks = String(s).split("|");
+      for (const chunk of dayChunks) {
+        const parts = chunk.split("—");
+        if (parts.length < 2) continue;
+        const dayId = parts[0].trim();
+        const rest = parts.slice(1).join("—").trim();
+        if (!dayId) continue;
+        out[dayId] = {};
+        const slotChunks = rest.split(";");
+        for (const slotChunk of slotChunks) {
+          const m = /Slot\s*(\d+)\s*:\s*(.+?)\s*\(([^)]+)\)\s*$/i.exec(slotChunk.trim());
+          if (!m) continue;
+          const slotN = parseInt(m[1]);
+          const title = m[2].trim();
+          const teacher = m[3].trim();
+          out[dayId][`slot-${slotN}`] = { title, teacher };
+        }
+      }
+      return out;
+    }
+
+    // ===== Render: tabs + filter row =======================================
+    function renderTabs() {
+      const root = document.getElementById("tabs");
+      root.innerHTML = "";
+      for (const w of WEEKS) {
+        const btn = document.createElement("button");
+        btn.className = "tab" + (CURRENT_WEEK === w.id ? " active" : "");
+        const enrolledForWeek = familiesAttendingWeek(w.id).length;
+        btn.innerHTML = `${escapeHtml(w.label)} <span class="count">${enrolledForWeek}</span>`;
+        btn.onclick = () => { CURRENT_WEEK = w.id; renderTabs(); renderSummaryBar(); renderGrid(); };
+        root.appendChild(btn);
+      }
+    }
+
+    function renderFilterRow() {
+      const root = document.getElementById("filter-row");
+      root.innerHTML = "";
+      const lbl = document.createElement("span");
+      lbl.className = "filter-label";
+      lbl.textContent = "Grade band";
+      root.appendChild(lbl);
+
+      const allChip = document.createElement("button");
+      allChip.className = "chip" + (CURRENT_BAND === "all" ? " active" : "");
+      allChip.textContent = "All";
+      allChip.onclick = () => { CURRENT_BAND = "all"; renderFilterRow(); renderGrid(); };
+      root.appendChild(allChip);
+
+      for (const b of BANDS) {
+        const c = document.createElement("button");
+        c.className = "chip band-" + b.id + (CURRENT_BAND === b.id ? " active" : "");
+        c.textContent = b.label;
+        c.onclick = () => { CURRENT_BAND = b.id; renderFilterRow(); renderGrid(); };
+        root.appendChild(c);
+      }
+    }
+
+    function renderSummaryBar() {
+      const root = document.getElementById("summary-bar");
+      const week = WEEKS.find(w => w.id === CURRENT_WEEK);
+      const fams = familiesAttendingWeek(CURRENT_WEEK);
+      const kidsAttending = new Set();
+      let revenue = 0;
+      for (const f of fams) {
+        for (const c of f.children) {
+          if (c.days.some(d => week.days.includes(d))) {
+            kidsAttending.add(f.regId + "_c" + c.childIdx);
+          }
+        }
+        revenue += Number(f.totalAmount) || 0;
+      }
+      root.innerHTML = `
+        <span><strong>${fams.length}</strong> families this week</span>
+        <span><strong>${kidsAttending.size}</strong> kids attending</span>
+        <span>Total revenue across all weeks: <strong>$${(REGISTRATIONS.reduce((s,f) => s + (Number(f.totalAmount)||0), 0)).toLocaleString()}</strong></span>
+      `;
+    }
+
+    function familiesAttendingWeek(weekId) {
+      const week = WEEKS.find(w => w.id === weekId);
+      return REGISTRATIONS.filter(f =>
+        f.children.some(c => c.days.some(d => week.days.includes(d)))
+      );
+    }
+
+    // ===== Render: the grid ================================================
+    function renderGrid() {
+      const root = document.getElementById("grid-root");
+      const week = WEEKS.find(w => w.id === CURRENT_WEEK);
+      root.innerHTML = "";
+
+      const grid = document.createElement("div");
+      grid.className = "grid";
+
+      // Column headers (days)
+      for (const dayId of week.days) {
+        const day = SCHEDULE.days.find(d => d.id === dayId);
+        const ch = document.createElement("div");
+        ch.className = "col-head";
+        ch.textContent = day ? day.label : dayId;
+        grid.appendChild(ch);
+      }
+
+      // Three rows: one per slot. Within each row, one cell per day.
+      for (const slotId of SLOT_IDS) {
+        const slotMeta = SCHEDULE.slots.find(s => s.id === slotId);
+        for (const dayId of week.days) {
+          const cell = document.createElement("div");
+          cell.className = "cell";
+
+          const head = document.createElement("div");
+          head.className = "cell-head";
+          head.innerHTML = `
+            <span class="slot-label">${escapeHtml(slotMeta.id.replace("slot-", "Slot "))}</span>
+            <span class="slot-time">${escapeHtml(slotMeta.time)}</span>
+          `;
+          cell.appendChild(head);
+
+          // Group classes by band
+          const classesHere = SCHEDULE.classes.filter(c => c.day === dayId && c.slot === slotId);
+          const bandsToShow = CURRENT_BAND === "all" ? BANDS.map(b => b.id) : [CURRENT_BAND];
+          for (const bandId of bandsToShow) {
+            const inBand = classesHere.filter(c => c.band === bandId);
+            if (inBand.length === 0) continue;
+
+            const bandGroup = document.createElement("div");
+            bandGroup.className = "band-group band-" + bandId;
+            const bandLbl = document.createElement("div");
+            bandLbl.className = "band-name";
+            bandLbl.textContent = (BANDS.find(b => b.id === bandId) || {}).label || bandId;
+            bandGroup.appendChild(bandLbl);
+
+            for (const cls of inBand) {
+              bandGroup.appendChild(renderClassCard(cls, dayId, slotId, bandId));
+            }
+            cell.appendChild(bandGroup);
+          }
+
+          if (cell.children.length === 1) { // only the head
+            const empty = document.createElement("div");
+            empty.style.cssText = "font-size:12px;font-style:italic;color:var(--ink-soft);text-align:center;padding:8px 0;";
+            empty.textContent = CURRENT_BAND === "all" ? "(no classes)" : "(no classes for this band)";
+            cell.appendChild(empty);
+          }
+
+          grid.appendChild(cell);
+        }
+      }
+
+      root.appendChild(grid);
+    }
+
+    function renderClassCard(cls, dayId, slotId, bandId) {
+      // Find every kid in REGISTRATIONS who picked this class.
+      const enrolled = [];
+      for (const fam of REGISTRATIONS) {
+        for (const c of fam.children) {
+          const pick = c.picks[dayId] && c.picks[dayId][slotId];
+          if (!pick) continue;
+          // Match on title + teacher (exact) — handles the case where the same
+          // title (e.g., "Robotics") appears in multiple bands the same period.
+          if (pick.title === cls.title && pick.teacher === cls.teacher && c.grade === cls.band) {
+            enrolled.push({
+              name: c.name,
+              age: c.age,
+              grade: c.grade,
+              parent: `${fam.parent.first} ${fam.parent.last}`.trim(),
+              regId: fam.regId,
+              childIdx: c.childIdx,
+              isPaid: fam.isPaid
+            });
+          }
+        }
+      }
+      enrolled.sort((a, b) => (a.age || 99) - (b.age || 99));
+
+      const card = document.createElement("div");
+      card.className = "class-card band-" + bandId;
+      const titleHtml = `
+        <div>
+          <span class="class-title">${escapeHtml(cls.title)}</span>
+          <span class="class-teacher">· ${escapeHtml(cls.teacher)}</span>
+        </div>
+      `;
+      let body;
+      if (enrolled.length === 0) {
+        body = `<div class="class-empty">No one enrolled yet.</div>`;
+      } else {
+        body = "<ul>" + enrolled.map(k => {
+          const ageBit = k.age != null ? `<span class="age">age ${k.age}</span>` : "";
+          const paidPill = k.isPaid ? "" : ` <span class="pill unpaid" title="Awaiting payment">unpaid</span>`;
+          return `<li>${escapeHtml(k.name)}${ageBit}${paidPill}</li>`;
+        }).join("") + "</ul>";
+      }
+      card.innerHTML = titleHtml + body;
+      return card;
+    }
+
+    // ===== Util ============================================================
+    function escapeHtml(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+    }
+  </script>
+</body>
+</html>
