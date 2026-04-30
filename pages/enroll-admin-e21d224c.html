@@ -62,6 +62,9 @@
     .tile.src-re-enrollment:hover { border-color: var(--re-blue); }
     .tile.src-declined { border-left-color: var(--neutral); background: rgba(0,0,0,0.04); opacity: 0.85; }
 
+    .tile-new-badge { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; padding: 1px 6px; border-radius: 8px; background: var(--rt-red); color: white; vertical-align: middle; margin-left: 6px; }
+    .tile.src-homeschool .tile-new-badge { background: var(--hs-green); }
+    .tile.src-re-enrollment .tile-new-badge { background: var(--re-blue); }
     .tile-fam { font-weight: 700; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
     .tile-email { font-size: 11px; color: var(--ink-soft); margin-bottom: 6px; word-break: break-all; }
     .tile-kid { font-size: 12px; color: var(--ink); padding: 2px 0; display: flex; align-items: center; gap: 7px; }
@@ -168,6 +171,13 @@
     let currentSource = "full-time";
     let openModalRegId = null; // re-open same modal after refresh
 
+    // "NEW since last visit" — submittedAt > this watermark earns a NEW badge.
+    // Persisted across page loads via localStorage; updated on every successful refresh.
+    const LAST_VISIT_KEY = "rts.adminLastVisit";
+    let lastVisitWatermark = (() => {
+      try { return localStorage.getItem(LAST_VISIT_KEY) || ""; } catch { return ""; }
+    })();
+
     // ===== Data fetching ====================================================
     async function loadData() {
       const refreshBtn = document.getElementById("refresh-btn");
@@ -186,10 +196,16 @@
         for (const [source, j] of results) DATA[source] = { headers: j.headers, rows: j.rows };
         ALL = parseAll();
         const total = Object.values(ALL).reduce((s, arr) => s + arr.length, 0);
-        const now = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+        const nowDate = new Date();
+        const now = nowDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
         meta.textContent = `${total} families · refreshed ${now}`;
         renderTabs();
         renderPipeline();
+        // Stamp the "last visit" watermark AFTER rendering — so any badges
+        // shown on this render reflect the previous watermark, not the current one.
+        const newWatermark = nowDate.toISOString();
+        try { localStorage.setItem(LAST_VISIT_KEY, newWatermark); } catch {}
+        lastVisitWatermark = newWatermark;
         if (openModalRegId) {
           // Re-open the same family's modal if it was open
           const found = Object.values(ALL).flat().find(f => f.regId === openModalRegId);
@@ -422,6 +438,18 @@
       return `<span class="${cls}">${escapeHtml(initial)}${imgHtml}</span>`;
     }
 
+    // Is this family newer than the last time we refreshed? Used for the
+    // "NEW" badge. Cognito-imported rows (regId starts with PFX-COG-) never
+    // get the badge — they're historical, not actually new arrivals.
+    function isNewSinceLastVisit(family) {
+      if (!lastVisitWatermark) return false;
+      if (!family.submittedAt) return false;
+      if (/^[A-Z]+-COG-/.test(family.regId || "")) return false;
+      const t = new Date(family.submittedAt);
+      const w = new Date(lastVisitWatermark);
+      return !isNaN(t) && !isNaN(w) && t > w;
+    }
+
     function renderTile(family) {
       const fam = family.parent1.lastName || "(no last name)";
       const p1 = (family.parent1.firstName + " " + family.parent1.lastName).trim();
@@ -431,10 +459,12 @@
         return `<div class="tile-kid">${avatarHtml(c, "sm")}<span class="kid-text"><span class="kid-name">${escapeHtml(name)}${age}</span> <span class="kid-meta">${escapeHtml(gradeLabel(c.grade))}</span></span></div>`;
       }).join("");
       const schedSummary = scheduleLine(family);
+      const isNew = isNewSinceLastVisit(family);
+      const newBadge = isNew ? `<span class="tile-new-badge">NEW</span>` : "";
       const tile = document.createElement("div");
       tile.className = "tile src-" + family.source;
       tile.innerHTML = `
-        <div class="tile-fam">${escapeHtml(fam)} — ${escapeHtml(p1)}</div>
+        <div class="tile-fam">${escapeHtml(fam)} — ${escapeHtml(p1)}${newBadge}</div>
         <div class="tile-email">${escapeHtml(family.parent1.email)}</div>
         ${kidsLine}
         ${schedSummary ? `<div class="tile-kid kid-meta" style="margin-top:4px;font-style:italic;">${escapeHtml(schedSummary)}</div>` : ""}
@@ -444,12 +474,25 @@
       return tile;
     }
 
+    // Sort families newest-first by Submitted (UTC). Missing dates sort to
+    // the bottom. Used inside every pipeline column so the freshest tiles
+    // are always at the top.
+    function sortNewestFirst(arr) {
+      return arr.slice().sort((a, b) => {
+        const ta = a.submittedAt ? Date.parse(a.submittedAt) : 0;
+        const tb = b.submittedAt ? Date.parse(b.submittedAt) : 0;
+        return tb - ta;
+      });
+    }
+
     function renderPipeline() {
       const root = document.getElementById("pipeline");
       root.innerHTML = "";
       if (currentSource === "declined") {
         root.classList.add("declined-view");
-        const declined = ["full-time","homeschool","re-enrollment"].flatMap(k => ALL[k].filter(f => f.stage === "Declined"));
+        const declined = sortNewestFirst(
+          ["full-time","homeschool","re-enrollment"].flatMap(k => ALL[k].filter(f => f.stage === "Declined"))
+        );
         const col = document.createElement("div");
         col.className = "col";
         col.innerHTML = `<div class="col-head"><span>Declined</span><span class="col-count">${declined.length}</span></div>`;
@@ -466,7 +509,7 @@
       for (const stage of STAGES) {
         const col = document.createElement("div");
         col.className = "col";
-        const inStage = families.filter(f => f.stage === stage);
+        const inStage = sortNewestFirst(families.filter(f => f.stage === stage));
         col.innerHTML = `<div class="col-head"><span>${stage}</span><span class="col-count">${inStage.length}</span></div>`;
         const body = document.createElement("div");
         body.className = "col-body";
@@ -646,6 +689,19 @@
 
     // ===== Boot =============================================================
     document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+    // Auto-refresh when the user returns to this tab — but no more often
+    // than once every 60 seconds, so flipping back-and-forth doesn't hammer
+    // the Apps Script quota.
+    let lastAutoRefreshAt = 0;
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState !== "visible") return;
+      const now = Date.now();
+      if (now - lastAutoRefreshAt < 60_000) return;
+      lastAutoRefreshAt = now;
+      loadData();
+    });
+
     loadData();
   </script>
 </body>
