@@ -84,6 +84,7 @@ function doPost(e) {
         body.dryRun === true
       ));
     }
+    if (params.action === "stripeWebhook") return json_(pipelineStripeWebhook_(e));
     const payload = JSON.parse(e.postData.contents);
     const result = handleReenrollment(payload);
     return json_(result);
@@ -644,6 +645,74 @@ function pipelineImport_(token, rows, dryRun) {
     dryRun: !!dryRun,
     sampleAcceptedRegIds: acceptedRegIds.slice(0, 5)
   };
+}
+
+/**
+ * Stripe webhook handler — same pattern as RTD/school/homeschool. URL secret +
+ * out-of-band Stripe event verification. On checkout.session.completed flip
+ * Pipeline Stage to "Paid" if the row is still at Inbox.
+ */
+function pipelineStripeWebhook_(e) {
+  const params = (e && e.parameter) || {};
+  const expectedSecret = cfg("STRIPE_WEBHOOK_SECRET");
+  if (!expectedSecret) return { ok: false, error: "Webhook secret not configured" };
+  if (!params.secret || params.secret !== expectedSecret) return { ok: false, error: "Forbidden" };
+
+  let event;
+  try { event = JSON.parse(e.postData.contents); }
+  catch (err) { return { ok: false, error: "Invalid body" }; }
+  if (!event || !event.id || !event.type) return { ok: false, error: "Event missing id/type" };
+
+  const stripeKey = cfg("STRIPE_SECRET_KEY");
+  if (!stripeKey) return { ok: false, error: "STRIPE_SECRET_KEY not configured" };
+
+  let verifiedEvent;
+  try {
+    const verifyRes = UrlFetchApp.fetch(
+      "https://api.stripe.com/v1/events/" + encodeURIComponent(event.id),
+      { method: "get", headers: { "Authorization": "Bearer " + stripeKey }, muteHttpExceptions: true }
+    );
+    if (verifyRes.getResponseCode() !== 200) return { ok: false, error: "Event verification failed" };
+    verifiedEvent = JSON.parse(verifyRes.getContentText());
+  } catch (err) {
+    return { ok: false, error: "Event verification network error" };
+  }
+  if (verifiedEvent.id !== event.id) return { ok: false, error: "Verified event ID mismatch" };
+  if (verifiedEvent.type !== "checkout.session.completed") {
+    return { ok: true, message: "Event ignored: " + verifiedEvent.type };
+  }
+
+  const session = verifiedEvent.data && verifiedEvent.data.object;
+  if (!session) return { ok: false, error: "Event data.object missing" };
+  const regId = session.client_reference_id;
+  if (!regId) return { ok: false, error: "No client_reference_id on session" };
+
+  const sh = pipelineSheet_();
+  const lastRow = sh.getLastRow();
+  const lastCol = sh.getLastColumn();
+  if (lastRow < 2) return { ok: false, error: "Sheet empty" };
+  const all = sh.getRange(1, 1, lastRow, lastCol).getValues();
+  const headers = all[0];
+  const stageIdx = headers.indexOf("Pipeline Stage") >= 0
+    ? headers.indexOf("Pipeline Stage")
+    : headers.indexOf("Status");
+  if (stageIdx < 0) return { ok: false, error: "Pipeline Stage / Status column not found" };
+
+  for (let r = 1; r < all.length; r++) {
+    if (String(all[r][0]) === String(regId)) {
+      const currentStage = String(all[r][stageIdx] || "");
+      if (/^paid$/i.test(currentStage)) {
+        return { ok: true, message: "Already Paid (idempotent)", regId: regId };
+      }
+      if (currentStage !== "Inbox" && !/awaiting/i.test(currentStage) && currentStage !== "") {
+        return { ok: true, message: "Stage already advanced: " + currentStage, regId: regId };
+      }
+      sh.getRange(r + 1, stageIdx + 1).setValue("Paid");
+      Logger.log("stripeWebhook: marked " + regId + " Paid (event " + event.id + ")");
+      return { ok: true, regId: regId, newStage: "Paid", eventId: event.id };
+    }
+  }
+  return { ok: false, error: "regId not found: " + regId };
 }
 
 function pipelineMigrate_(token) {
