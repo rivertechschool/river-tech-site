@@ -130,7 +130,7 @@
       '<div class="reg-row-grid-2">',
       '  <div>',
       '    <label class="reg-label" for="c' + idx + '_age">Age<span class="req">*</span></label>',
-      '    <input class="reg-input" type="number" min="4" max="19" id="c' + idx + '_age" name="c' + idx + '_age" required>',
+      '    <input class="reg-input" type="number" min="6" max="16" id="c' + idx + '_age" name="c' + idx + '_age" required>',
       '  </div>',
       '  <div>',
       '    <label class="reg-label" for="c' + idx + '_grade">Current grade <span style="opacity:0.6; font-weight:400;">(optional)</span></label>',
@@ -351,6 +351,10 @@
       if (!c.lastName)  return "Child " + c.index + ": last name is required.";
       if (!c.age)       return "Child " + c.index + ": please enter an age.";
       if (!c.ageGroup)  return "Child " + c.index + ": age must be a number.";
+      const ageNum = parseInt(c.age, 10);
+      if (ageNum < 6 || ageNum > 16) {
+        return "Child " + c.index + ": River Tech Days is for ages 6 to 16. If your child is outside that range, please email learn@rivertech.me.";
+      }
       if (c.days.length === 0) return "Child " + c.index + ": please pick at least one day.";
 
       const expectedSubjects = subjectsForGroup(c.ageGroup);
