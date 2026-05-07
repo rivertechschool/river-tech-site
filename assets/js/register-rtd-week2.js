@@ -8,7 +8,7 @@
 
   // ---- Configuration ----------------------------------------------------
   // Set this to your deployed Apps Script web-app URL before go-live.
-  const BACKEND_URL = "__BACKEND_URL__";
+  const BACKEND_URL = "https://script.google.com/macros/s/AKfycbySC2mlrayyJwQQuscl2Yods57nz32CuPQVDlnK17blV9yfaavF8rRGaMHKIjdhgoawYA/exec";
 
   // Pricing: per child, based on day count + tier.
   // Outside families: $29/day, $69 for all 3.
