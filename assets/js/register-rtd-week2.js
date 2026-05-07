@@ -131,7 +131,6 @@
       '  <div>',
       '    <label class="reg-label" for="c' + idx + '_age">Age<span class="req">*</span></label>',
       '    <input class="reg-input" type="number" min="4" max="19" id="c' + idx + '_age" name="c' + idx + '_age" required>',
-      '    <span class="reg-help">10 and under sees one set of subjects; 11 and up sees another.</span>',
       '  </div>',
       '  <div>',
       '    <label class="reg-label" for="c' + idx + '_grade">Current grade <span style="opacity:0.6; font-weight:400;">(optional)</span></label>',
