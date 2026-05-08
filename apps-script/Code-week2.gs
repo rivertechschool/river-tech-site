@@ -61,29 +61,13 @@ function doGet(e) {
 // One-time bootstrap: create the registrations sheet on learn@rivertech.me
 // (the script's owning account), store its ID in Script Properties.
 // Triggered by GET ?action=setupSheet&token=rtd-w2-bootstrap-fxR8q3.
-// Idempotent: if SHEET_ID already points at a sheet readable by this script,
-// return it without creating a new one.
+// Always creates a fresh sheet — does NOT try to read the existing SHEET_ID,
+// because attempting to openById a sheet on a different account triggers a
+// Google-edge "permission denied" response that can't be caught in V8.
 function setupSheet_() {
-  const props = PropertiesService.getScriptProperties();
-  const existing = props.getProperty("SHEET_ID");
-  if (existing) {
-    try {
-      const ss = SpreadsheetApp.openById(existing);
-      const lastRow = ss.getSheets()[0].getLastRow();
-      // If the sheet is readable AND has a header row, treat as already set up.
-      if (lastRow > 0) {
-        return { ok: true, status: "already-setup", id: existing, url: ss.getUrl() };
-      }
-      // Empty sheet readable by us — keep it.
-      return { ok: true, status: "kept-existing-empty", id: existing, url: ss.getUrl() };
-    } catch (err) {
-      // openById threw — sheet not accessible. Fall through and create a new one.
-      Logger.log("setupSheet_: existing SHEET_ID not accessible, creating fresh: " + err);
-    }
-  }
   const ss = SpreadsheetApp.create("RTD Week 2 Registrations");
   const id = ss.getId();
-  props.setProperty("SHEET_ID", id);
+  PropertiesService.getScriptProperties().setProperty("SHEET_ID", id);
   return { ok: true, status: "created", id: id, url: ss.getUrl() };
 }
 
