@@ -101,12 +101,36 @@ Until every box is checked, the form is not done — it's "almost done", which i
 
 ---
 
+## Account hygiene — always create on learn@rivertech.me (added 2026-05-08)
+
+**20. Always create form sheets, Drive folders, Apps Script projects on `learn@rivertech.me` — never on `dhegelund@gmail.com`.**
+
+Apps Script and Sheets/Drive track active account *independently*. Being signed in as learn@ in the Apps Script tab does NOT mean Sheets routes new docs to learn@. When you navigate to `https://docs.google.com/spreadsheets/create` with no account index, Chrome creates the file on whichever account is active for Sheets at that moment — which can easily be dhegelund@ if you've used Sheets there recently.
+
+The 2026-05-08 incident: created the RTD Week 2 sheet on dhegelund@ via plain `/spreadsheets/create`. Apps Script (running as learn@) couldn't access the sheet, so every form POST failed. Form was broken for ~25 hours with parents seeing "server not responding" before Dan caught it from parent reports. Lost real registrations.
+
+**How to apply:**
+- Use account-indexed URLs when creating: `https://docs.google.com/u/<index>/spreadsheets/create`. Find the right `<index>` ahead of time by visiting `https://myaccount.google.com/`.
+- For sheets tied to an Apps Script: prefer the script's own `SpreadsheetApp.create()` — invoke it via a `setupSheet_` GET endpoint (token-protected) so Henry can trigger it via curl. The script runs as Owner so the sheet is auto-owned by learn@.
+- Right after creating any asset, verify the owner: read `document.querySelector('a[aria-label*="Google Account"]')?.getAttribute('aria-label')` in that tab via Chrome MCP `javascript_tool`. If it says dhegelund@, abort and redo with `/u/<learn-index>/...`.
+
+**21. A successful GET health check is NOT proof the backend works. E2E POST is mandatory before declaring launch.**
+
+The Week 2 build's `?action=...` GET returned `{ok:true, message:"backend is alive"}` immediately after deployment, and that lulled Henry into declaring "fully functional." But GET doesn't exercise SpreadsheetApp.openById, UrlFetchApp.fetch (Stripe), or MailApp.sendEmail — the things that actually matter. POST does. Without an E2E POST test, the cross-account sheet bug stayed hidden for 25 hours.
+
+**How to apply:**
+- The "shipping is not done until..." checklist (above) lists "E2E test: real submission → sheet row → Drive upload → Stripe Checkout session" as a hard requirement. Don't skip it. Don't outsource it to "Dan can test when he wants." Henry runs the E2E himself (Python urllib POST per #18 + check Executions log per #11a + read sheet via gviz CSV per Playbook §4) before saying the form is launched.
+- "We can rely on the Week-1 pattern" is a tempting shortcut and the wrong call. Each form has its own deployment with its own potential cross-account issues.
+
+---
+
 ## Change log
 
 - **2026-04-21** — initial draft after Full-Time 2026-27 shipped. Captured lessons from RTD, Homeschool, Field Trip, and Full-Time builds.
 - **2026-04-21** — after Re-Enrollment 2026-27 shipped. Added 11a (Executions-log Duration as the fastest E2E-verify signal) and logged Re-Enrollment in the "shipped so far" list. Reconfirmed #11 (curl POST gotcha is real and repeatable).
 - **2026-04-29** — after flipping Re-Enrollment fee 200→250. Added 11b (Apps Script redeploy requires OWNER account signed into Chrome). Dan signed in `learn@rivertech.me` mid-session, then Henry drove the full edit + save + redeploy from JS in Chrome (Version 2 deployed, doPost confirmed at 2.445s). Added 11c (the function-run picker is the one part of the IDE that won't accept synthesized clicks — `isTrusted` filter).
 - **2026-04-29** — Cognito historical import (33 families). Added the next four lessons.
+- **2026-05-08** — RTD Week 2 backend was broken for ~25 hours because the registrations sheet was created on dhegelund@ instead of learn@. Added lessons 20 (always create on learn@, verify owner immediately after create) and 21 (a GET health check is not enough — E2E POST is mandatory before declaring launch). Recovery: added `?action=setupSheet&token=...` endpoint to the Apps Script so Henry can re-bootstrap a fresh sheet via curl without needing the function-run picker (which Apps Script blocks for synthesized clicks per #11c). Worked on second try after stripping a try/catch around `SpreadsheetApp.openById` of the wrong-account sheet, which itself triggered an uncatchable Google-edge "permission denied" response.
 
 ---
 
