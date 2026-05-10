@@ -108,6 +108,7 @@ function doPost(e) {
 function doGet(e) {
   const params = (e && e.parameter) || {};
   if (params.action === "list") return json_(pipelineList_(params.token));
+  if (params.action === "backfillPaid") return json_(pipelineBackfillPaid_(params.token, params.daysBack, params.limit));
   return json_({ ok: true, message: "Homeschool 2026-27 backend is alive." });
 }
 
@@ -760,9 +761,15 @@ function pipelineFixPhotoSharing_(token) {
 }
 
 /**
- * Stripe webhook handler — same pattern as RTD/school. URL secret + out-of-band
- * Stripe event verification. On checkout.session.completed flip Pipeline Stage
- * to "Paid" if the row is still at Inbox.
+ * Stripe webhook handler — URL secret + structural validation. NO out-of-band
+ * verify (the api.stripe.com fetch added 1-3s of latency that occasionally
+ * pushed past Stripe's 30s timeout, getting the endpoint disabled 2026-04-30
+ * to 2026-05-08). The URL secret is 40+ chars of randomness which is plenty
+ * for v1; if a forged event slipped through, the worst it could do is flip a
+ * Status to Paid for a registrationId already in the sheet — can't create
+ * rows, transfer money, or expose data.
+ *
+ * On checkout.session.completed: flip Pipeline Stage to "Paid".
  */
 function pipelineStripeWebhook_(e) {
   const params = (e && e.parameter) || {};
@@ -775,30 +782,23 @@ function pipelineStripeWebhook_(e) {
   catch (err) { return { ok: false, error: "Invalid body" }; }
   if (!event || !event.id || !event.type) return { ok: false, error: "Event missing id/type" };
 
-  const stripeKey = cfg("STRIPE_SECRET_KEY");
-  if (!stripeKey) return { ok: false, error: "STRIPE_SECRET_KEY not configured" };
-
-  let verifiedEvent;
-  try {
-    const verifyRes = UrlFetchApp.fetch(
-      "https://api.stripe.com/v1/events/" + encodeURIComponent(event.id),
-      { method: "get", headers: { "Authorization": "Bearer " + stripeKey }, muteHttpExceptions: true }
-    );
-    if (verifyRes.getResponseCode() !== 200) return { ok: false, error: "Event verification failed" };
-    verifiedEvent = JSON.parse(verifyRes.getContentText());
-  } catch (err) {
-    return { ok: false, error: "Event verification network error" };
-  }
-  if (verifiedEvent.id !== event.id) return { ok: false, error: "Verified event ID mismatch" };
-  if (verifiedEvent.type !== "checkout.session.completed") {
-    return { ok: true, message: "Event ignored: " + verifiedEvent.type };
+  if (event.type !== "checkout.session.completed") {
+    return { ok: true, message: "Event ignored: " + event.type };
   }
 
-  const session = verifiedEvent.data && verifiedEvent.data.object;
+  const session = event.data && event.data.object;
   if (!session) return { ok: false, error: "Event data.object missing" };
   const regId = session.client_reference_id;
   if (!regId) return { ok: false, error: "No client_reference_id on session" };
 
+  return markRegistrationPaid_(regId, event.id);
+}
+
+/**
+ * Helper: flip a single row's Pipeline Stage / Status to "Paid".
+ * Idempotent. Used by pipelineStripeWebhook_ and pipelineBackfillPaid_.
+ */
+function markRegistrationPaid_(regId, ref) {
   const sh = pipelineSheet_();
   const lastRow = sh.getLastRow();
   const lastCol = sh.getLastColumn();
@@ -820,11 +820,71 @@ function pipelineStripeWebhook_(e) {
         return { ok: true, message: "Stage already advanced: " + currentStage, regId: regId };
       }
       sh.getRange(r + 1, stageIdx + 1).setValue("Paid");
-      Logger.log("stripeWebhook: marked " + regId + " Paid (event " + event.id + ")");
-      return { ok: true, regId: regId, newStage: "Paid", eventId: event.id };
+      Logger.log("markRegistrationPaid_: " + regId + " Paid (ref " + (ref || "(none)") + ")");
+      return { ok: true, regId: regId, newStage: "Paid", ref: ref };
     }
   }
   return { ok: false, error: "regId not found: " + regId };
+}
+
+/**
+ * Backfill: scan recent successful Stripe Checkout Sessions, flip matching
+ * sheet rows to "Paid". Use after the webhook has been disabled for a stretch.
+ *
+ * GET ?action=backfillPaid&token=<PIPELINE_TOKEN>
+ *      &daysBack=<n, default 30>
+ *      &limit=<n, default 100, Stripe cap = 100>
+ */
+function pipelineBackfillPaid_(token, daysBackParam, limitParam) {
+  if (!pipelineCheckToken_(token)) return { ok: false, error: "Bad token" };
+  const stripeKey = cfg("STRIPE_SECRET_KEY");
+  if (!stripeKey) return { ok: false, error: "STRIPE_SECRET_KEY not configured" };
+
+  const days = parseInt(daysBackParam, 10) || 30;
+  const lim = Math.min(parseInt(limitParam, 10) || 100, 100);
+  const since = Math.floor((Date.now() - days * 24 * 3600 * 1000) / 1000);
+
+  const url = "https://api.stripe.com/v1/checkout/sessions?limit=" + lim +
+    "&created[gte]=" + since;
+  const resp = UrlFetchApp.fetch(url, {
+    method: "get",
+    headers: { "Authorization": "Bearer " + stripeKey },
+    muteHttpExceptions: true
+  });
+  if (resp.getResponseCode() !== 200) {
+    return { ok: false, error: "Stripe list failed: " + resp.getResponseCode() + " " + resp.getContentText().slice(0, 200) };
+  }
+  const data = JSON.parse(resp.getContentText());
+  const sessions = data.data || [];
+
+  const updates = [];
+  const skipped = [];
+  for (const s of sessions) {
+    if (s.payment_status !== "paid") {
+      skipped.push({ id: s.id, reason: "payment_status: " + s.payment_status });
+      continue;
+    }
+    const regId = s.client_reference_id;
+    if (!regId) {
+      skipped.push({ id: s.id, reason: "no client_reference_id" });
+      continue;
+    }
+    updates.push({ regId: regId, sessionId: s.id, result: markRegistrationPaid_(regId, s.id) });
+  }
+
+  return {
+    ok: true,
+    scannedSessions: sessions.length,
+    updates: updates,
+    skipped: skipped,
+    summary: {
+      total: sessions.length,
+      flipped: updates.filter(function (u) { return u.result.newStage === "Paid"; }).length,
+      already: updates.filter(function (u) { return /idempotent|advanced/i.test(u.result.message || ""); }).length,
+      notFound: updates.filter(function (u) { return /not found/i.test(u.result.error || ""); }).length,
+      skippedNonPaid: skipped.length
+    }
+  };
 }
 
 function pipelineMigrate_(token) {
