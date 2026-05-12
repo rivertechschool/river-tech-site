@@ -590,14 +590,20 @@
       <a href="river-tech-days.html" class="reg-back">← Back to River Tech Days</a>
 
       <div class="reg-hero">
-        <h1>Register for River Tech Days</h1>
+        <h1>Registration is closed</h1>
         <p class="reg-subtitle">Week 2 · The Heart · Post Falls, ID</p>
         <p class="reg-dates">Tuesday–Thursday, May 12–14, 2026 · 1–4 PM</p>
       </div>
 
-      <div class="reg-deadline">
-        <strong>Registration closes Saturday, May 10.</strong> Spaces are limited. We&rsquo;ll send confirmations on Sunday, May 11. If your child&rsquo;s top-choice subjects are full, we&rsquo;ll match them to their next-best picks based on their ratings.
+      <div class="reg-deadline" style="background: #f6f4f0; border-left-color: var(--color-text);">
+        <strong>Registration for River Tech Days Week 2 closed Saturday, May 10.</strong> If you have a question or a special request, email <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>. Already registered? Confirmation emails went out Sunday, May 11 with your child&rsquo;s schedule.
       </div>
+
+      <div style="text-align: center; margin: 40px 0;">
+        <a href="river-tech-days.html" class="cta-btn" style="background: var(--color-text); color: white;">&larr; Back to River Tech Days</a>
+      </div>
+
+      <div style="display: none;"><!-- Form hidden — registration closed. Kept in DOM for backend wiring and individual sharing if needed. -->
 
       <div id="reg-error" class="reg-error" role="alert"></div>
       <div id="reg-success" class="reg-success" role="status"></div>
@@ -701,6 +707,7 @@
         <p style="text-align:center; font-size:13px; color:var(--color-text); opacity:0.6; margin-top:12px;">You&rsquo;ll be taken to Stripe to pay by card. We don&rsquo;t store your card details.</p>
 
       </form>
+      </div><!-- /hidden form wrapper (registration closed) -->
 
     </div>
   </div>
