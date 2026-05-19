@@ -65,6 +65,7 @@
     .tile-new-badge { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; padding: 1px 6px; border-radius: 8px; background: var(--rt-red); color: white; vertical-align: middle; margin-left: 6px; }
     .tile.src-homeschool .tile-new-badge { background: var(--hs-green); }
     .tile.src-re-enrollment .tile-new-badge { background: var(--re-blue); }
+    .tile-paid-badge { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; padding: 1px 6px; border-radius: 8px; background: #2f7d3a; color: white; vertical-align: middle; margin-left: 6px; }
     .tile-fam { font-weight: 700; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
     .tile-email { font-size: 11px; color: var(--ink-soft); margin-bottom: 6px; word-break: break-all; }
     .tile-kid { font-size: 12px; color: var(--ink); padding: 2px 0; display: flex; align-items: center; gap: 7px; }
@@ -330,11 +331,18 @@
         }
         children.push(c);
       }
+      const rawStage = get("Pipeline Stage") || "Inbox";
+      // "Paid" isn't a pipeline stage — it's a payment signal set by the Stripe
+      // webhook. Map back to "Inbox" so the family still appears in the review
+      // pipeline; remember the paid-ness as a separate flag so we can badge them.
+      const stage = rawStage === "Paid" ? "Inbox" : rawStage;
+      const paid = rawStage === "Paid";
       return {
         source,
         regId: String(get("Registration ID") || ""),
         submittedAt: get("Submitted (UTC)"),
-        stage: get("Pipeline Stage") || "Inbox",
+        stage,
+        paid,
         decidedDate: get("Decided Date"),
         confirmedDate: get("Confirmed Date"),
         committedDate: get("Committed Date"),
@@ -461,10 +469,11 @@
       const schedSummary = scheduleLine(family);
       const isNew = isNewSinceLastVisit(family);
       const newBadge = isNew ? `<span class="tile-new-badge">NEW</span>` : "";
+      const paidBadge = family.paid ? `<span class="tile-paid-badge">$ PAID</span>` : "";
       const tile = document.createElement("div");
       tile.className = "tile src-" + family.source;
       tile.innerHTML = `
-        <div class="tile-fam">${escapeHtml(fam)} — ${escapeHtml(p1)}${newBadge}</div>
+        <div class="tile-fam">${escapeHtml(fam)} — ${escapeHtml(p1)}${newBadge}${paidBadge}</div>
         <div class="tile-email">${escapeHtml(family.parent1.email)}</div>
         ${kidsLine}
         ${schedSummary ? `<div class="tile-kid kid-meta" style="margin-top:4px;font-style:italic;">${escapeHtml(schedSummary)}</div>` : ""}
