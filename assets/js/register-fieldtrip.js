@@ -1,57 +1,318 @@
-/* River Tech Field Trip — Registration form logic
-   Branches on trip selection (Karate $10 Elem/Middle vs NIC Free HS):
-     - Karate: shows homeschool/dropoff + chaperone sections + bus permission
-       clause in release. Submits and is redirected to Stripe Checkout.
-     - NIC: skips Karate-only blocks. Submits and goes straight to success.
-   POSTs to the Apps Script backend which writes the row, creates the
-   Stripe Checkout session (Karate only), sends emails, and returns
+/* River Tech Field Trip — Silverwood June 1, 2026 — Registration form logic
+   Branches on family type at the top:
+     - Full-time family: students get bus/own transport choice. R2R applies.
+     - Homeschool family: parent must accompany. Everyone drives. R2R applies.
+   Multi-participant form. Each participant is Student or Parent/family member.
+   Price is $35/person except for Read 2 Ride students (free at gate).
+   POSTs to the Apps Script backend which writes a row per participant,
+   creates the Stripe Checkout session (if total > 0), and returns
    { ok, checkoutUrl? }. */
 (function () {
   "use strict";
 
   // ---- Configuration ----------------------------------------------------
-  // Set this to the deployed Apps Script web-app URL before go-live.
+  // Existing Apps Script web-app deployment (was the April 29 field trip;
+  // now serves the Silverwood June 1 trip with the new multi-participant
+  // model). Same URL — only the underlying code + SHEET_ID change.
   const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwhK9l0Ve9IVj9GU4F0BttzPtPD52tMxWNIBs2EUIf5Xg8prXlOQ8UD2Bon74K2aOtH/exec";
 
-  const KARATE_PRICE_USD = 10;
+  const PRICE_PER_PERSON = 35;
 
-  // Form config — hard-coded for the April 29 trip. When we universalize
-  // the form later, this moves into the Current Trip sheet.
   const TRIP_CONFIG = {
-    karate: {
-      id: "karate",
-      name: "Christian Karate + CDA Park",
-      date: "2026-04-29",
-      price: KARATE_PRICE_USD,
-      gradeBand: "Elementary & Middle",
-      requiresPayment: true,
-      submitLabel: "Pay $10 & Complete Registration →"
-    },
-    nic: {
-      id: "nic",
-      name: "North Idaho College Tour + CDA Park",
-      date: "2026-04-29",
-      price: 0,
-      gradeBand: "High School",
-      requiresPayment: false,
-      submitLabel: "Complete Registration →"
-    }
+    id: "silverwood-2026-06-01",
+    name: "Silverwood Field Trip",
+    date: "2026-06-01",
+    deadline: "2026-05-28",
+    price: PRICE_PER_PERSON
   };
+
+  const PARTICIPANT_TYPES = {
+    "student": "Student",
+    "family":  "Parent or family member"
+  };
+
+  const TRANSPORT_OPTIONS = {
+    "bus-both":  "Bus both ways",
+    "bus-there": "Bus there, own ride home",
+    "bus-back":  "Own ride there, bus back",
+    "own-both":  "Own transport both ways"
+  };
+
+  // Track current family type at module scope so participant cards can adapt
+  let currentFamilyType = null; // "full-time" | "homeschool" | null
 
   // ---- Boot -------------------------------------------------------------
   document.addEventListener("DOMContentLoaded", function () {
     stampSignatureDate();
     wireEvents();
-    // No trip chosen yet — hide everything below the selector.
-    setTripBranch(null);
+    // Form body stays hidden until family type is picked.
   });
 
-  // ---- Helpers ----------------------------------------------------------
-  function getSelectedTrip() {
-    const r = document.querySelector("input[name='trip']:checked");
-    return r ? r.value : null;
+  // ---- Family-type branching --------------------------------------------
+  function setFamilyType(val) {
+    currentFamilyType = val;
+
+    // Reveal form body
+    const body = document.getElementById("form-body");
+    body.classList.toggle("show", !!val);
+
+    // Toggle [data-branch] elements
+    document.querySelectorAll("[data-branch]").forEach(function (el) {
+      const branch = el.getAttribute("data-branch");
+      el.classList.toggle("show", branch === val);
+    });
+
+    // If switching family type, refresh every participant card
+    document.querySelectorAll(".participant-card").forEach(function (card) {
+      applyTypeToCard(card);
+    });
+
+    // Make sure there's at least one participant row when the form opens
+    const list = document.getElementById("participant-list");
+    if (val && list.children.length === 0) {
+      addParticipant();
+    }
+
+    // Required flag on the homeschool acknowledgment
+    const homeschoolAck = document.querySelector("[name='ackHomeschool']");
+    if (homeschoolAck) {
+      if (val === "homeschool") {
+        homeschoolAck.setAttribute("required", "");
+      } else {
+        homeschoolAck.removeAttribute("required");
+        homeschoolAck.checked = false;
+        const lbl = homeschoolAck.closest(".reg-check");
+        if (lbl) lbl.classList.remove("checked");
+      }
+    }
+
+    updateTotal();
   }
 
+  // ---- Participant management -------------------------------------------
+  let participantCounter = 0;
+
+  function addParticipant() {
+    participantCounter += 1;
+    const id = "p" + participantCounter;
+    const list = document.getElementById("participant-list");
+
+    const card = document.createElement("div");
+    card.className = "participant-card";
+    card.dataset.pid = id;
+    card.innerHTML = renderParticipantCard(id, list.children.length + 1);
+    list.appendChild(card);
+
+    wireParticipantCard(card);
+    applyTypeToCard(card);
+    renumberParticipants();
+    updateTotal();
+  }
+
+  function removeParticipant(card) {
+    const list = document.getElementById("participant-list");
+    if (list.children.length <= 1) {
+      // Don't remove the last row — clear it instead.
+      const inputs = card.querySelectorAll("input, select");
+      inputs.forEach(function (el) {
+        if (el.type === "checkbox" || el.type === "radio") el.checked = false;
+        else el.value = "";
+      });
+      const r2rLbl = card.querySelector(".pc-r2r .reg-check");
+      if (r2rLbl) r2rLbl.classList.remove("checked");
+      applyTypeToCard(card);
+      updateTotal();
+      return;
+    }
+    card.remove();
+    renumberParticipants();
+    updateTotal();
+  }
+
+  function renderParticipantCard(id, n) {
+    const typeOptions = Object.keys(PARTICIPANT_TYPES).map(function (k) {
+      return '<option value="' + k + '">' + PARTICIPANT_TYPES[k] + '</option>';
+    }).join("");
+
+    const transportOptions = Object.keys(TRANSPORT_OPTIONS).map(function (k) {
+      return '<option value="' + k + '">' + TRANSPORT_OPTIONS[k] + '</option>';
+    }).join("");
+
+    return [
+      '<div class="pc-header">',
+      '  <span class="pc-title" data-pc-title>Person ' + n + '</span>',
+      '  <button type="button" class="pc-remove" data-action="remove">Remove</button>',
+      '</div>',
+      '<div class="reg-row-grid-2">',
+      '  <div>',
+      '    <label class="reg-label">First name<span class="req">*</span></label>',
+      '    <input class="reg-input" type="text" data-field="firstName" required>',
+      '  </div>',
+      '  <div>',
+      '    <label class="reg-label">Last name<span class="req">*</span></label>',
+      '    <input class="reg-input" type="text" data-field="lastName" required>',
+      '  </div>',
+      '</div>',
+      '<div class="reg-row-grid-2">',
+      '  <div>',
+      '    <label class="reg-label">Age<span class="req">*</span></label>',
+      '    <input class="reg-input" type="number" min="0" max="99" data-field="age" required>',
+      '  </div>',
+      '  <div>',
+      '    <label class="reg-label">Who is this?<span class="req">*</span></label>',
+      '    <select class="reg-select" data-field="type" required>',
+      '      <option value="">Select…</option>',
+      typeOptions,
+      '    </select>',
+      '  </div>',
+      '</div>',
+      '<div class="pc-r2r">',
+      '  <label class="reg-label">Select ticket price<span class="req">*</span></label>',
+      '  <span class="reg-help">Read 2 Ride was a spring program. Only students who already submitted their reading log to Mary back in March qualify. This is not something that can be done now.</span>',
+      '  <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">',
+      '    <label class="reg-check">',
+      '      <input type="radio" data-field="r2r" name="r2r-' + id + '" value="yes">',
+      '      <span>Already submitted Read 2 Ride log to Mary in spring — <strong>free ticket at the gate</strong></span>',
+      '    </label>',
+      '    <label class="reg-check">',
+      '      <input type="radio" data-field="r2r" name="r2r-' + id + '" value="no">',
+      '      <span>Does not apply — <strong>$35</strong></span>',
+      '    </label>',
+      '  </div>',
+      '</div>',
+      '<div class="pc-transport">',
+      '  <label class="reg-label">Transportation<span class="req">*</span></label>',
+      '  <select class="reg-select" data-field="transport">',
+      '    <option value="">Select…</option>',
+      transportOptions,
+      '  </select>',
+      '  <span class="reg-help">Choose whether this student rides the school bus, drives, or both.</span>',
+      '</div>',
+      '<div class="pc-homeschool-note">',
+      '  Homeschool families and family members provide their own transportation to and from the park.',
+      '</div>'
+    ].join("\n");
+  }
+
+  function wireParticipantCard(card) {
+    const removeBtn = card.querySelector('[data-action="remove"]');
+    if (removeBtn) removeBtn.addEventListener("click", function () { removeParticipant(card); });
+
+    const typeSel = card.querySelector('[data-field="type"]');
+    if (typeSel) {
+      typeSel.addEventListener("change", function () {
+        applyTypeToCard(card);
+        updateTotal();
+      });
+    }
+
+    card.querySelectorAll('[data-field="r2r"]').forEach(function (r) {
+      r.addEventListener("change", function () { updateTotal(); });
+    });
+
+    const transport = card.querySelector('[data-field="transport"]');
+    if (transport) transport.addEventListener("change", function () { updateTotal(); });
+
+    const fn = card.querySelector('[data-field="firstName"]');
+    const ln = card.querySelector('[data-field="lastName"]');
+    [fn, ln].forEach(function (el) {
+      if (el) el.addEventListener("input", function () { renumberParticipants(); updateTotal(); });
+    });
+  }
+
+  function applyTypeToCard(card) {
+    const typeSel = card.querySelector('[data-field="type"]');
+    const type = typeSel ? typeSel.value : "";
+    const transport = card.querySelector(".pc-transport");
+    const hsNote = card.querySelector(".pc-homeschool-note");
+    const r2rWrap = card.querySelector(".pc-r2r");
+
+    const showTransport = (type === "student" && currentFamilyType === "full-time");
+    const showHsNote = (type === "student" && currentFamilyType === "homeschool");
+    // R2R is full-time only (homeschool families don't get R2R)
+    const showR2R = (type === "student" && currentFamilyType === "full-time");
+
+    transport.classList.toggle("show", showTransport);
+    hsNote.classList.toggle("show", showHsNote);
+    r2rWrap.style.display = showR2R ? "" : "none";
+
+    if (!showTransport) {
+      const tSel = card.querySelector('[data-field="transport"]');
+      if (tSel) tSel.value = "";
+    }
+    if (!showR2R) {
+      card.querySelectorAll('[data-field="r2r"]').forEach(function (r) {
+        r.checked = false;
+        const lbl = r.closest(".reg-check");
+        if (lbl) lbl.classList.remove("checked");
+      });
+    }
+  }
+
+  function renumberParticipants() {
+    const cards = document.querySelectorAll(".participant-card");
+    cards.forEach(function (card, idx) {
+      const titleEl = card.querySelector("[data-pc-title]");
+      if (!titleEl) return;
+      const fn = (card.querySelector('[data-field="firstName"]') || {}).value || "";
+      const ln = (card.querySelector('[data-field="lastName"]') || {}).value || "";
+      const fullName = (fn + " " + ln).trim();
+      titleEl.textContent = fullName
+        ? "Person " + (idx + 1) + " — " + fullName
+        : "Person " + (idx + 1);
+    });
+  }
+
+  // ---- Total calculation ------------------------------------------------
+  function updateTotal() {
+    const cards = document.querySelectorAll(".participant-card");
+    let paidCount = 0;
+    let freeCount = 0;
+
+    cards.forEach(function (card) {
+      const type = (card.querySelector('[data-field="type"]') || {}).value;
+      const fn = (card.querySelector('[data-field="firstName"]') || {}).value || "";
+      if (!fn.trim()) return;
+
+      const r2rChecked = card.querySelector('[data-field="r2r"]:checked');
+      const isR2R = !!(r2rChecked && r2rChecked.value === "yes");
+
+      if (type === "student" && isR2R) {
+        freeCount += 1;
+      } else if (type) {
+        paidCount += 1;
+      }
+    });
+
+    const total = paidCount * PRICE_PER_PERSON;
+    const totalEl = document.getElementById("total-amount");
+    const breakdownEl = document.getElementById("total-breakdown");
+    const submitBtn = document.getElementById("reg-submit");
+    const helper = document.getElementById("submit-helper");
+
+    totalEl.textContent = "$" + total;
+
+    if (paidCount === 0 && freeCount === 0) {
+      breakdownEl.textContent = "Add at least one person to get started.";
+      submitBtn.textContent = "Complete Registration →";
+      helper.style.display = "none";
+    } else {
+      const parts = [];
+      if (paidCount > 0) parts.push(paidCount + " × $" + PRICE_PER_PERSON + " paid");
+      if (freeCount > 0) parts.push(freeCount + " × free (Read 2 Ride)");
+      breakdownEl.textContent = parts.join(" · ");
+
+      if (total > 0) {
+        submitBtn.textContent = "Pay $" + total + " & Complete Registration →";
+        helper.style.display = "block";
+      } else {
+        submitBtn.textContent = "Complete Registration →";
+        helper.style.display = "none";
+      }
+    }
+  }
+
+  // ---- Date stamp -------------------------------------------------------
   function stampSignatureDate() {
     const today = new Date();
     const fmt = today.toLocaleDateString("en-US", {
@@ -61,138 +322,89 @@
     if (el) el.textContent = fmt;
   }
 
-  function show(el, yes) {
-    if (!el) return;
-    el.classList.toggle("show", !!yes);
-  }
-
-  // ---- Branching --------------------------------------------------------
-  function setTripBranch(trip) {
-    // Show/hide the trip-details info blocks below the selector
-    show(document.getElementById("trip-details-karate"), trip === "karate");
-    show(document.getElementById("trip-details-nic"),    trip === "nic");
-
-    // Everything below the trip-selection section is branch-only until a
-    // trip is chosen.
-    const allBranchBlocks = document.querySelectorAll(".branch-only");
-    allBranchBlocks.forEach(function (el) {
-      el.classList.remove("show");
-    });
-
-    if (!trip) {
-      // Hide submit button; no trip picked.
-      document.getElementById("reg-submit").style.display = "none";
-      document.getElementById("submit-helper").style.display = "none";
-      return;
-    }
-
-    // Shared sections visible in both branches:
-    ["section-parent", "section-student", "section-medical",
-     "section-notes", "section-release", "section-signature"].forEach(function (id) {
-      show(document.getElementById(id), true);
-    });
-
-    // Karate-only sections:
-    const karate = trip === "karate";
-    show(document.getElementById("homeschool-block"), karate);
-    show(document.getElementById("section-chaperone"), karate);
-
-    // Karate-only release clauses (the Transportation paragraph)
-    document.querySelectorAll(".branch-karate").forEach(function (el) {
-      show(el, karate);
-    });
-
-    // Configure submit button
-    const cfg = TRIP_CONFIG[trip];
-    const btn = document.getElementById("reg-submit");
-    btn.textContent = cfg.submitLabel;
-    btn.style.display = "block";
-
-    const helper = document.getElementById("submit-helper");
-    if (cfg.requiresPayment) {
-      helper.style.display = "block";
-    } else {
-      helper.style.display = "none";
-    }
-
-    // Reset Karate-only field requireds when switching to NIC
-    const homeschoolRadios = document.querySelectorAll("input[name='homeschool']");
-    homeschoolRadios.forEach(function (r) {
-      if (!karate) r.checked = false;
-    });
-    const chaperoneRadios = document.querySelectorAll("input[name='chaperone']");
-    chaperoneRadios.forEach(function (r) {
-      if (!karate) r.checked = false;
-    });
-    if (!karate) {
-      const dropoff = document.getElementById("dropoffRequest");
-      if (dropoff) dropoff.checked = false;
-      // hide the dropoff sub-block
-      show(document.getElementById("dropoff-block"), false);
-      // clear visual .checked states on karate-only cards
-      document.querySelectorAll("#homeschool-block .reg-check, #section-chaperone .reg-check")
-        .forEach(function (lbl) { lbl.classList.remove("checked"); });
-    }
-  }
-
-  function setHomeschoolBranch(val) {
-    // Drop-off request sub-block only appears if homeschool === "yes"
-    show(document.getElementById("dropoff-block"), val === "yes");
-    if (val !== "yes") {
-      const dropoff = document.getElementById("dropoffRequest");
-      if (dropoff) {
-        dropoff.checked = false;
-        const lbl = dropoff.closest(".reg-check");
-        if (lbl) lbl.classList.remove("checked");
-      }
-    }
-  }
-
   // ---- Validation -------------------------------------------------------
   function validate() {
     const form = document.getElementById("reg-form");
-    const trip = getSelectedTrip();
-    if (!trip) return "Please select a trip at the top of the form.";
+
+    // Family type
+    if (!currentFamilyType) {
+      return "Please choose whether you're a full-time family or a homeschool family.";
+    }
 
     // Parent block
     const parentFields = [
       ["parentFirstName", "parent/guardian first name"],
       ["parentLastName",  "parent/guardian last name"],
       ["parentEmail",     "parent/guardian email"],
-      ["parentPhone",     "parent/guardian cell phone"],
-      ["emergencyPhone",  "emergency contact phone"]
+      ["parentPhone",     "parent/guardian cell phone"]
     ];
     for (let i = 0; i < parentFields.length; i++) {
       const f = form.querySelector("[name='" + parentFields[i][0] + "']");
       if (!f || !f.value.trim()) return "Please fill in " + parentFields[i][1] + ".";
     }
 
-    // Email format
     const email = form.parentEmail.value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return "Please enter a valid email address.";
     }
 
-    // Student block
-    const studentFields = [
-      ["studentFirstName", "student first name"],
-      ["studentLastName",  "student last name"],
-      ["studentGrade",     "student grade"],
-      ["studentAge",       "student age"]
-    ];
-    for (let i = 0; i < studentFields.length; i++) {
-      const f = form.querySelector("[name='" + studentFields[i][0] + "']");
-      if (!f || !f.value.trim()) return "Please fill in the " + studentFields[i][1] + ".";
+    // Participants
+    const cards = document.querySelectorAll(".participant-card");
+    if (cards.length === 0) return "Please add at least one participant.";
+
+    let hasValidParticipant = false;
+    let hasStudent = false;
+    let hasAttendingAdult = false;
+
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
+      const fn = (card.querySelector('[data-field="firstName"]') || {}).value || "";
+      const ln = (card.querySelector('[data-field="lastName"]') || {}).value || "";
+      const age = (card.querySelector('[data-field="age"]') || {}).value || "";
+      const type = (card.querySelector('[data-field="type"]') || {}).value || "";
+
+      const isEmpty = !fn.trim() && !ln.trim() && !age.trim() && !type;
+      if (isEmpty) continue;
+
+      if (!fn.trim()) return "Person " + (i + 1) + ": please enter a first name.";
+      if (!ln.trim()) return "Person " + (i + 1) + ": please enter a last name.";
+      if (!age.trim()) return "Person " + (i + 1) + ": please enter an age.";
+      const ageNum = parseInt(age, 10);
+      if (isNaN(ageNum) || ageNum < 0 || ageNum > 99) {
+        return "Person " + (i + 1) + ": please enter a valid age.";
+      }
+      if (!type) return "Person " + (i + 1) + ": please choose who this person is.";
+
+      if (type === "student" && currentFamilyType === "full-time") {
+        const r2rChecked = card.querySelector('[data-field="r2r"]:checked');
+        if (!r2rChecked) return "Person " + (i + 1) + ": please choose a Read 2 Ride status.";
+
+        const transport = (card.querySelector('[data-field="transport"]') || {}).value || "";
+        if (!transport) return "Person " + (i + 1) + ": please choose a transportation option.";
+      }
+
+      if (type === "student") hasStudent = true;
+      if (type === "family") hasAttendingAdult = true;
+
+      hasValidParticipant = true;
     }
 
-    const age = parseInt(form.studentAge.value, 10);
-    if (isNaN(age) || age < 4 || age > 19) {
-      return "Please enter a valid age between 4 and 19.";
+    if (!hasValidParticipant) return "Please complete at least one participant's details.";
+
+    // Homeschool families: must have at least one attending adult (family member)
+    if (currentFamilyType === "homeschool" && hasStudent && !hasAttendingAdult) {
+      return "Homeschool families: please add yourself (or another attending adult) as a Parent or family member. Homeschool students must be accompanied by an adult.";
     }
 
-    // First aid permission — required
-    const firstAid = form.querySelector("input[name='firstAidPermission']:checked");
-    if (!firstAid) return "Please choose yes or no for first-aid permission.";
+    // Acknowledgments — different sets per branch
+    const requiredAcks = (currentFamilyType === "homeschool")
+      ? ["ackHomeschool"]
+      : ["ackSwimsuits", "ackDevices", "ackSchedule"];
+
+    for (let i = 0; i < requiredAcks.length; i++) {
+      const a = form.querySelector("[name='" + requiredAcks[i] + "']");
+      if (!a || !a.checked) return "Please confirm all acknowledgments above the release.";
+    }
 
     // Release
     const release = form.querySelector("#releaseAgree");
@@ -203,62 +415,79 @@
       return "Please type your full name as signature.";
     }
 
-    // Sanity: signature name should match one of the parent name parts
-    // (gentle check — not blocking if they signed in a different order)
-    // Intentionally not enforced to avoid false negatives.
-
     return null;
   }
 
   // ---- Payload ----------------------------------------------------------
   function buildPayload() {
     const form = document.getElementById("reg-form");
-    const trip = getSelectedTrip();
-    const cfg = TRIP_CONFIG[trip];
+    const cards = document.querySelectorAll(".participant-card");
 
-    const homeschool = (form.querySelector("input[name='homeschool']:checked") || {}).value || "";
-    const chaperone  = (form.querySelector("input[name='chaperone']:checked") || {}).value  || "";
-    const firstAid   = (form.querySelector("input[name='firstAidPermission']:checked") || {}).value || "";
-    const dropoff    = document.getElementById("dropoffRequest");
+    const participants = [];
+    let paidCount = 0;
+    let freeCount = 0;
+
+    cards.forEach(function (card) {
+      const fn = (card.querySelector('[data-field="firstName"]') || {}).value || "";
+      const ln = (card.querySelector('[data-field="lastName"]') || {}).value || "";
+      const age = (card.querySelector('[data-field="age"]') || {}).value || "";
+      const type = (card.querySelector('[data-field="type"]') || {}).value || "";
+      const transport = (card.querySelector('[data-field="transport"]') || {}).value || "";
+      const r2rChecked = card.querySelector('[data-field="r2r"]:checked');
+
+      if (!fn.trim()) return;
+
+      const isStudent = type === "student";
+      const isR2R = !!(r2rChecked && r2rChecked.value === "yes" && isStudent);
+      const isFree = isR2R;
+
+      if (isFree) freeCount += 1;
+      else paidCount += 1;
+
+      participants.push({
+        firstName: fn.trim(),
+        lastName:  ln.trim(),
+        age:       age,
+        type:      type,                                  // "student" | "family"
+        typeLabel: PARTICIPANT_TYPES[type] || "",
+        transport: transport,                              // only set for full-time students
+        transportLabel: TRANSPORT_OPTIONS[transport] || "",
+        read2Ride: isFree,
+        priceUSD:  isFree ? 0 : PRICE_PER_PERSON
+      });
+    });
+
+    const totalUSD = paidCount * PRICE_PER_PERSON;
 
     return {
       submittedAt: new Date().toISOString(),
       trip: {
-        id:       trip,
-        name:     cfg.name,
-        date:     cfg.date,
-        gradeBand: cfg.gradeBand,
-        price:    cfg.price,
-        requiresPayment: cfg.requiresPayment
+        id:   TRIP_CONFIG.id,
+        name: TRIP_CONFIG.name,
+        date: TRIP_CONFIG.date,
+        deadline: TRIP_CONFIG.deadline,
+        pricePerPersonUSD: PRICE_PER_PERSON
       },
+      familyType: currentFamilyType,    // "full-time" | "homeschool"
       parent: {
         firstName: form.parentFirstName.value.trim(),
         lastName:  form.parentLastName.value.trim(),
         email:     form.parentEmail.value.trim(),
         phone:     form.parentPhone.value.trim()
       },
-      emergency: {
-        name:  form.emergencyName.value.trim(),
-        phone: form.emergencyPhone.value.trim()
+      participants: participants,
+      counts: {
+        paid: paidCount,
+        free: freeCount,
+        total: participants.length
       },
-      student: {
-        firstName: form.studentFirstName.value.trim(),
-        lastName:  form.studentLastName.value.trim(),
-        grade:     form.studentGrade.value,
-        age:       form.studentAge.value
+      totalUSD: totalUSD,
+      acknowledgments: {
+        homeschoolSupervision: !!(form.querySelector("[name='ackHomeschool']") && form.querySelector("[name='ackHomeschool']").checked),
+        noSwimsuits:           !!form.querySelector("[name='ackSwimsuits']").checked,
+        noDevices:             !!form.querySelector("[name='ackDevices']").checked,
+        scheduleRead:          !!form.querySelector("[name='ackSchedule']").checked
       },
-      homeschool: {
-        isHomeschool: homeschool === "yes",
-        dropoffRequest: !!(dropoff && dropoff.checked)
-      },
-      medical: {
-        allergies:          form.allergies.value.trim(),
-        medications:        form.medications.value.trim(),
-        medicalConditions:  form.medicalConditions.value.trim(),
-        firstAidPermission: firstAid === "yes"
-      },
-      chaperone: chaperone,
-      notes: form.notes.value.trim(),
       release: {
         agreed: true,
         signatureName: form.signatureName.value.trim(),
@@ -282,10 +511,9 @@
 
     const payload = buildPayload();
 
-    // If backend isn't wired yet, show a friendly preview.
     if (!BACKEND_URL || BACKEND_URL === "__BACKEND_URL__") {
       console.log("Field trip registration payload (no backend configured):", payload);
-      showError("Almost ready — the registration backend isn't deployed yet. Your details are complete. Please try again shortly, or email learn@rivertech.me to sign up by hand.");
+      showError("Almost ready — the registration backend isn't deployed yet. Your details look good. Please try again shortly, or email learn@rivertech.me to sign up by hand.");
       submitBtn.disabled = false;
       submitBtn.textContent = originalLabel;
       return;
@@ -293,7 +521,7 @@
 
     fetch(BACKEND_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoid CORS preflight on Apps Script
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     })
       .then(function (r) { return r.json(); })
@@ -306,10 +534,8 @@
           return;
         }
         if (data.checkoutUrl) {
-          // Karate branch — Stripe redirect
           window.location.href = data.checkoutUrl;
         } else {
-          // NIC (free) branch — go straight to the success page
           const rid = data.registrationId ? ("?id=" + encodeURIComponent(data.registrationId)) : "";
           window.location.href = "register-fieldtrip-success.html" + rid;
         }
@@ -336,31 +562,22 @@
 
   // ---- Event wiring -----------------------------------------------------
   function wireEvents() {
-    // Trip card selection (radios)
-    document.querySelectorAll("input[name='trip']").forEach(function (r) {
+    // Family-type radios
+    document.querySelectorAll("input[name='familyType']").forEach(function (r) {
       r.addEventListener("change", function (e) {
-        // Visual: toggle .checked on the outer trip-card label
-        document.querySelectorAll(".trip-card").forEach(function (card) {
-          const input = card.querySelector("input[name='trip']");
+        document.querySelectorAll(".family-card").forEach(function (card) {
+          const input = card.querySelector("input[name='familyType']");
           card.classList.toggle("checked", input && input.checked);
         });
-        setTripBranch(e.target.value);
+        setFamilyType(e.target.value);
       });
     });
 
-    // Homeschool radios → toggle drop-off sub-block
-    document.querySelectorAll("input[name='homeschool']").forEach(function (r) {
-      r.addEventListener("change", function (e) {
-        setHomeschoolBranch(e.target.value);
-        // Visual .checked toggle
-        document.querySelectorAll("input[name='homeschool']").forEach(function (x) {
-          const lbl = x.closest(".reg-check");
-          if (lbl) lbl.classList.toggle("checked", x.checked);
-        });
-      });
-    });
+    // Add-participant button
+    const addBtn = document.getElementById("add-participant");
+    if (addBtn) addBtn.addEventListener("click", addParticipant);
 
-    // Visual state for ALL radio/checkbox .reg-check labels
+    // Visual state for ALL .reg-check labels
     document.addEventListener("change", function (e) {
       const t = e.target;
       if (!t) return;
@@ -369,7 +586,6 @@
       if (t.type === "checkbox") {
         lbl.classList.toggle("checked", t.checked);
       } else if (t.type === "radio") {
-        // Clear siblings in the same radio group
         const group = document.getElementsByName(t.name);
         Array.prototype.forEach.call(group, function (r) {
           const l = r.closest(".reg-check");
