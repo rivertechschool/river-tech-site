@@ -80,6 +80,12 @@
 
     .empty { font-size: 11px; font-style: italic; color: var(--ink-soft); text-align: center; padding: 6px 0; }
 
+    .subgroup { margin-top: 4px; }
+    .subgroup-head { font-size: 10px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; padding: 4px 6px; border-radius: 3px; margin: 4px 0 4px; display: flex; justify-content: space-between; align-items: baseline; }
+    .subgroup-head.ft { background: var(--ft-blue); color: white; }
+    .subgroup-head.hs { background: var(--hs-green); color: white; }
+    .subgroup-count { font-weight: 600; opacity: 0.85; }
+
     .summary-bar { background: var(--panel); padding: 8px 18px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--ink-soft); display: flex; gap: 18px; }
     .summary-bar strong { color: var(--ink); font-weight: 700; }
     .error-banner { background: #fef0f0; border-left: 4px solid var(--rt-red); padding: 10px 14px; margin: 8px; font-size: 13px; color: var(--rt-red); }
@@ -324,29 +330,40 @@
 
   function block(day, period) {
     // period: "morning" (full-time only, 8:30-10:30), "afternoon" (full-time + HS, 10:30+), "all-day" (Wed full-time only)
-    let kids;
-    if (period === "morning") {
-      kids = KIDS.filter(k => k.type === "ft" && k.days.includes(day) && ageFilterMatches(k));
-    } else if (period === "all-day") {
-      kids = KIDS.filter(k => k.type === "ft" && k.days.includes(day) && ageFilterMatches(k));
-    } else {
-      kids = KIDS.filter(k => k.days.includes(day) && ageFilterMatches(k));
-    }
+    const allDayKids = KIDS.filter(k => k.days.includes(day) && ageFilterMatches(k));
+    const ftKids = allDayKids.filter(k => k.type === "ft");
+    const hsKids = allDayKids.filter(k => k.type === "hs");
+
     const time = period === "morning" ? "8:30 – 10:30" :
                  period === "all-day" ? "All day" : "10:30 onward";
     const note = period === "morning" ? "Full-timers only" :
-                 period === "all-day" ? "Full-timers only (no a-la-carte)" : "+ A-la-carte joins";
+                 period === "all-day" ? "Full-timers only (no a-la-carte)" : "Full-time + a-la-carte side by side";
     const cls = "block" + (period === "all-day" ? " all-day" : "");
-    const body = kids.length === 0
-      ? `<div class="empty">— no one —</div>`
-      : kids.map(kidPill).join("");
+
+    let body = "";
+    if (period === "morning" || period === "all-day") {
+      // Full-time only
+      body = ftKids.length === 0
+        ? `<div class="empty">— no one —</div>`
+        : ftKids.map(kidPill).join("");
+    } else {
+      // 10:30 onward: show two clearly separated subgroups
+      body += `<div class="subgroup"><div class="subgroup-head ft"><span>Full-time</span><span class="subgroup-count">${ftKids.length}</span></div>`;
+      body += ftKids.length === 0 ? `<div class="empty">— none —</div>` : ftKids.map(kidPill).join("");
+      body += `</div>`;
+      body += `<div class="subgroup"><div class="subgroup-head hs"><span>Homeschool</span><span class="subgroup-count">${hsKids.length}</span></div>`;
+      body += hsKids.length === 0 ? `<div class="empty">— no a-la-carte today —</div>` : hsKids.map(kidPill).join("");
+      body += `</div>`;
+    }
+
+    const totalCount = (period === "morning" || period === "all-day") ? ftKids.length : (ftKids.length + hsKids.length);
     return `<div class="${cls}">
       <div class="block-head">
         <span>
           <span class="block-time">${time}</span>
           <span class="block-note"> · ${escapeHtml(note)}</span>
         </span>
-        <span class="block-count">${kids.length}</span>
+        <span class="block-count">${totalCount}</span>
       </div>
       ${body}
     </div>`;
