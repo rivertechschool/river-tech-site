@@ -1,24 +1,26 @@
 /**
- * River Tech — Field Trip Registration Backend
+ * River Tech — Silverwood Field Trip Registration Backend
  * Google Apps Script web app. Deploy with:
- *   Deploy > New deployment > Type: Web app
+ *   Deploy > Manage deployments > Edit (pencil) > New version > Deploy
  *   Execute as: Me
  *   Who has access: Anyone
  *
- * Handles ONE field trip form (April 29, 2026 trip: Karate + CDA Park
- * OR NIC Tour + CDA Park). When we universalize the form later, this
- * backend gets replaced; for now it's purpose-built for this trip.
+ * Handles the Silverwood June 1, 2026 field trip form. Multi-participant
+ * model: one parent registers a family (full-time or homeschool), each
+ * person is either a Student or a Parent/family member. Read 2 Ride
+ * students are free; everyone else is $35.
  *
  * Per submission:
  *   1. Validate payload structure.
- *   2. Append a row to the Sheet (auto-initialize header row).
- *   3. For Karate trips: create Stripe Checkout Session.
+ *   2. Append one row PER PARTICIPANT to the Sheet (auto-init headers).
+ *   3. If totalUSD > 0: create a single Stripe Checkout Session covering
+ *      the whole registration. (R2R-only families bypass Stripe.)
  *   4. Email parent + notify learn@rivertech.me and dhegelund@gmail.com.
  *   5. Return { ok: true, registrationId, checkoutUrl? }.
  *
  * Script Properties (set via Project Settings > Script Properties):
- *   SHEET_ID           — Google Sheet ID (file in My Drive/RTS Website Forms/)
- *   STRIPE_SECRET_KEY  — sk_live_... (same key used by RTD; one key, one org)
+ *   SHEET_ID           — Google Sheet ID for "Silverwood Field Trip 2026-06-01"
+ *   STRIPE_SECRET_KEY  — sk_live_... (same key already used by RTD; do not change)
  */
 
 // ---- Config helpers -----------------------------------------------------
@@ -33,6 +35,8 @@ const FORM_PAGE_URL = "https://www.rivertechschool.com/pages/register-fieldtrip.
 const SUCCESS_URL = "https://www.rivertechschool.com/pages/register-fieldtrip-success.html?session_id={CHECKOUT_SESSION_ID}";
 const CANCEL_URL = "https://www.rivertechschool.com/pages/register-fieldtrip.html";
 const SHEET_TAB_NAME = "Signups";
+
+const PRICE_PER_PERSON_USD = 35;
 
 // ---- Web-app entrypoints ------------------------------------------------
 function doPost(e) {
@@ -49,8 +53,8 @@ function doPost(e) {
 function doGet() {
   return json_({
     ok: true,
-    message: "River Tech Field Trip backend is alive.",
-    trip: "April 29, 2026"
+    message: "River Tech Silverwood Field Trip backend is alive.",
+    trip: "Silverwood — June 1, 2026"
   });
 }
 
@@ -63,17 +67,29 @@ function json_(obj) {
 // ---- Core handler -------------------------------------------------------
 function handleSubmission(p) {
   // Validate top-level structure
-  if (!p || !p.trip || !p.parent || !p.student || !p.release) {
+  if (!p || !p.trip || !p.parent || !p.participants || !p.release) {
     return { ok: false, error: "Registration data was incomplete. Please fill out every required field." };
   }
-  if (p.trip.id !== "karate" && p.trip.id !== "nic") {
-    return { ok: false, error: "Unknown trip selection. Please refresh the page and try again." };
+  if (p.trip.id !== "silverwood-2026-06-01") {
+    return { ok: false, error: "Unknown trip. Please refresh and try again." };
+  }
+  if (p.familyType !== "full-time" && p.familyType !== "homeschool") {
+    return { ok: false, error: "Please choose a family type." };
   }
   if (!p.parent.firstName || !p.parent.lastName || !p.parent.email || !p.parent.phone) {
     return { ok: false, error: "Parent/guardian information is incomplete." };
   }
-  if (!p.student.firstName || !p.student.lastName || !p.student.grade || !p.student.age) {
-    return { ok: false, error: "Student information is incomplete." };
+  if (!Array.isArray(p.participants) || p.participants.length === 0) {
+    return { ok: false, error: "Please add at least one participant." };
+  }
+  for (let i = 0; i < p.participants.length; i++) {
+    const part = p.participants[i];
+    if (!part.firstName || !part.lastName || !part.age || !part.type) {
+      return { ok: false, error: "Participant " + (i + 1) + " is missing required information." };
+    }
+    if (p.familyType === "full-time" && part.type === "student" && !part.transport) {
+      return { ok: false, error: "Participant " + (i + 1) + ": transportation choice is required for full-time students." };
+    }
   }
   if (!p.release.signatureName) {
     return { ok: false, error: "Please type your signature (parent/guardian full name)." };
@@ -82,22 +98,33 @@ function handleSubmission(p) {
     return { ok: false, error: "Please check the release agreement box." };
   }
 
-  const registrationId = "FT-" + Utilities.formatDate(
+  const registrationId = "SW-" + Utilities.formatDate(
     new Date(), "America/Los_Angeles", "yyyyMMdd-HHmmss"
   ) + "-" + Math.floor(Math.random() * 1000).toString().padStart(3, "0");
 
-  // 1. Write to Sheet
-  writeToSheet_(registrationId, p);
+  // Compute the trustworthy total server-side (don't trust client math)
+  let paidCount = 0;
+  let freeCount = 0;
+  p.participants.forEach(function (part) {
+    const isStudent = part.type === "student";
+    const isR2R = !!(part.read2Ride && isStudent && p.familyType === "full-time");
+    if (isR2R) freeCount += 1;
+    else paidCount += 1;
+  });
+  const totalUSD = paidCount * PRICE_PER_PERSON_USD;
 
-  // 2. Stripe Checkout (Karate only)
+  // 1. Write rows to Sheet (one per participant)
+  writeToSheet_(registrationId, p, totalUSD);
+
+  // 2. Stripe Checkout (only if totalUSD > 0)
   let checkoutUrl = null;
-  if (p.trip.id === "karate" && p.trip.requiresPayment) {
-    checkoutUrl = createStripeSession_(registrationId, p);
+  if (totalUSD > 0) {
+    checkoutUrl = createStripeSession_(registrationId, p, totalUSD, paidCount);
   }
 
   // 3. Emails
-  sendParentEmail_(registrationId, p);
-  sendNotificationEmail_(registrationId, p);
+  sendParentEmail_(registrationId, p, totalUSD, paidCount, freeCount);
+  sendNotificationEmail_(registrationId, p, totalUSD, paidCount, freeCount);
 
   return { ok: true, registrationId: registrationId, checkoutUrl: checkoutUrl };
 }
@@ -108,34 +135,30 @@ function headerRow_() {
     "Registration ID",
     "Submitted (UTC)",
     "Status",
-    "Trip",
-    "Trip Name",
+    "Family Type",
     "Parent First",
     "Parent Last",
     "Parent Email",
     "Parent Phone",
-    "Emergency Contact Name",
-    "Emergency Contact Phone",
-    "Student First",
-    "Student Last",
-    "Student Grade",
-    "Student Age",
-    "Homeschool",
-    "Dropoff Request",
-    "Allergies",
-    "Medications",
-    "Medical Conditions",
-    "First Aid Permission",
-    "Chaperone Volunteer",
-    "Notes",
+    "Participant First",
+    "Participant Last",
+    "Participant Age",
+    "Participant Type",
+    "Read 2 Ride",
+    "Transportation",
+    "Price (USD)",
+    "Registration Total (USD)",
+    "Paid",
     "Signature Name",
     "Signature Date",
-    "Amount (USD)",
-    "Paid"
+    "Ack: Homeschool Supervision",
+    "Ack: No Swimsuits",
+    "Ack: No Devices",
+    "Ack: Schedule Read"
   ];
 }
 
-function writeToSheet_(registrationId, p) {
+function writeToSheet_(registrationId, p, totalUSD) {
   const sheetId = cfg("SHEET_ID");
   if (!sheetId) throw new Error("SHEET_ID is not configured in Script Properties.");
   const ss = SpreadsheetApp.openById(sheetId);
@@ -149,58 +172,61 @@ function writeToSheet_(registrationId, p) {
     sh.setFrozenRows(1);
   }
 
-  const isPaid = p.trip.id === "nic" ? "N/A (free)" : "No";
-  const status = p.trip.id === "nic"
-    ? "Submitted (free trip)"
-    : "Submitted (awaiting payment)";
+  const status = totalUSD > 0
+    ? "Submitted (awaiting payment)"
+    : "Submitted (free — R2R only)";
+  const paidLabel = totalUSD > 0 ? "No" : "N/A (free)";
+  const submittedAt = p.submittedAt || new Date().toISOString();
 
-  const row = [
-    registrationId,
-    p.submittedAt || new Date().toISOString(),
-    status,
-    p.trip.id,
-    p.trip.name || "",
-    p.parent.firstName,
-    p.parent.lastName,
-    p.parent.email,
-    p.parent.phone,
-    (p.emergency && p.emergency.name) || "",
-    (p.emergency && p.emergency.phone) || "",
-    p.student.firstName,
-    p.student.lastName,
-    p.student.grade,
-    p.student.age,
-    p.homeschool && p.homeschool.isHomeschool ? "Yes" : "No",
-    p.homeschool && p.homeschool.dropoffRequest ? "Yes" : "No",
-    (p.medical && p.medical.allergies) || "",
-    (p.medical && p.medical.medications) || "",
-    (p.medical && p.medical.medicalConditions) || "",
-    p.medical && p.medical.firstAidPermission ? "Yes" : "No",
-    p.chaperone || "",
-    p.notes || "",
-    (p.release && p.release.signatureName) || "",
-    (p.release && p.release.signatureDate) || "",
-    p.trip.price || 0,
-    isPaid
-  ];
+  p.participants.forEach(function (part) {
+    const isStudent = part.type === "student";
+    const isR2R = !!(part.read2Ride && isStudent && p.familyType === "full-time");
+    const pricePerPerson = isR2R ? 0 : PRICE_PER_PERSON_USD;
 
-  sh.appendRow(row);
+    const row = [
+      registrationId,
+      submittedAt,
+      status,
+      p.familyType,
+      p.parent.firstName,
+      p.parent.lastName,
+      p.parent.email,
+      p.parent.phone,
+      part.firstName,
+      part.lastName,
+      part.age,
+      part.typeLabel || part.type,
+      isR2R ? "Yes (free)" : (isStudent ? "No" : "N/A"),
+      part.transportLabel || part.transport || "",
+      pricePerPerson,
+      totalUSD,
+      paidLabel,
+      (p.release && p.release.signatureName) || "",
+      (p.release && p.release.signatureDate) || "",
+      (p.acknowledgments && p.acknowledgments.homeschoolSupervision) ? "Yes" : "",
+      (p.acknowledgments && p.acknowledgments.noSwimsuits) ? "Yes" : "",
+      (p.acknowledgments && p.acknowledgments.noDevices) ? "Yes" : "",
+      (p.acknowledgments && p.acknowledgments.scheduleRead) ? "Yes" : ""
+    ];
+
+    sh.appendRow(row);
+  });
 }
 
 // ---- Stripe Checkout ----------------------------------------------------
-function createStripeSession_(registrationId, p) {
+function createStripeSession_(registrationId, p, totalUSD, paidCount) {
   const secretKey = cfg("STRIPE_SECRET_KEY");
   if (!secretKey) {
     Logger.log("No Stripe key configured — returning null checkout URL.");
     return null;
   }
 
-  const amountCents = Math.round((p.trip.price || 0) * 100);
-  if (amountCents <= 0) throw new Error("Trip price must be greater than zero for paid trips.");
+  const amountCents = Math.round(PRICE_PER_PERSON_USD * 100);
+  if (paidCount <= 0) throw new Error("paidCount must be > 0 to charge.");
 
   const parentName = (p.parent.firstName + " " + p.parent.lastName).trim();
-  const studentName = (p.student.firstName + " " + p.student.lastName).trim();
-  const description = p.trip.name + " — " + studentName + " (Grade " + p.student.grade + ")";
+  const description = "Silverwood field trip — " + paidCount +
+    " paid participant" + (paidCount === 1 ? "" : "s") + " · " + parentName;
 
   const params = {
     "mode": "payment",
@@ -212,15 +238,16 @@ function createStripeSession_(registrationId, p) {
     "metadata[parentName]": parentName,
     "metadata[parentEmail]": p.parent.email,
     "metadata[parentPhone]": p.parent.phone,
-    "metadata[studentName]": studentName,
-    "metadata[studentGrade]": String(p.student.grade),
+    "metadata[familyType]": p.familyType,
+    "metadata[paidCount]": String(paidCount),
+    "metadata[totalUSD]": String(totalUSD),
     "metadata[trip]": p.trip.id,
     "metadata[tripDate]": p.trip.date,
     "line_items[0][price_data][currency]": "usd",
-    "line_items[0][price_data][product_data][name]": "River Tech Field Trip — " + p.trip.name,
+    "line_items[0][price_data][product_data][name]": "Silverwood Field Trip — June 1, 2026",
     "line_items[0][price_data][product_data][description]": description,
     "line_items[0][price_data][unit_amount]": String(amountCents),
-    "line_items[0][quantity]": "1"
+    "line_items[0][quantity]": String(paidCount)
   };
 
   const response = UrlFetchApp.fetch("https://api.stripe.com/v1/checkout/sessions", {
@@ -242,64 +269,69 @@ function createStripeSession_(registrationId, p) {
 }
 
 // ---- Emails -------------------------------------------------------------
-function sendParentEmail_(registrationId, p) {
-  const isKarate = p.trip.id === "karate";
-  const subject = "Field Trip Registration Received — April 29 " + (isKarate ? "Karate" : "NIC") + " Trip";
+function sendParentEmail_(registrationId, p, totalUSD, paidCount, freeCount) {
+  const subject = "Silverwood Field Trip Registration Received — June 1, 2026";
 
   const lines = [
     "Hi " + p.parent.firstName + ",",
     "",
-    "Thanks for registering " + p.student.firstName + " for the April 29 field trip.",
+    "Thanks for registering your family for the Silverwood field trip on Monday, June 1, 2026.",
     "",
     "Confirmation reference: " + registrationId,
-    "Trip: " + p.trip.name,
-    "Date: Wednesday, April 29, 2026",
+    "Family type: " + (p.familyType === "full-time" ? "Full-time" : "Homeschool"),
+    "Participants: " + p.participants.length +
+      " (" + paidCount + " paid · " + freeCount + " free)",
+    "Total: $" + totalUSD + (totalUSD > 0 ? " — paid via Stripe at registration. A separate receipt comes from Stripe." : " (free — Read 2 Ride only)"),
     ""
   ];
 
-  if (isKarate) {
-    lines.push("Schedule:");
-    lines.push("  9:45 AM — Drop-off at Christian Karate Coeur d'Alene");
-    lines.push("  10:00–11:00 AM — Karate workshop");
-    lines.push("  11:15 AM — School bus to CDA City Park");
-    lines.push("  11:30 AM–2:00 PM — Lunch, Fort Sherman playground, beach time");
-    lines.push("  2:00 PM — Pickup at Rotary Bandshell (CDA City Park)");
+  lines.push("Registered participants:");
+  p.participants.forEach(function (part) {
+    const isStudent = part.type === "student";
+    const isR2R = !!(part.read2Ride && isStudent && p.familyType === "full-time");
+    const priceLabel = isR2R ? "Free (R2R)" : ("$" + PRICE_PER_PERSON_USD);
+    const transportSuffix = part.transportLabel ? " · " + part.transportLabel : "";
+    lines.push("  • " + part.firstName + " " + part.lastName +
+      " (" + (part.typeLabel || part.type) + ", age " + part.age + ") — " +
+      priceLabel + transportSuffix);
+  });
+  lines.push("");
+
+  if (p.familyType === "full-time") {
+    lines.push("Schedule (bus riders):");
+    lines.push("  8:50 AM — Student drop-off at River Tech / The Heart");
+    lines.push("  9:00 AM — School bus departs");
+    lines.push("  9:45 AM — Bus arrives at Silverwood, security check");
+    lines.push("  10:00 AM — Meet at the ticket windows by the bathrooms, group split, tickets handed out");
+    lines.push("  11:00 AM — Park opens");
+    lines.push("  4:30 PM — Begin heading back to bus");
+    lines.push("  5:00 PM — Bus departs Silverwood");
+    lines.push("  5:45 PM — Bus arrives back at The Heart for pick-up");
     lines.push("");
-    lines.push("What to bring:");
-    lines.push("  • Backpack, comfortable athletic clothes & shoes");
-    lines.push("  • Large water bottle (or two)");
-    lines.push("  • Cold lunch and snacks");
-    lines.push("  • Extra t-shirt (recommended)");
-    lines.push("  • Sunscreen (weather dependent)");
-    lines.push("  • Optional: swimsuit + towel");
-    lines.push("  • No electronic devices");
-    lines.push("");
-    if (p.trip.requiresPayment) {
-      lines.push("Payment: $10 — paid via Stripe at registration. A separate receipt comes from Stripe.");
-      lines.push("");
-    }
   } else {
-    lines.push("Schedule:");
-    lines.push("  10:15 AM — Drop-off at DeArmond College & University Center");
-    lines.push("            901 W River Ave, Coeur d'Alene, ID");
-    lines.push("  10:30–11:45 AM — NIC campus tour");
-    lines.push("  11:45 AM — Walk to CDA City Park");
-    lines.push("  12:00–2:00 PM — Lunch, beach, volleyball, basketball, playground");
-    lines.push("  2:00 PM — Pickup at Rotary Bandshell (CDA City Park)");
+    lines.push("Schedule (homeschool families):");
+    lines.push("  10:00 AM — Meet at the ticket windows by the bathrooms at Silverwood");
+    lines.push("  Mary will hand out tickets here for everyone in your family.");
+    lines.push("  11:00 AM — Park opens");
+    lines.push("  6:00 PM — Park closes");
     lines.push("");
-    lines.push("What to bring:");
-    lines.push("  • Backpack, water bottle, cold lunch");
-    lines.push("  • Sunscreen (if sunny)");
-    lines.push("  • Optional: swimsuit + towel");
-    lines.push("  • No electronic devices (phones allowed for communication if needed)");
-    lines.push("");
-    lines.push("Cost: Free");
+    lines.push("Reminder: homeschool students must have a parent or responsible adult with them all day.");
     lines.push("");
   }
 
-  lines.push("Times and pickup locations are subject to minor adjustments — we'll email any updates.");
+  lines.push("What to bring:");
+  lines.push("  • Cold lunch and dinner (or money for food)");
+  lines.push("  • Snacks (or money for snacks)");
+  lines.push("  • Large water bottle filled with cold water (mandatory)");
+  lines.push("  • Hydration drinks (recommended)");
+  lines.push("  • Sunscreen + sun hat (recommended)");
+  lines.push("  • Light, weather-appropriate clothes");
+  lines.push("  • Extra clothes + small towel (many students will get wet on rides)");
+  lines.push("  • Phone (optional)");
   lines.push("");
-  lines.push("If you have questions, reply to this email or write learn@rivertech.me.");
+  lines.push("Not allowed: tablets, laptops, other devices. Swimsuits not allowed — no Boulder Beach this trip.");
+  lines.push("");
+  lines.push("Questions? Text Mary at 425-444-2271 (24–48 hr reply time) or reply to this email.");
   lines.push("");
   lines.push(SCHOOL_NAME);
   lines.push("927 E Polston Ave, Post Falls, ID 83854");
@@ -318,55 +350,63 @@ function sendParentEmail_(registrationId, p) {
   }
 }
 
-function sendNotificationEmail_(registrationId, p) {
-  const subject = "[Field Trip] " + p.trip.name.split(" ")[0] + " — " +
-    p.student.firstName + " " + p.student.lastName +
-    " (Grade " + p.student.grade + ")";
+function sendNotificationEmail_(registrationId, p, totalUSD, paidCount, freeCount) {
+  const parentName = p.parent.firstName + " " + p.parent.lastName;
+  const subject = "[Silverwood] " + parentName +
+    " — " + p.participants.length + " ppl ($" + totalUSD + ")";
 
   const lines = [
-    "New Field Trip registration.",
+    "New Silverwood Field Trip registration.",
     "",
     "Reference: " + registrationId,
     "Submitted: " + (p.submittedAt || new Date().toISOString()),
-    "Trip: " + p.trip.name,
-    "Price: $" + (p.trip.price || 0) + (p.trip.requiresPayment ? " (via Stripe)" : " (free)"),
+    "Family type: " + p.familyType,
+    "Total: $" + totalUSD + " (" + paidCount + " paid · " + freeCount + " free R2R)",
     "",
-    "Student: " + p.student.firstName + " " + p.student.lastName +
-      " (Grade " + p.student.grade + ", age " + p.student.age + ")",
-    "",
-    "Parent: " + p.parent.firstName + " " + p.parent.lastName,
+    "Parent: " + parentName,
     "Email:  " + p.parent.email,
     "Phone:  " + p.parent.phone,
     ""
   ];
 
-  if (p.emergency && (p.emergency.name || p.emergency.phone)) {
-    lines.push("Emergency contact: " + (p.emergency.name || "(same as parent)") + " — " + (p.emergency.phone || ""));
-    lines.push("");
-  }
-
-  if (p.homeschool && p.homeschool.isHomeschool) {
-    lines.push("Homeschool: Yes" + (p.homeschool.dropoffRequest ? " (REQUESTING drop-off permission — age 11+)" : ""));
-    lines.push("");
-  }
-
-  lines.push("Medical:");
-  lines.push("  Allergies:   " + ((p.medical && p.medical.allergies) || "(none)"));
-  lines.push("  Medications: " + ((p.medical && p.medical.medications) || "(none)"));
-  lines.push("  Conditions:  " + ((p.medical && p.medical.medicalConditions) || "(none)"));
-  lines.push("  First aid OK: " + (p.medical && p.medical.firstAidPermission ? "Yes" : "No"));
+  lines.push("Participants:");
+  p.participants.forEach(function (part) {
+    const isStudent = part.type === "student";
+    const isR2R = !!(part.read2Ride && isStudent && p.familyType === "full-time");
+    const tag = isR2R ? "FREE (R2R)" : ("$" + PRICE_PER_PERSON_USD);
+    const transport = part.transportLabel ? " · " + part.transportLabel : "";
+    lines.push("  • " + part.firstName + " " + part.lastName +
+      " (" + (part.typeLabel || part.type) + ", age " + part.age + ") — " + tag + transport);
+  });
   lines.push("");
 
-  if (p.trip.id === "karate") {
-    lines.push("Chaperone volunteer: " + (p.chaperone || "(not answered)"));
+  // Bus summary for full-time families
+  if (p.familyType === "full-time") {
+    let busBoth = 0, busThere = 0, busBack = 0, ownBoth = 0;
+    p.participants.forEach(function (part) {
+      if (part.type !== "student") return;
+      if (part.transport === "bus-both") busBoth += 1;
+      else if (part.transport === "bus-there") busThere += 1;
+      else if (part.transport === "bus-back") busBack += 1;
+      else if (part.transport === "own-both") ownBoth += 1;
+    });
+    lines.push("Bus summary for this family:");
+    lines.push("  Bus both ways:        " + busBoth);
+    lines.push("  Bus there only:       " + busThere);
+    lines.push("  Bus back only:        " + busBack);
+    lines.push("  Own transport both:   " + ownBoth);
     lines.push("");
   }
 
-  lines.push("Notes: " + (p.notes || "(none)"));
+  lines.push("Acknowledgments:");
+  lines.push("  Homeschool supervision: " + ((p.acknowledgments && p.acknowledgments.homeschoolSupervision) ? "Yes" : "—"));
+  lines.push("  No swimsuits:           " + ((p.acknowledgments && p.acknowledgments.noSwimsuits) ? "Yes" : "—"));
+  lines.push("  No devices:             " + ((p.acknowledgments && p.acknowledgments.noDevices) ? "Yes" : "—"));
+  lines.push("  Schedule read:          " + ((p.acknowledgments && p.acknowledgments.scheduleRead) ? "Yes" : "—"));
   lines.push("");
   lines.push("Signed: " + (p.release && p.release.signatureName) + " on " + (p.release && p.release.signatureDate));
   lines.push("");
-  lines.push("Row has been appended to the Field Trip Signups 2026 sheet.");
+  lines.push("Rows appended to Silverwood Field Trip 2026-06-01 sheet (one per participant).");
 
   try {
     MailApp.sendEmail({
@@ -382,55 +422,66 @@ function sendNotificationEmail_(registrationId, p) {
 
 // ---- Setup & self-test helpers ------------------------------------------
 /**
- * Run once from the Apps Script editor to load Script Properties.
- * Replace the placeholder strings first. After running, DELETE the
- * values from this function and re-save — Script Properties keeps them.
+ * Run once from the Apps Script editor after setting Script Properties.
+ * Verifies the SHEET_ID and STRIPE_SECRET_KEY are reachable.
  */
-function setupConfig_ONCE() {
-  PropertiesService.getScriptProperties().setProperties({
-    "SHEET_ID": "PASTE_SHEET_ID_HERE",
-    "STRIPE_SECRET_KEY": "PASTE_STRIPE_SECRET_KEY_HERE"
-  });
-  Logger.log("Config set. Now clear the placeholders from this function.");
+function verifyConfig() {
+  const sheetId = cfg("SHEET_ID");
+  const stripeKey = cfg("STRIPE_SECRET_KEY");
+  Logger.log("SHEET_ID set: " + !!sheetId);
+  Logger.log("STRIPE_SECRET_KEY set: " + !!stripeKey + (stripeKey ? " (" + stripeKey.slice(0, 8) + "...)" : ""));
+  if (sheetId) {
+    try {
+      const ss = SpreadsheetApp.openById(sheetId);
+      Logger.log("Sheet name: " + ss.getName());
+    } catch (e) {
+      Logger.log("Cannot open sheet: " + e.message);
+    }
+  }
 }
 
 /**
- * Quick self-test — fake a Karate registration and run it through the
- * full pipeline. Check the sheet, your inbox, and the Stripe dashboard.
+ * Self-test: fake an R2R-only ($0) full-time registration through the full
+ * pipeline. Hits the Sheet + emails. Skips Stripe (totalUSD === 0).
  */
-function selfTestKarate() {
+function selfTestR2ROnly() {
   const fake = {
     submittedAt: new Date().toISOString(),
     trip: {
-      id: "karate",
-      name: "Christian Karate + CDA Park",
-      date: "2026-04-29",
-      gradeBand: "Elementary & Middle",
-      price: 10,
-      requiresPayment: true
+      id: "silverwood-2026-06-01",
+      name: "Silverwood Field Trip",
+      date: "2026-06-01",
+      deadline: "2026-05-28",
+      pricePerPersonUSD: 35
     },
+    familyType: "full-time",
     parent: {
       firstName: "Test",
       lastName: "Parent",
       email: Session.getActiveUser().getEmail() || "dhegelund@gmail.com",
       phone: "555-0100"
     },
-    emergency: { name: "Test Emergency", phone: "555-0101" },
-    student: {
-      firstName: "Testchild",
-      lastName: "Parent",
-      grade: "5",
-      age: "10"
+    participants: [
+      {
+        firstName: "TestKid",
+        lastName: "Parent",
+        age: "10",
+        type: "student",
+        typeLabel: "Student",
+        transport: "bus-both",
+        transportLabel: "Bus both ways",
+        read2Ride: true,
+        priceUSD: 0
+      }
+    ],
+    counts: { paid: 0, free: 1, total: 1 },
+    totalUSD: 0,
+    acknowledgments: {
+      homeschoolSupervision: false,
+      noSwimsuits: true,
+      noDevices: true,
+      scheduleRead: true
     },
-    homeschool: { isHomeschool: false, dropoffRequest: false },
-    medical: {
-      allergies: "none",
-      medications: "none",
-      medicalConditions: "none",
-      firstAidPermission: true
-    },
-    chaperone: "maybe",
-    notes: "Self-test submission — delete this row.",
     release: {
       agreed: true,
       signatureName: "Test Parent",
@@ -440,42 +491,51 @@ function selfTestKarate() {
   Logger.log(JSON.stringify(handleSubmission(fake), null, 2));
 }
 
-function selfTestNIC() {
+/**
+ * Self-test: fake a $35 single-paying registration. Returns a real Stripe
+ * Checkout URL (LIVE mode). Do NOT actually pay unless you intend to.
+ */
+function selfTestSinglePaid() {
   const fake = {
     submittedAt: new Date().toISOString(),
     trip: {
-      id: "nic",
-      name: "North Idaho College Tour + CDA Park",
-      date: "2026-04-29",
-      gradeBand: "High School",
-      price: 0,
-      requiresPayment: false
+      id: "silverwood-2026-06-01",
+      name: "Silverwood Field Trip",
+      date: "2026-06-01",
+      deadline: "2026-05-28",
+      pricePerPersonUSD: 35
     },
+    familyType: "homeschool",
     parent: {
       firstName: "Test",
-      lastName: "Parent",
+      lastName: "Homeschool",
       email: Session.getActiveUser().getEmail() || "dhegelund@gmail.com",
       phone: "555-0100"
     },
-    emergency: { name: "", phone: "555-0100" },
-    student: {
-      firstName: "Teststudent",
-      lastName: "Parent",
-      grade: "11",
-      age: "16"
+    participants: [
+      {
+        firstName: "TestParent",
+        lastName: "Homeschool",
+        age: "40",
+        type: "family",
+        typeLabel: "Parent or family member",
+        transport: "",
+        transportLabel: "",
+        read2Ride: false,
+        priceUSD: 35
+      }
+    ],
+    counts: { paid: 1, free: 0, total: 1 },
+    totalUSD: 35,
+    acknowledgments: {
+      homeschoolSupervision: true,
+      noSwimsuits: false,
+      noDevices: false,
+      scheduleRead: false
     },
-    homeschool: { isHomeschool: false, dropoffRequest: false },
-    medical: {
-      allergies: "none",
-      medications: "none",
-      medicalConditions: "none",
-      firstAidPermission: true
-    },
-    chaperone: "",
-    notes: "Self-test NIC submission — delete this row.",
     release: {
       agreed: true,
-      signatureName: "Test Parent",
+      signatureName: "Test Homeschool",
       signatureDate: new Date().toISOString().slice(0, 10)
     }
   };
