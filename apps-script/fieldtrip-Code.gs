@@ -59,7 +59,7 @@ function doGet() {
   return json_({
     ok: true,
     message: "River Tech Field Trip + Waiver backend is alive.",
-    handlers: ["Silverwood field trip (June 1, 2026)", "HS Super 1 Lunch Waiver"]
+    handlers: ["Silverwood field trip (June 1, 2026)", "HS Off-Campus Lunch Waiver"]
   });
 }
 
@@ -688,7 +688,7 @@ function sendWaiverParentEmail_(registrationId, p, students) {
 }
 
 function sendWaiverNotificationEmail_(registrationId, p, students) {
-  const subject = "[Waiver] HS Super 1 Lunch — " + p.parent.firstName + " " + p.parent.lastName + " (" + students.length + " student" + (students.length > 1 ? "s" : "") + ")";
+  const subject = "[Waiver] HS Off-Campus Lunch — " + p.parent.firstName + " " + p.parent.lastName + " (" + students.length + " student" + (students.length > 1 ? "s" : "") + ")";
 
   const lines = [
     "New HS Off-Campus Lunch Waiver received.",
@@ -708,7 +708,7 @@ function sendWaiverNotificationEmail_(registrationId, p, students) {
   lines.push("");
   lines.push("Signed: " + (p.release && p.release.signatureName) + " on " + (p.release && p.release.signatureDate));
   lines.push("");
-  lines.push("Row" + (students.length > 1 ? "s" : "") + " appended to the HS Super 1 Lunch Waivers sheet (one per student).");
+  lines.push("Row" + (students.length > 1 ? "s" : "") + " appended to the HS Off-Campus Lunch Waivers sheet (one per student).");
 
   try {
     MailApp.sendEmail({
