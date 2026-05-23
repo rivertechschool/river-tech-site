@@ -1,20 +1,107 @@
 /* River Tech — HS Off-Campus Lunch (Super 1) Waiver — Form logic
-   Single-student parent waiver. Parent signs once per student per school year.
-   POSTs to the Apps Script backend which writes a row to the Sheet,
-   sends a confirmation email to the parent, and notifies staff. */
+   Multi-student parent waiver. One submission covers all HS students in
+   a family. One consolidated agreement checkbox replaces the previous
+   seven-acknowledgment list. POSTs to the shared field-trip backend,
+   which routes via payload.waiverType. */
 (function () {
   "use strict";
 
   // ---- Configuration ----------------------------------------------------
-  // Shared deployment with the field trip backend (same project, routed
-  // via payload.waiverType === "hs-super1-lunch").
   const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwhK9l0Ve9IVj9GU4F0BttzPtPD52tMxWNIBs2EUIf5Xg8prXlOQ8UD2Bon74K2aOtH/exec";
 
   // ---- Boot -------------------------------------------------------------
   document.addEventListener("DOMContentLoaded", function () {
     stampSignatureDate();
     wireEvents();
+    addStudent(); // start with one row
   });
+
+  // ---- Student management -----------------------------------------------
+  let studentCounter = 0;
+
+  function addStudent() {
+    studentCounter += 1;
+    const id = "s" + studentCounter;
+    const list = document.getElementById("student-list");
+
+    const card = document.createElement("div");
+    card.className = "student-card";
+    card.dataset.sid = id;
+    card.style.cssText = "border: 1.5px solid rgba(39, 36, 67, 0.18); border-radius: 4px; padding: 18px 20px; background: var(--color-bg); position: relative;";
+    card.innerHTML = renderStudentCard(id);
+    list.appendChild(card);
+
+    wireStudentCard(card);
+    renumberStudents();
+  }
+
+  function removeStudent(card) {
+    const list = document.getElementById("student-list");
+    if (list.children.length <= 1) {
+      // Don't remove the last row — clear it instead.
+      card.querySelectorAll("input, select").forEach(function (el) {
+        el.value = "";
+      });
+      renumberStudents();
+      return;
+    }
+    card.remove();
+    renumberStudents();
+  }
+
+  function renderStudentCard(id) {
+    return [
+      '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">',
+      '  <span class="sc-title" data-sc-title style="font-weight: 700; font-size: 16px;">Student 1</span>',
+      '  <button type="button" data-action="remove" style="background: none; border: 1px solid rgba(39, 36, 67, 0.25); border-radius: 2px; padding: 4px 10px; font-size: 13px; cursor: pointer; color: var(--color-text); opacity: 0.7;">Remove</button>',
+      '</div>',
+      '<div class="reg-row-grid-2">',
+      '  <div>',
+      '    <label class="reg-label">First name<span class="req">*</span></label>',
+      '    <input class="reg-input" type="text" data-field="firstName" required>',
+      '  </div>',
+      '  <div>',
+      '    <label class="reg-label">Last name<span class="req">*</span></label>',
+      '    <input class="reg-input" type="text" data-field="lastName" required>',
+      '  </div>',
+      '</div>',
+      '<div class="reg-row" style="margin-bottom: 0;">',
+      '  <label class="reg-label">Grade<span class="req">*</span></label>',
+      '  <select class="reg-select" data-field="grade" required>',
+      '    <option value="">Select…</option>',
+      '    <option value="9">9th grade</option>',
+      '    <option value="10">10th grade</option>',
+      '    <option value="11">11th grade</option>',
+      '    <option value="12">12th grade</option>',
+      '  </select>',
+      '</div>'
+    ].join("\n");
+  }
+
+  function wireStudentCard(card) {
+    const removeBtn = card.querySelector('[data-action="remove"]');
+    if (removeBtn) removeBtn.addEventListener("click", function () { removeStudent(card); });
+
+    const fn = card.querySelector('[data-field="firstName"]');
+    const ln = card.querySelector('[data-field="lastName"]');
+    [fn, ln].forEach(function (el) {
+      if (el) el.addEventListener("input", renumberStudents);
+    });
+  }
+
+  function renumberStudents() {
+    const cards = document.querySelectorAll(".student-card");
+    cards.forEach(function (card, idx) {
+      const titleEl = card.querySelector("[data-sc-title]");
+      if (!titleEl) return;
+      const fn = (card.querySelector('[data-field="firstName"]') || {}).value || "";
+      const ln = (card.querySelector('[data-field="lastName"]') || {}).value || "";
+      const fullName = (fn + " " + ln).trim();
+      titleEl.textContent = fullName
+        ? "Student " + (idx + 1) + " — " + fullName
+        : "Student " + (idx + 1);
+    });
+  }
 
   // ---- Date stamp -------------------------------------------------------
   function stampSignatureDate() {
@@ -46,29 +133,32 @@
       return "Please enter a valid email address.";
     }
 
-    const studentFields = [
-      ["studentFirstName", "student first name"],
-      ["studentLastName",  "student last name"],
-      ["studentGrade",     "student grade"]
-    ];
-    for (let i = 0; i < studentFields.length; i++) {
-      const f = form.querySelector("[name='" + studentFields[i][0] + "']");
-      if (!f || !f.value.trim()) return "Please fill in the " + studentFields[i][1] + ".";
+    // Students
+    const cards = document.querySelectorAll(".student-card");
+    if (cards.length === 0) return "Please add at least one HS student.";
+
+    let hasValidStudent = false;
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
+      const fn = (card.querySelector('[data-field="firstName"]') || {}).value || "";
+      const ln = (card.querySelector('[data-field="lastName"]') || {}).value || "";
+      const grade = (card.querySelector('[data-field="grade"]') || {}).value || "";
+
+      const isEmpty = !fn.trim() && !ln.trim() && !grade;
+      if (isEmpty) continue;
+
+      if (!fn.trim()) return "Student " + (i + 1) + ": please enter a first name.";
+      if (!ln.trim()) return "Student " + (i + 1) + ": please enter a last name.";
+      if (!grade)     return "Student " + (i + 1) + ": please choose a grade.";
+
+      hasValidStudent = true;
     }
 
-    // Acknowledgments
-    const acks = [
-      "ackWindow", "ackTellTeacher", "ackReturnCheck",
-      "ackBehavior", "ackValues", "ackGroup", "ackDiscretion"
-    ];
-    for (let i = 0; i < acks.length; i++) {
-      const a = form.querySelector("[name='" + acks[i] + "']");
-      if (!a || !a.checked) return "Please confirm all acknowledgments before submitting.";
-    }
+    if (!hasValidStudent) return "Please fill in at least one student's details.";
 
-    // Release
+    // Single agreement
     const release = form.querySelector("#releaseAgree");
-    if (!release.checked) return "Please read and agree to the release before submitting.";
+    if (!release.checked) return "Please confirm the agreement before submitting.";
 
     // Signature
     if (!form.signatureName.value.trim()) {
@@ -81,6 +171,20 @@
   // ---- Payload ----------------------------------------------------------
   function buildPayload() {
     const form = document.getElementById("waiver-form");
+    const cards = document.querySelectorAll(".student-card");
+
+    const students = [];
+    cards.forEach(function (card) {
+      const fn = (card.querySelector('[data-field="firstName"]') || {}).value || "";
+      const ln = (card.querySelector('[data-field="lastName"]') || {}).value || "";
+      const grade = (card.querySelector('[data-field="grade"]') || {}).value || "";
+      if (!fn.trim()) return; // skip empty rows
+      students.push({
+        firstName: fn.trim(),
+        lastName:  ln.trim(),
+        grade:     grade
+      });
+    });
 
     return {
       submittedAt: new Date().toISOString(),
@@ -92,19 +196,11 @@
         email:     form.parentEmail.value.trim(),
         phone:     form.parentPhone.value.trim()
       },
-      student: {
-        firstName: form.studentFirstName.value.trim(),
-        lastName:  form.studentLastName.value.trim(),
-        grade:     form.studentGrade.value
-      },
-      acknowledgments: {
-        window:       true,
-        tellTeacher:  true,
-        returnCheck:  true,
-        behavior:     true,
-        values:       true,
-        group:        true,
-        discretion:   true
+      students: students,
+      agreement: {
+        agreed: true,
+        // Single consolidated agreement; the policy summary at the top
+        // of the page enumerates the rules the parent agreed to.
       },
       release: {
         agreed: true,
@@ -131,7 +227,7 @@
 
     if (!BACKEND_URL || BACKEND_URL === "__BACKEND_URL__") {
       console.log("Waiver payload (no backend configured):", payload);
-      showError("Almost ready — the waiver backend isn't deployed yet. Your details look good. Please try again shortly, or email learn@rivertech.me to opt in by hand.");
+      showError("Almost ready — the waiver backend isn't deployed yet.");
       submitBtn.disabled = false;
       submitBtn.textContent = originalLabel;
       return;
@@ -185,6 +281,9 @@
         lbl.classList.toggle("checked", t.checked);
       }
     });
+
+    const addBtn = document.getElementById("add-student");
+    if (addBtn) addBtn.addEventListener("click", addStudent);
 
     document.getElementById("waiver-form").addEventListener("submit", submitForm);
   }

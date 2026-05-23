@@ -415,102 +415,35 @@
           </div>
         </div>
 
-        <!-- Section 2: Student -->
+        <!-- Section 2: Students -->
         <div class="reg-section">
-          <div class="reg-section-title">High School Student</div>
-          <p class="reg-section-subtitle">One waiver per student. If you have multiple HS students, fill out the form once for each.</p>
+          <div class="reg-section-title">High School Student(s)</div>
+          <p class="reg-section-subtitle">Add every HS student in your family you're opting in. One waiver covers all of them.</p>
 
-          <div class="reg-row-grid-2">
-            <div>
-              <label class="reg-label" for="studentFirstName">First name<span class="req">*</span></label>
-              <input class="reg-input" type="text" id="studentFirstName" name="studentFirstName" required>
-            </div>
-            <div>
-              <label class="reg-label" for="studentLastName">Last name<span class="req">*</span></label>
-              <input class="reg-input" type="text" id="studentLastName" name="studentLastName" required>
-            </div>
+          <div id="student-list" style="display: flex; flex-direction: column; gap: 18px; margin-bottom: 18px;">
+            <!-- Student rows inserted by JS -->
           </div>
 
-          <div class="reg-row">
-            <label class="reg-label" for="studentGrade">Grade<span class="req">*</span></label>
-            <select class="reg-select" id="studentGrade" name="studentGrade" required>
-              <option value="">Select…</option>
-              <option value="9">9th grade</option>
-              <option value="10">10th grade</option>
-              <option value="11">11th grade</option>
-              <option value="12">12th grade</option>
-            </select>
-          </div>
+          <button type="button" id="add-student" style="display: inline-block; padding: 10px 18px; background: var(--color-white); color: var(--color-text); border: 1.5px dashed rgba(39, 36, 67, 0.4); border-radius: 2px; font-family: var(--font-body); font-size: 15px; font-weight: 600; cursor: pointer;">+ Add another HS student</button>
         </div>
 
-        <!-- Section 3: Acknowledgments -->
+        <!-- Section 3: Single agreement + release -->
         <div class="reg-section">
-          <div class="reg-section-title">Acknowledgments</div>
-          <p class="reg-section-subtitle">Please review and confirm each item below.</p>
-
-          <div class="reg-row" style="display: flex; flex-direction: column; gap: 10px;">
-            <label class="reg-check">
-              <input type="checkbox" name="ackWindow" required>
-              <span>I understand the privilege is <strong>Tuesday and Wednesday, 11:45 AM&ndash;12:05 PM only</strong>.<span class="req">*</span></span>
-            </label>
-
-            <label class="reg-check">
-              <input type="checkbox" name="ackTellTeacher" required>
-              <span>I understand my student will <strong>tell a teacher before leaving</strong> (no formal sign-out required).<span class="req">*</span></span>
-            </label>
-
-            <label class="reg-check">
-              <input type="checkbox" name="ackReturnCheck" required>
-              <span>I understand <strong>teachers will check at 12:05</strong> that my student has returned. If they didn't, this privilege is revoked.<span class="req">*</span></span>
-            </label>
-
-            <label class="reg-check">
-              <input type="checkbox" name="ackBehavior" required>
-              <span>I understand that <strong>late return or off-campus misbehavior</strong> removes this privilege <strong>immediately</strong>.<span class="req">*</span></span>
-            </label>
-
-            <label class="reg-check">
-              <input type="checkbox" name="ackValues" required>
-              <span>I understand my student is expected to <strong>reflect River Tech values</strong> while off-campus.<span class="req">*</span></span>
-            </label>
-
-            <label class="reg-check">
-              <input type="checkbox" name="ackGroup" required>
-              <span>I understand my student may go <strong>alone or in a small group of their choosing</strong>.<span class="req">*</span></span>
-            </label>
-
-            <label class="reg-check">
-              <input type="checkbox" name="ackDiscretion" required>
-              <span>I understand this privilege can be <strong>revoked at any time at staff discretion</strong>.<span class="req">*</span></span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Section 4: Release -->
-        <div class="reg-section">
-          <div class="reg-section-title">Release and Acknowledgment</div>
-          <p class="reg-section-subtitle">Please read before checking the box below.</p>
+          <div class="reg-section-title">Agreement</div>
 
           <div class="reg-release">
-            <h3>Off-Campus Permission and Assumption of Responsibility</h3>
-            <p>I, the undersigned parent/guardian, give permission for my High School student (the &ldquo;Student&rdquo;) to leave the River Tech School campus during the designated lunch window (Tuesdays and Wednesdays, 11:45 AM&ndash;12:05 PM) to walk to and from the Super 1 grocery store adjacent to the school.</p>
+            <p style="margin-bottom: 12px;">By signing below, I confirm that I have read and agree to the policy described at the top of this page — including the <strong>Tuesday/Wednesday 11:45&ndash;12:05 window</strong>, the <strong>tell-a-teacher-before-leaving</strong> rule, the <strong>12:05 return check</strong>, the immediate <strong>revocation for late return or misbehavior</strong>, the expectation that my student <strong>reflects River Tech's values off-campus</strong>, and staff's right to <strong>revoke this privilege at any time</strong>.</p>
 
-            <h3>Assumption of Risk</h3>
-            <p>I understand that this privilege involves the Student walking off-campus without direct staff supervision. I accept the inherent risks of this activity, including but not limited to those involved in walking near roads, interacting with members of the public, and being briefly outside of school supervision. River Tech School, its staff, and its volunteers are not responsible for the Student's whereabouts or actions during the off-campus window.</p>
+            <p style="margin-bottom: 12px;">I give permission for my High School student(s) listed above to leave the River Tech School campus during the designated lunch window to walk to and from the Super 1 grocery store next door.</p>
 
-            <h3>Waiver and Release</h3>
-            <p>I hereby release and forever discharge River Tech School, Faithful Five Inc., and their employees, officers, and volunteers from any and all liability, claims, demands, actions, and causes of action arising out of or related to the Student's off-campus lunch privilege, except in cases of gross negligence by River Tech staff.</p>
+            <p style="margin-bottom: 12px;">I accept the inherent risks of this activity and release River Tech School, Faithful Five Inc., and their employees, officers, and volunteers from any liability, claims, or actions arising from my student's off-campus lunch privilege, except in cases of gross negligence by River Tech staff.</p>
 
-            <h3>Conduct Expectations</h3>
-            <p>I understand and agree that my Student is expected to reflect River Tech's values of personal responsibility, respect, and integrity while off-campus. I agree that River Tech may revoke this privilege at any time, for any reason, including (but not limited to) late return, misbehavior at Super 1 or in transit, or general staff discretion.</p>
-
-            <h3>Duration and Revocation</h3>
-            <p>This permission remains in effect for the remainder of the current school year unless revoked by me (the parent/guardian) in writing, or by River Tech staff at their discretion.</p>
+            <p style="margin-bottom: 0;">This permission remains in effect for the rest of the current school year unless revoked by me in writing, or by River Tech staff at their discretion.</p>
           </div>
 
           <label class="reg-check" style="border-color: var(--color-red); background: var(--color-pink-btn);">
             <input type="checkbox" id="releaseAgree" name="releaseAgree" required>
-            <span>I have read and agree to the Release and Acknowledgment above.<span class="req">*</span></span>
+            <span><strong>I have read and agree to all of the above.</strong><span class="req">*</span></span>
           </label>
         </div>
 
@@ -571,7 +504,7 @@
 </footer>
 
 <script src="../assets/js/main.js?v=4" defer></script>
-<script src="../assets/js/hs-super1-waiver.js?v=1" defer></script>
+<script src="../assets/js/hs-super1-waiver.js?v=2" defer></script>
 
 <button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 <script>

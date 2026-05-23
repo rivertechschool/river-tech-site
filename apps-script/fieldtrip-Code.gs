@@ -558,29 +558,39 @@ const WAIVER_SHEET_TAB_NAME = "Waivers";
 const WAIVER_PAGE_URL = "https://www.rivertechschool.com/pages/hs-super1-waiver.html";
 
 function handleWaiverSubmission_(p) {
-  if (!p || !p.parent || !p.student || !p.release) {
+  if (!p || !p.parent || !p.release) {
     return { ok: false, error: "Waiver data is incomplete. Please fill out every required field." };
   }
   if (!p.parent.firstName || !p.parent.lastName || !p.parent.email || !p.parent.phone) {
     return { ok: false, error: "Parent/guardian information is incomplete." };
   }
-  if (!p.student.firstName || !p.student.lastName || !p.student.grade) {
-    return { ok: false, error: "Student information is incomplete." };
+  // Support both new multi-student payload (p.students) and legacy
+  // single-student payload (p.student) for backwards compatibility.
+  let students = p.students;
+  if (!students && p.student) students = [p.student];
+  if (!Array.isArray(students) || students.length === 0) {
+    return { ok: false, error: "Please add at least one HS student." };
+  }
+  for (let i = 0; i < students.length; i++) {
+    const s = students[i];
+    if (!s || !s.firstName || !s.lastName || !s.grade) {
+      return { ok: false, error: "Student " + (i + 1) + " is missing required information." };
+    }
   }
   if (!p.release.signatureName) {
     return { ok: false, error: "Please type your signature (parent/guardian full name)." };
   }
   if (!p.release.agreed) {
-    return { ok: false, error: "Please check the release agreement box." };
+    return { ok: false, error: "Please check the agreement box." };
   }
 
   const registrationId = "WV-" + Utilities.formatDate(
     new Date(), "America/Los_Angeles", "yyyyMMdd-HHmmss"
   ) + "-" + Math.floor(Math.random() * 1000).toString().padStart(3, "0");
 
-  writeWaiverToSheet_(registrationId, p);
-  sendWaiverParentEmail_(registrationId, p);
-  sendWaiverNotificationEmail_(registrationId, p);
+  writeWaiverToSheet_(registrationId, p, students);
+  sendWaiverParentEmail_(registrationId, p, students);
+  sendWaiverNotificationEmail_(registrationId, p, students);
 
   return { ok: true, registrationId: registrationId };
 }
@@ -590,13 +600,11 @@ function waiverHeaderRow_() {
     "Waiver ID", "Submitted (UTC)", "School Year",
     "Parent First", "Parent Last", "Parent Email", "Parent Phone",
     "Student First", "Student Last", "Student Grade",
-    "Ack: Window", "Ack: Tell Teacher", "Ack: Return Check",
-    "Ack: Behavior", "Ack: Values", "Ack: Group", "Ack: Discretion",
-    "Signature Name", "Signature Date", "Status"
+    "Agreement", "Signature Name", "Signature Date", "Status"
   ];
 }
 
-function writeWaiverToSheet_(registrationId, p) {
+function writeWaiverToSheet_(registrationId, p, students) {
   const sheetId = cfg("WAIVER_SHEET_ID");
   if (!sheetId) throw new Error("WAIVER_SHEET_ID is not configured in Script Properties.");
   const ss = SpreadsheetApp.openById(sheetId);
@@ -611,51 +619,50 @@ function writeWaiverToSheet_(registrationId, p) {
   }
 
   const submittedAt = p.submittedAt || new Date().toISOString();
-  const a = p.acknowledgments || {};
+  const sigName = (p.release && p.release.signatureName) || "";
+  const sigDate = (p.release && p.release.signatureDate) || "";
 
-  const row = [
-    registrationId,
-    submittedAt,
-    p.schoolYear || "2025-26",
-    p.parent.firstName,
-    p.parent.lastName,
-    p.parent.email,
-    p.parent.phone,
-    p.student.firstName,
-    p.student.lastName,
-    p.student.grade,
-    a.window ? "Yes" : "",
-    a.tellTeacher ? "Yes" : "",
-    a.returnCheck ? "Yes" : "",
-    a.behavior ? "Yes" : "",
-    a.values ? "Yes" : "",
-    a.group ? "Yes" : "",
-    a.discretion ? "Yes" : "",
-    (p.release && p.release.signatureName) || "",
-    (p.release && p.release.signatureDate) || "",
-    "Active"
-  ];
-
-  sh.appendRow(row);
+  students.forEach(function (s) {
+    const row = [
+      registrationId,
+      submittedAt,
+      p.schoolYear || "2025-26",
+      p.parent.firstName,
+      p.parent.lastName,
+      p.parent.email,
+      p.parent.phone,
+      s.firstName,
+      s.lastName,
+      s.grade,
+      "Yes",
+      sigName,
+      sigDate,
+      "Active"
+    ];
+    sh.appendRow(row);
+  });
 }
 
-function sendWaiverParentEmail_(registrationId, p) {
-  const subject = "HS Off-Campus Lunch Waiver — Received for " + p.student.firstName + " " + p.student.lastName;
+function sendWaiverParentEmail_(registrationId, p, students) {
+  const studentNames = students.map(function (s) {
+    return s.firstName + " " + s.lastName + " (Grade " + s.grade + ")";
+  }).join(", ");
+  const subject = "HS Off-Campus Lunch Waiver — Received";
 
   const lines = [
     "Hi " + p.parent.firstName + ",",
     "",
-    "Thanks for opting " + p.student.firstName + " into the High School off-campus lunch privilege at River Tech.",
+    "Thanks for opting your student" + (students.length > 1 ? "s" : "") + " into the High School off-campus lunch privilege at River Tech.",
     "",
     "Confirmation reference: " + registrationId,
-    "Student: " + p.student.firstName + " " + p.student.lastName + " (Grade " + p.student.grade + ")",
+    "Student" + (students.length > 1 ? "s" : "") + ": " + studentNames,
     "",
     "Quick reminders of the policy you agreed to:",
     "  • Tuesday and Wednesday only, 11:45 AM – 12:05 PM",
-    "  • " + p.student.firstName + " should tell a teacher before leaving",
+    "  • Students should tell a teacher before leaving",
     "  • Teachers will check at 12:05 that all students have returned",
     "  • Late return or off-campus misbehavior = privilege revoked immediately",
-    "  • " + p.student.firstName + " may go alone or in a small group (their choice)",
+    "  • Students may go alone or in a small group (their choice)",
     "  • Expected to reflect River Tech values while off-campus",
     "",
     "This permission stays in effect for the rest of the current school year unless revoked by you in writing, or by River Tech staff at their discretion.",
@@ -680,8 +687,8 @@ function sendWaiverParentEmail_(registrationId, p) {
   }
 }
 
-function sendWaiverNotificationEmail_(registrationId, p) {
-  const subject = "[Waiver] HS Super 1 Lunch — " + p.student.firstName + " " + p.student.lastName + " (Grade " + p.student.grade + ")";
+function sendWaiverNotificationEmail_(registrationId, p, students) {
+  const subject = "[Waiver] HS Super 1 Lunch — " + p.parent.firstName + " " + p.parent.lastName + " (" + students.length + " student" + (students.length > 1 ? "s" : "") + ")";
 
   const lines = [
     "New HS Off-Campus Lunch Waiver received.",
@@ -689,16 +696,19 @@ function sendWaiverNotificationEmail_(registrationId, p) {
     "Reference: " + registrationId,
     "Submitted: " + (p.submittedAt || new Date().toISOString()),
     "",
-    "Student: " + p.student.firstName + " " + p.student.lastName + " (Grade " + p.student.grade + ")",
-    "",
     "Parent: " + p.parent.firstName + " " + p.parent.lastName,
     "Email:  " + p.parent.email,
     "Phone:  " + p.parent.phone,
     "",
-    "Signed: " + (p.release && p.release.signatureName) + " on " + (p.release && p.release.signatureDate),
-    "",
-    "Row appended to the HS Super 1 Lunch Waivers sheet."
+    "Students (" + students.length + "):"
   ];
+  students.forEach(function (s) {
+    lines.push("  • " + s.firstName + " " + s.lastName + " (Grade " + s.grade + ")");
+  });
+  lines.push("");
+  lines.push("Signed: " + (p.release && p.release.signatureName) + " on " + (p.release && p.release.signatureDate));
+  lines.push("");
+  lines.push("Row" + (students.length > 1 ? "s" : "") + " appended to the HS Super 1 Lunch Waivers sheet (one per student).");
 
   try {
     MailApp.sendEmail({
