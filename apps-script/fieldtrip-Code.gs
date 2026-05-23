@@ -42,6 +42,11 @@ const PRICE_PER_PERSON_USD = 35;
 function doPost(e) {
   try {
     const payload = JSON.parse(e.postData.contents);
+    // Route by payload type. Waiver submissions tag themselves with
+    // `waiverType`; everything else is treated as a field-trip submission.
+    if (payload && payload.waiverType === "hs-super1-lunch") {
+      return json_(handleWaiverSubmission_(payload));
+    }
     const result = handleSubmission(payload);
     return json_(result);
   } catch (err) {
@@ -53,8 +58,8 @@ function doPost(e) {
 function doGet() {
   return json_({
     ok: true,
-    message: "River Tech Silverwood Field Trip backend is alive.",
-    trip: "Silverwood — June 1, 2026"
+    message: "River Tech Field Trip + Waiver backend is alive.",
+    handlers: ["Silverwood field trip (June 1, 2026)", "HS Super 1 Lunch Waiver"]
   });
 }
 
@@ -540,4 +545,182 @@ function selfTestSinglePaid() {
     }
   };
   Logger.log(JSON.stringify(handleSubmission(fake), null, 2));
+}
+
+// =========================================================================
+// HS Super 1 Lunch Waiver — handlers bundled into this project so we
+// don't need a fresh OAuth grant. Routed via doPost based on
+// payload.waiverType === "hs-super1-lunch". Writes to a separate sheet
+// (configured via Script Property WAIVER_SHEET_ID).
+// =========================================================================
+
+const WAIVER_SHEET_TAB_NAME = "Waivers";
+const WAIVER_PAGE_URL = "https://www.rivertechschool.com/pages/hs-super1-waiver.html";
+
+function handleWaiverSubmission_(p) {
+  if (!p || !p.parent || !p.student || !p.release) {
+    return { ok: false, error: "Waiver data is incomplete. Please fill out every required field." };
+  }
+  if (!p.parent.firstName || !p.parent.lastName || !p.parent.email || !p.parent.phone) {
+    return { ok: false, error: "Parent/guardian information is incomplete." };
+  }
+  if (!p.student.firstName || !p.student.lastName || !p.student.grade) {
+    return { ok: false, error: "Student information is incomplete." };
+  }
+  if (!p.release.signatureName) {
+    return { ok: false, error: "Please type your signature (parent/guardian full name)." };
+  }
+  if (!p.release.agreed) {
+    return { ok: false, error: "Please check the release agreement box." };
+  }
+
+  const registrationId = "WV-" + Utilities.formatDate(
+    new Date(), "America/Los_Angeles", "yyyyMMdd-HHmmss"
+  ) + "-" + Math.floor(Math.random() * 1000).toString().padStart(3, "0");
+
+  writeWaiverToSheet_(registrationId, p);
+  sendWaiverParentEmail_(registrationId, p);
+  sendWaiverNotificationEmail_(registrationId, p);
+
+  return { ok: true, registrationId: registrationId };
+}
+
+function waiverHeaderRow_() {
+  return [
+    "Waiver ID", "Submitted (UTC)", "School Year",
+    "Parent First", "Parent Last", "Parent Email", "Parent Phone",
+    "Student First", "Student Last", "Student Grade",
+    "Ack: Window", "Ack: Tell Teacher", "Ack: Return Check",
+    "Ack: Behavior", "Ack: Values", "Ack: Group", "Ack: Discretion",
+    "Signature Name", "Signature Date", "Status"
+  ];
+}
+
+function writeWaiverToSheet_(registrationId, p) {
+  const sheetId = cfg("WAIVER_SHEET_ID");
+  if (!sheetId) throw new Error("WAIVER_SHEET_ID is not configured in Script Properties.");
+  const ss = SpreadsheetApp.openById(sheetId);
+  let sh = ss.getSheetByName(WAIVER_SHEET_TAB_NAME);
+  if (!sh) sh = ss.insertSheet(WAIVER_SHEET_TAB_NAME);
+
+  if (sh.getLastRow() === 0) {
+    const header = waiverHeaderRow_();
+    sh.appendRow(header);
+    sh.getRange(1, 1, 1, header.length).setFontWeight("bold");
+    sh.setFrozenRows(1);
+  }
+
+  const submittedAt = p.submittedAt || new Date().toISOString();
+  const a = p.acknowledgments || {};
+
+  const row = [
+    registrationId,
+    submittedAt,
+    p.schoolYear || "2025-26",
+    p.parent.firstName,
+    p.parent.lastName,
+    p.parent.email,
+    p.parent.phone,
+    p.student.firstName,
+    p.student.lastName,
+    p.student.grade,
+    a.window ? "Yes" : "",
+    a.tellTeacher ? "Yes" : "",
+    a.returnCheck ? "Yes" : "",
+    a.behavior ? "Yes" : "",
+    a.values ? "Yes" : "",
+    a.group ? "Yes" : "",
+    a.discretion ? "Yes" : "",
+    (p.release && p.release.signatureName) || "",
+    (p.release && p.release.signatureDate) || "",
+    "Active"
+  ];
+
+  sh.appendRow(row);
+}
+
+function sendWaiverParentEmail_(registrationId, p) {
+  const subject = "HS Off-Campus Lunch Waiver — Received for " + p.student.firstName + " " + p.student.lastName;
+
+  const lines = [
+    "Hi " + p.parent.firstName + ",",
+    "",
+    "Thanks for opting " + p.student.firstName + " into the High School off-campus lunch privilege at River Tech.",
+    "",
+    "Confirmation reference: " + registrationId,
+    "Student: " + p.student.firstName + " " + p.student.lastName + " (Grade " + p.student.grade + ")",
+    "",
+    "Quick reminders of the policy you agreed to:",
+    "  • Tuesday and Wednesday only, 11:45 AM – 12:05 PM",
+    "  • " + p.student.firstName + " should tell a teacher before leaving",
+    "  • Teachers will check at 12:05 that all students have returned",
+    "  • Late return or off-campus misbehavior = privilege revoked immediately",
+    "  • " + p.student.firstName + " may go alone or in a small group (their choice)",
+    "  • Expected to reflect River Tech values while off-campus",
+    "",
+    "This permission stays in effect for the rest of the current school year unless revoked by you in writing, or by River Tech staff at their discretion.",
+    "",
+    "Questions? Reply to this email or text Mary at 425-444-2271.",
+    "",
+    SCHOOL_NAME,
+    "927 E Polston Ave, Post Falls, ID 83854",
+    WAIVER_PAGE_URL
+  ];
+
+  try {
+    MailApp.sendEmail({
+      to: p.parent.email,
+      replyTo: "learn@rivertech.me",
+      subject: subject,
+      body: lines.join("\n"),
+      name: "River Tech School"
+    });
+  } catch (err) {
+    Logger.log("Waiver parent email failed: " + err);
+  }
+}
+
+function sendWaiverNotificationEmail_(registrationId, p) {
+  const subject = "[Waiver] HS Super 1 Lunch — " + p.student.firstName + " " + p.student.lastName + " (Grade " + p.student.grade + ")";
+
+  const lines = [
+    "New HS Off-Campus Lunch Waiver received.",
+    "",
+    "Reference: " + registrationId,
+    "Submitted: " + (p.submittedAt || new Date().toISOString()),
+    "",
+    "Student: " + p.student.firstName + " " + p.student.lastName + " (Grade " + p.student.grade + ")",
+    "",
+    "Parent: " + p.parent.firstName + " " + p.parent.lastName,
+    "Email:  " + p.parent.email,
+    "Phone:  " + p.parent.phone,
+    "",
+    "Signed: " + (p.release && p.release.signatureName) + " on " + (p.release && p.release.signatureDate),
+    "",
+    "Row appended to the HS Super 1 Lunch Waivers sheet."
+  ];
+
+  try {
+    MailApp.sendEmail({
+      to: NOTIFY_EMAILS.join(","),
+      subject: subject,
+      body: lines.join("\n"),
+      name: "River Tech Waivers"
+    });
+  } catch (err) {
+    Logger.log("Waiver notification email failed: " + err);
+  }
+}
+
+function verifyWaiverConfig() {
+  const sheetId = cfg("WAIVER_SHEET_ID");
+  Logger.log("WAIVER_SHEET_ID set: " + !!sheetId);
+  if (sheetId) {
+    try {
+      const ss = SpreadsheetApp.openById(sheetId);
+      Logger.log("Waiver sheet name: " + ss.getName());
+    } catch (e) {
+      Logger.log("Cannot open waiver sheet: " + e.message);
+    }
+  }
 }
