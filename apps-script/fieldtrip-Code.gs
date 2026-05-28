@@ -85,15 +85,65 @@ function silverwoodRoster_(providedToken) {
   const lastCol = sh.getLastColumn();
   const values = sh.getRange(1, 1, lastRow, lastCol).getValues();
   const header = values[0];
+
+  // Cross-reference with Stripe to find which registrations have actually
+  // been paid. We list completed Checkout Sessions and match by
+  // client_reference_id (the registrationId we set at session-create time).
+  const paidRegIds = listPaidStripeRegistrationIds_();
+
   const rows = values.slice(1).map(function (r) {
     const obj = {};
     for (let i = 0; i < header.length; i++) {
       obj[header[i]] = r[i];
     }
+    const regId = obj["Registration ID"];
+    obj["__verifiedPaid"] = !!(regId && paidRegIds.has(regId));
     return obj;
   });
 
-  return { ok: true, rows: rows, fetchedAt: new Date().toISOString() };
+  return {
+    ok: true,
+    rows: rows,
+    stripeChecked: paidRegIds.size,
+    fetchedAt: new Date().toISOString()
+  };
+}
+
+// Lists every completed + paid Stripe Checkout Session and returns a Set
+// of client_reference_ids (which we set to the registration ID at create
+// time). Paginates up to 5 pages × 100 sessions = 500 sessions.
+function listPaidStripeRegistrationIds_() {
+  const secretKey = cfg("STRIPE_SECRET_KEY");
+  const ids = new Set();
+  if (!secretKey) return ids;
+
+  let startingAfter = null;
+  let pages = 0;
+  while (pages < 5) {
+    let url = "https://api.stripe.com/v1/checkout/sessions?limit=100";
+    if (startingAfter) url += "&starting_after=" + encodeURIComponent(startingAfter);
+    const response = UrlFetchApp.fetch(url, {
+      method: "get",
+      headers: { "Authorization": "Bearer " + secretKey },
+      muteHttpExceptions: true
+    });
+    const status = response.getResponseCode();
+    if (status < 200 || status >= 300) {
+      Logger.log("Stripe list error (" + status + "): " + response.getContentText().slice(0, 500));
+      break;
+    }
+    const body = JSON.parse(response.getContentText());
+    const data = body.data || [];
+    data.forEach(function (s) {
+      if (s.payment_status === "paid" && s.client_reference_id) {
+        ids.add(s.client_reference_id);
+      }
+    });
+    if (!body.has_more || data.length === 0) break;
+    startingAfter = data[data.length - 1].id;
+    pages += 1;
+  }
+  return ids;
 }
 
 function json_(obj) {

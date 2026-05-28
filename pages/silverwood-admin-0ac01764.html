@@ -175,10 +175,14 @@
           parentEmail: r["Parent Email"] || "",
           parentPhone: r["Parent Phone"] || "",
           paid: r["Paid"] || "",
+          verifiedPaid: !!r["__verifiedPaid"],
           totalUSD: Number(r["Registration Total (USD)"]) || 0,
           participants: []
         });
       }
+      // If any row for this registration is verified-paid by Stripe, the
+      // family is paid.
+      if (r["__verifiedPaid"]) families.get(id).verifiedPaid = true;
       families.get(id).participants.push({
         firstName: r["Participant First"] || "",
         lastName:  r["Participant Last"] || "",
@@ -222,24 +226,18 @@
         else if (p.type && p.type.toLowerCase().includes("family")) adults += 1;
         if (p.r2r && p.r2r.toLowerCase().includes("yes")) r2rFree += 1;
       });
-      const paid = (f.paid || "").toLowerCase().includes("yes")
-        || (f.status || "").toLowerCase().includes("paid")
-        || (f.status || "").toLowerCase().includes("complete");
-      // We don't have a definitive "paid" column wired to Stripe webhooks,
-      // so this is best-effort. Treat $0 totals as paid-by-default.
+      // Paid status now comes from live Stripe verification (verifiedPaid)
       if (f.totalUSD === 0) revenue += 0;
-      else if (paid) revenue += f.totalUSD;
+      else if (f.verifiedPaid) revenue += f.totalUSD;
       else pendingRevenue += f.totalUSD;
     });
-
-    const totalPotential = revenue + pendingRevenue;
 
     document.getElementById("summary").style.display = "grid";
     document.getElementById("summary").innerHTML = `
       <div class="stat"><div class="stat-label">Families</div><div class="stat-value">${families.length}</div><div class="stat-sub">${fullTimeFams} FT &middot; ${homeschoolFams} HS</div></div>
       <div class="stat"><div class="stat-label">Participants</div><div class="stat-value">${totalParticipants}</div><div class="stat-sub">${students} students &middot; ${adults} adults</div></div>
       <div class="stat stat-r2r"><div class="stat-label">Read 2 Ride</div><div class="stat-value">${r2rFree}</div><div class="stat-sub">free at the gate</div></div>
-      <div class="stat stat-money"><div class="stat-label">Expected revenue</div><div class="stat-value">$${totalPotential}</div><div class="stat-sub">${families.length} registrations</div></div>
+      <div class="stat stat-money"><div class="stat-label">Collected</div><div class="stat-value">$${revenue}</div><div class="stat-sub">${pendingRevenue > 0 ? '$' + pendingRevenue + ' awaiting' : 'all paid'}</div></div>
     `;
   }
 
@@ -302,7 +300,7 @@
 
       const paidPill = f.totalUSD === 0
         ? '<span class="pill paid">Free</span>'
-        : ((f.paid || "").toLowerCase().includes("yes") || (f.status || "").toLowerCase().includes("paid"))
+        : f.verifiedPaid
           ? '<span class="pill paid">Paid</span>'
           : '<span class="pill awaiting">Awaiting</span>';
 
