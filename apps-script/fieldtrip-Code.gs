@@ -55,12 +55,45 @@ function doPost(e) {
   }
 }
 
-function doGet() {
+function doGet(e) {
+  const params = (e && e.parameter) || {};
+  if (params.action === "silverwoodRoster") {
+    return json_(silverwoodRoster_(params.token));
+  }
   return json_({
     ok: true,
     message: "River Tech Field Trip + Waiver backend is alive.",
     handlers: ["Silverwood field trip (June 1, 2026)", "HS Off-Campus Lunch Waiver"]
   });
+}
+
+// ---- Silverwood roster (read-only admin view) ---------------------------
+function silverwoodRoster_(providedToken) {
+  const expected = cfg("ROSTER_TOKEN");
+  if (!expected) return { ok: false, error: "Roster not configured" };
+  if (providedToken !== expected) return { ok: false, error: "Unauthorized" };
+
+  const sheetId = cfg("SHEET_ID");
+  if (!sheetId) return { ok: false, error: "Sheet not configured" };
+  const ss = SpreadsheetApp.openById(sheetId);
+  const sh = ss.getSheetByName(SHEET_TAB_NAME);
+  if (!sh) return { ok: true, rows: [], message: "No signups yet." };
+
+  const lastRow = sh.getLastRow();
+  if (lastRow < 2) return { ok: true, rows: [] };
+
+  const lastCol = sh.getLastColumn();
+  const values = sh.getRange(1, 1, lastRow, lastCol).getValues();
+  const header = values[0];
+  const rows = values.slice(1).map(function (r) {
+    const obj = {};
+    for (let i = 0; i < header.length; i++) {
+      obj[header[i]] = r[i];
+    }
+    return obj;
+  });
+
+  return { ok: true, rows: rows, fetchedAt: new Date().toISOString() };
 }
 
 function json_(obj) {

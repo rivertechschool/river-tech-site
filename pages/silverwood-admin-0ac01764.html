@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Silverwood Roster — Admin</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f5f2;
+      --panel: #ffffff;
+      --ink: #272443;
+      --ink-soft: #6b6883;
+      --line: rgba(39, 36, 67, 0.12);
+      --rt-red: #d63232;
+      --rt-red-soft: #fbe6e3;
+      --ft-blue: #2257a0;
+      --ft-blue-soft: #e6efff;
+      --hs-green: #2f7d3a;
+      --hs-green-soft: #e0f3e3;
+      --amber: #d99502;
+      --amber-soft: #fff8e6;
+      --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.04);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-size: 14px; line-height: 1.4; }
+
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; gap: 10px; }
+    .topbar h1 { margin: 0; font-size: 19px; font-weight: 700; }
+    .topbar h1 small { font-size: 13px; color: var(--ink-soft); font-weight: 500; margin-left: 8px; }
+    .topbar .meta { font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 12px; }
+    .topbar .refresh-btn { background: var(--rt-red); color: white; border: none; border-radius: 4px; padding: 7px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .topbar .refresh-btn:hover { background: #b82828; }
+    .topbar .refresh-btn:disabled { opacity: 0.5; cursor: wait; }
+
+    .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding: 14px 20px; background: var(--panel); border-bottom: 1px solid var(--line); }
+    .stat { padding: 10px 14px; border-left: 3px solid var(--ft-blue); }
+    .stat.stat-money { border-left-color: var(--hs-green); }
+    .stat.stat-r2r { border-left-color: var(--amber); }
+    .stat.stat-bus { border-left-color: var(--rt-red); }
+    .stat .stat-label { font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; margin-bottom: 2px; }
+    .stat .stat-value { font-size: 24px; font-weight: 800; }
+    .stat .stat-sub { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+
+    .section { padding: 16px 20px; }
+    .section h2 { margin: 0 0 12px; font-size: 16px; font-weight: 700; }
+
+    table { width: 100%; border-collapse: collapse; background: var(--panel); border-radius: 6px; overflow: hidden; box-shadow: var(--shadow); }
+    th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--line); font-size: 13px; vertical-align: top; }
+    th { background: rgba(0,0,0,0.03); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); position: sticky; top: 0; z-index: 1; }
+    tr:hover td { background: rgba(0,0,0,0.02); }
+    .pill { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 700; letter-spacing: 0.03em; }
+    .pill.ft { background: var(--ft-blue-soft); color: var(--ft-blue); }
+    .pill.hs { background: var(--hs-green-soft); color: var(--hs-green); }
+    .pill.r2r { background: var(--amber-soft); color: var(--amber); }
+    .pill.paid { background: var(--hs-green-soft); color: var(--hs-green); }
+    .pill.awaiting { background: #fef0f0; color: var(--rt-red); }
+    .muted { color: var(--ink-soft); font-size: 12px; }
+
+    .bus-table th, .bus-table td { font-size: 13px; }
+    .bus-table { width: auto; min-width: 320px; }
+
+    .empty { padding: 40px; text-align: center; color: var(--ink-soft); font-style: italic; }
+    .error-banner { background: #fef0f0; border-left: 4px solid var(--rt-red); padding: 10px 14px; margin: 16px 20px; font-size: 13px; color: var(--rt-red); }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Silverwood Roster <small>Monday, June 1, 2026</small></h1>
+  <div class="meta">
+    <span id="meta-line">Loading…</span>
+    <button id="refresh-btn" class="refresh-btn" onclick="loadRoster()">Refresh</button>
+  </div>
+</div>
+
+<div id="summary" class="summary" style="display:none;"></div>
+<div id="error-area"></div>
+
+<div class="section">
+  <h2>Bus headcount (full-time students)</h2>
+  <table id="bus-table" class="bus-table">
+    <thead><tr><th>Direction</th><th>Seats needed</th></tr></thead>
+    <tbody id="bus-body"></tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Families &amp; participants</h2>
+  <table id="roster-table">
+    <thead>
+      <tr>
+        <th>Family</th>
+        <th>Contact</th>
+        <th>Type</th>
+        <th>Participants</th>
+        <th>$</th>
+        <th>Payment</th>
+        <th>Submitted</th>
+      </tr>
+    </thead>
+    <tbody id="roster-body"></tbody>
+  </table>
+</div>
+
+<script>
+  // ===== Configuration ===================================================
+  const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwhK9l0Ve9IVj9GU4F0BttzPtPD52tMxWNIBs2EUIf5Xg8prXlOQ8UD2Bon74K2aOtH/exec";
+  const TOKEN = "2ce1659a558a80e4b259fd223450ed526bd074b8fc3b0d2d";
+
+  // Auto-refresh on tab focus if older than 60s
+  let lastRefreshAt = 0;
+
+  document.addEventListener("DOMContentLoaded", loadRoster);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState !== "visible") return;
+    if (Date.now() - lastRefreshAt < 60_000) return;
+    loadRoster();
+  });
+
+  async function loadRoster() {
+    const btn = document.getElementById("refresh-btn");
+    const meta = document.getElementById("meta-line");
+    btn.disabled = true;
+    meta.textContent = "Loading…";
+    clearError();
+
+    try {
+      const url = BACKEND_URL + "?action=silverwoodRoster&token=" + encodeURIComponent(TOKEN);
+      const r = await fetch(url, { method: "GET", redirect: "follow" });
+      const data = await r.json();
+      if (!data || !data.ok) {
+        throw new Error((data && data.error) || "Unknown error");
+      }
+      render(data.rows || []);
+      lastRefreshAt = Date.now();
+      const t = new Date();
+      meta.textContent = "Updated " + t.toLocaleTimeString();
+    } catch (err) {
+      console.error(err);
+      showError("Could not load roster: " + err.message);
+      meta.textContent = "Error";
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function clearError() {
+    document.getElementById("error-area").innerHTML = "";
+  }
+  function showError(msg) {
+    document.getElementById("error-area").innerHTML =
+      '<div class="error-banner">' + escapeHTML(msg) + "</div>";
+  }
+  function escapeHTML(s) {
+    if (s == null) return "";
+    return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c]);
+  }
+
+  function render(rows) {
+    // Group rows by Registration ID into families
+    const families = new Map();
+    rows.forEach(r => {
+      const id = r["Registration ID"];
+      if (!id) return;
+      if (!families.has(id)) {
+        families.set(id, {
+          id,
+          submittedAt: r["Submitted (UTC)"],
+          status: r["Status"] || "",
+          familyType: r["Family Type"] || "",
+          parentFirst: r["Parent First"] || "",
+          parentLast: r["Parent Last"] || "",
+          parentEmail: r["Parent Email"] || "",
+          parentPhone: r["Parent Phone"] || "",
+          paid: r["Paid"] || "",
+          totalUSD: Number(r["Registration Total (USD)"]) || 0,
+          participants: []
+        });
+      }
+      families.get(id).participants.push({
+        firstName: r["Participant First"] || "",
+        lastName:  r["Participant Last"] || "",
+        age:       r["Participant Age"] || "",
+        type:      r["Participant Type"] || "",
+        r2r:       r["Read 2 Ride"] || "",
+        transport: r["Transportation"] || "",
+        priceUSD:  Number(r["Price (USD)"]) || 0
+      });
+    });
+
+    const all = Array.from(families.values());
+    // Sort by parent last name then submission time
+    all.sort((a, b) => {
+      const an = (a.parentLast || "").localeCompare(b.parentLast || "");
+      if (an !== 0) return an;
+      return new Date(a.submittedAt) - new Date(b.submittedAt);
+    });
+
+    renderSummary(all);
+    renderBus(all);
+    renderRoster(all);
+  }
+
+  function renderSummary(families) {
+    let totalParticipants = 0;
+    let students = 0;
+    let adults = 0;
+    let r2rFree = 0;
+    let revenue = 0;
+    let pendingRevenue = 0;
+    let fullTimeFams = 0;
+    let homeschoolFams = 0;
+
+    families.forEach(f => {
+      totalParticipants += f.participants.length;
+      if (f.familyType === "full-time") fullTimeFams += 1;
+      if (f.familyType === "homeschool") homeschoolFams += 1;
+      f.participants.forEach(p => {
+        if (p.type && p.type.toLowerCase().includes("student")) students += 1;
+        else if (p.type && p.type.toLowerCase().includes("family")) adults += 1;
+        if (p.r2r && p.r2r.toLowerCase().includes("yes")) r2rFree += 1;
+      });
+      const paid = (f.paid || "").toLowerCase().includes("yes")
+        || (f.status || "").toLowerCase().includes("paid")
+        || (f.status || "").toLowerCase().includes("complete");
+      // We don't have a definitive "paid" column wired to Stripe webhooks,
+      // so this is best-effort. Treat $0 totals as paid-by-default.
+      if (f.totalUSD === 0) revenue += 0;
+      else if (paid) revenue += f.totalUSD;
+      else pendingRevenue += f.totalUSD;
+    });
+
+    const totalPotential = revenue + pendingRevenue;
+
+    document.getElementById("summary").style.display = "grid";
+    document.getElementById("summary").innerHTML = `
+      <div class="stat"><div class="stat-label">Families</div><div class="stat-value">${families.length}</div><div class="stat-sub">${fullTimeFams} FT &middot; ${homeschoolFams} HS</div></div>
+      <div class="stat"><div class="stat-label">Participants</div><div class="stat-value">${totalParticipants}</div><div class="stat-sub">${students} students &middot; ${adults} adults</div></div>
+      <div class="stat stat-r2r"><div class="stat-label">Read 2 Ride</div><div class="stat-value">${r2rFree}</div><div class="stat-sub">free at the gate</div></div>
+      <div class="stat stat-money"><div class="stat-label">Expected revenue</div><div class="stat-value">$${totalPotential}</div><div class="stat-sub">${families.length} registrations</div></div>
+    `;
+  }
+
+  function renderBus(families) {
+    let busBoth = 0, busThere = 0, busBack = 0, ownBoth = 0;
+    families.forEach(f => {
+      if (f.familyType !== "full-time") return;
+      f.participants.forEach(p => {
+        if (!(p.type || "").toLowerCase().includes("student")) return;
+        const t = (p.transport || "").toLowerCase();
+        if (t.includes("bus both")) busBoth += 1;
+        else if (t.includes("bus there")) busThere += 1;
+        else if (t.includes("bus back")) busBack += 1;
+        else if (t.includes("own transport") || t.includes("own both")) ownBoth += 1;
+      });
+    });
+    const outbound = busBoth + busThere;
+    const inbound = busBoth + busBack;
+    const totalStudents = busBoth + busThere + busBack + ownBoth;
+
+    document.getElementById("bus-body").innerHTML = `
+      <tr><td>Bus both ways</td><td><strong>${busBoth}</strong></td></tr>
+      <tr><td>Bus there only</td><td>${busThere}</td></tr>
+      <tr><td>Bus back only</td><td>${busBack}</td></tr>
+      <tr><td>Own transport</td><td>${ownBoth}</td></tr>
+      <tr style="background: var(--ft-blue-soft);"><td><strong>Seats needed outbound</strong></td><td><strong>${outbound}</strong></td></tr>
+      <tr style="background: var(--ft-blue-soft);"><td><strong>Seats needed inbound</strong></td><td><strong>${inbound}</strong></td></tr>
+      <tr><td class="muted">Full-time students total</td><td class="muted">${totalStudents}</td></tr>
+    `;
+  }
+
+  function renderRoster(families) {
+    const body = document.getElementById("roster-body");
+    if (families.length === 0) {
+      body.innerHTML = '<tr><td colspan="7" class="empty">No registrations yet.</td></tr>';
+      return;
+    }
+
+    body.innerHTML = families.map(f => {
+      const parentName = (f.parentFirst + " " + f.parentLast).trim();
+      const typePill = f.familyType === "full-time"
+        ? '<span class="pill ft">Full-time</span>'
+        : f.familyType === "homeschool"
+          ? '<span class="pill hs">Homeschool</span>'
+          : escapeHTML(f.familyType);
+
+      const participantsHTML = f.participants.map(p => {
+        const pills = [];
+        if ((p.r2r || "").toLowerCase().includes("yes")) {
+          pills.push('<span class="pill r2r">R2R free</span>');
+        }
+        const transportNote = p.transport ? ' &middot; <span class="muted">' + escapeHTML(p.transport) + '</span>' : '';
+        const roleNote = p.type ? ' <span class="muted">(' + escapeHTML(p.type) + ', age ' + escapeHTML(p.age) + ')</span>' : '';
+        return '<div>' + escapeHTML(p.firstName + ' ' + p.lastName).trim()
+          + roleNote
+          + transportNote
+          + (pills.length ? ' ' + pills.join(' ') : '')
+          + '</div>';
+      }).join('');
+
+      const paidPill = f.totalUSD === 0
+        ? '<span class="pill paid">Free</span>'
+        : ((f.paid || "").toLowerCase().includes("yes") || (f.status || "").toLowerCase().includes("paid"))
+          ? '<span class="pill paid">Paid</span>'
+          : '<span class="pill awaiting">Awaiting</span>';
+
+      const submitted = f.submittedAt ? new Date(f.submittedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "";
+
+      const contact = '<div>' + escapeHTML(f.parentEmail) + '</div>'
+        + (f.parentPhone ? '<div class="muted">' + escapeHTML(f.parentPhone) + '</div>' : '');
+
+      return '<tr>'
+        + '<td>' + escapeHTML(parentName) + '</td>'
+        + '<td>' + contact + '</td>'
+        + '<td>' + typePill + '</td>'
+        + '<td>' + participantsHTML + '</td>'
+        + '<td>$' + f.totalUSD + '</td>'
+        + '<td>' + paidPill + '</td>'
+        + '<td class="muted">' + escapeHTML(submitted) + '</td>'
+      + '</tr>';
+    }).join('');
+  }
+</script>
+
+</body>
+</html>
