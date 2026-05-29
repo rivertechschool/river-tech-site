@@ -115,7 +115,7 @@
       '  <div>',
       '    <label class="reg-label" for="c' + idx + '_gender">Gender</label>',
       '    <select class="reg-select" id="c' + idx + '_gender" name="c' + idx + '_gender">',
-      '      <option value="">Prefer not to say</option>',
+      '      <option value="">Select…</option>',
       '      <option value="female">Female</option>',
       '      <option value="male">Male</option>',
       '    </select>',
@@ -318,7 +318,7 @@
     const elaborate = document.getElementById("assistance-elaborate");
     assistBox.addEventListener("change", function (e) {
       paintRadioGroup("assistance");
-      elaborate.classList.toggle("show", getRadio("assistance") === "more-than-25");
+      elaborate.classList.toggle("show", getRadio("assistance") === "more-than-20");
     });
 
     // Volunteer radio visuals
