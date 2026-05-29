@@ -11,7 +11,7 @@
 
   // ---- Configuration ----------------------------------------------------
   // Set this to the deployed Apps Script web-app URL before go-live.
-  const BACKEND_URL = "__BACKEND_URL__";
+  const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwS6IbPLFRSbmMMGsupjhHau-XPefwwSDFD5q07M56hVe3dnkAU_lI_hTgZM3E9aq1A/exec";
 
   // Flat, non-refundable application processing fee.
   const PROCESSING_FEE = 20;
