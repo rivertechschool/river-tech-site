@@ -33,6 +33,17 @@
   const PERIOD_WORD = { quarterly: "quarter", annual: "year", monthly: "month" };
   const DEFAULT_CREDIT_PER_CHILD = 5000;
 
+  // Sibling discount: per quarter, applied to the 2nd child onward.
+  // Annualized (× 4) and distributed across whatever plan the family picks.
+  const SIBLING_DISCOUNT_PER_QUARTER = { "5-day": 150, "4-day": 120 };
+  function siblingAnnual(programmedChildren) {
+    let total = 0;
+    for (let i = 1; i < programmedChildren.length; i++) {
+      total += (SIBLING_DISCOUNT_PER_QUARTER[programmedChildren[i].program] || 0) * 4;
+    }
+    return total;
+  }
+
   // ---- Boot -------------------------------------------------------------
   document.addEventListener("DOMContentLoaded", function () {
     syncChildren();
@@ -186,12 +197,16 @@
       return;
     }
 
-    // Family yearly total for the chosen plan.
-    let yearTotal = 0;
+    // Gross family yearly total for the chosen plan.
+    let grossYear = 0;
     programmed.forEach(function (c) {
-      yearTotal += TUITION[c.program][cadence].year;
+      grossYear += TUITION[c.program][cadence].year;
     });
     const periods = TUITION[programmed[0].program][cadence].periods;
+
+    // Sibling discount (2nd child onward), annualized then spread across the plan.
+    const sibling = siblingAnnual(programmed);
+    const yearTotal = grossYear - sibling;
 
     let creditApplied = 0;
     if (decision === "apply") {
@@ -205,7 +220,10 @@
     const word = PERIOD_WORD[cadence];
 
     let rows = "";
-    rows += row("Tuition for the year (" + planName + ")", money(yearTotal));
+    rows += row("Tuition for the year (" + planName + ")", money(grossYear));
+    if (sibling > 0) {
+      rows += row("Sibling discount (2nd child onward)", "−" + money(sibling), "credit");
+    }
     if (decision === "apply") {
       rows += row("Your tax credit applied", "−" + money(creditApplied), "credit");
       rows += row("Remaining balance", money(remaining));
@@ -281,11 +299,12 @@
     const decision = getDecision();
     const children = gatherChildren();
 
-    let yearTotal = 0;
-    children.forEach(function (c) {
-      if (c.program) yearTotal += TUITION[c.program][cadence].year;
-    });
-    const periods = children[0].program ? TUITION[children[0].program][cadence].periods : 0;
+    const programmed = children.filter(function (c) { return c.program; });
+    let grossYear = 0;
+    programmed.forEach(function (c) { grossYear += TUITION[c.program][cadence].year; });
+    const sibling = siblingAnnual(programmed);
+    const yearTotal = grossYear - sibling;
+    const periods = programmed[0] ? TUITION[programmed[0].program][cadence].periods : 0;
     let creditApplied = 0;
     if (decision === "apply") {
       const raw = parseFloat(document.getElementById("creditAmount").value) || 0;
