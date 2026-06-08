@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
+  <title>Apply Your Tax Credit to Tuition 2026&ndash;27 | River Tech School</title>
+  <meta name="description" content="Tell us how you'd like to apply your Idaho Parental Choice Tax Credit toward River Tech tuition for the 2026&ndash;27 school year. See your exact payment live as you choose.">
+
+  <meta property="og:title" content="Apply Your Tax Credit to Tuition 2026&ndash;27 | River Tech School">
+  <meta property="og:description" content="Tell us how you'd like to apply your $5,000 Idaho Parental Choice Tax Credit toward River Tech tuition.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.rivertechschool.com/pages/register-tax-credit-2026-27.html">
+  <meta property="og:image" content="https://www.rivertechschool.com/assets/images/og-image.png">
+
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/style.css?v=27">
+
+  <link rel="canonical" href="https://www.rivertechschool.com/pages/register-tax-credit-2026-27.html">
+
+  <meta name="robots" content="noindex,follow">
+
+  <style>
+    /* --- Apply Tax Credit: scoped styles (shared reg-* system) --- */
+    .reg-wrap { max-width: 760px; margin: 0 auto; padding: 20px 0 120px; }
+
+    .reg-hero { text-align: center; padding: 34px 0 22px; position: relative; }
+    .reg-hero::after {
+      content: ""; display: block; width: 72px; height: 4px;
+      margin: 18px auto 0; border-radius: 4px;
+      background: linear-gradient(90deg, var(--color-red), var(--color-enroll-bg));
+    }
+    .reg-pill {
+      display: inline-block; font-family: var(--font-nav); font-size: 13px;
+      font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--color-red); background: var(--color-pink-btn);
+      padding: 6px 14px; border-radius: 999px; margin-bottom: 14px;
+    }
+    .reg-hero h1 {
+      font-family: var(--font-display); font-size: clamp(30px, 5vw, 46px);
+      font-weight: 700; margin-bottom: 8px; color: var(--color-text); line-height: 1.1;
+    }
+    .reg-hero .reg-subtitle {
+      font-family: var(--font-display); font-size: clamp(18px, 2.4vw, 24px);
+      font-weight: 600; color: var(--color-text); opacity: 0.85; margin-bottom: 4px;
+    }
+
+    .reg-info {
+      background: var(--color-bg); padding: 22px 26px; margin-bottom: 26px;
+      border-left: 3px solid var(--color-red); border-radius: 0 6px 6px 0;
+    }
+    .reg-info p { margin-bottom: 10px; line-height: 1.6; }
+    .reg-info p:last-child { margin-bottom: 0; }
+    .reg-info a { color: var(--color-red); }
+
+    .reg-section {
+      background: var(--color-white); border: 1px solid rgba(39, 36, 67, 0.12);
+      border-radius: 8px; padding: 26px 28px; margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(39, 36, 67, 0.05); transition: box-shadow 0.2s;
+    }
+    .reg-section:focus-within { box-shadow: 0 4px 16px rgba(39, 36, 67, 0.10); }
+    .reg-section-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
+    .reg-step {
+      flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%;
+      background: var(--color-enroll-bg); color: var(--color-white);
+      font-family: var(--font-nav); font-weight: 700; font-size: 16px;
+      display: flex; align-items: center; justify-content: center; margin-top: 2px;
+    }
+    .reg-section-title {
+      font-family: var(--font-display); font-size: 22px; font-weight: 700;
+      color: var(--color-text); margin-bottom: 4px; line-height: 1.2;
+    }
+    .reg-section-subtitle { font-size: 15px; color: var(--color-text); opacity: 0.75; margin: 0; line-height: 1.5; }
+
+    .reg-row { margin-bottom: 18px; }
+    .reg-row:last-child { margin-bottom: 0; }
+    .reg-row-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+    @media (max-width: 520px) { .reg-row-grid-2 { grid-template-columns: 1fr; } }
+    .reg-label { display: block; font-size: 15px; font-weight: 600; color: var(--color-text); margin-bottom: 6px; }
+    .reg-label .req { color: var(--color-red); margin-left: 3px; }
+    .reg-help { display: block; font-size: 13px; color: var(--color-text); opacity: 0.7; margin-top: 4px; line-height: 1.4; }
+    .reg-input, .reg-select, .reg-textarea {
+      width: 100%; padding: 11px 13px; font-family: var(--font-body); font-size: 16px;
+      color: var(--color-text); background: var(--color-white);
+      border: 1.5px solid rgba(39, 36, 67, 0.25); border-radius: 4px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .reg-input:focus, .reg-select:focus, .reg-textarea:focus {
+      outline: none; border-color: var(--color-red); box-shadow: 0 0 0 3px var(--color-pink-btn);
+    }
+    .reg-textarea { resize: vertical; min-height: 90px; }
+
+    .reg-choices { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .reg-check {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+      border: 1.5px solid rgba(39, 36, 67, 0.18); border-radius: 6px; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s; font-size: 16px;
+    }
+    .reg-check:hover { border-color: var(--color-red); }
+    .reg-check input { width: 18px; height: 18px; accent-color: var(--color-red); cursor: pointer; flex: 0 0 auto; }
+    .reg-check.checked { border-color: var(--color-red); background: var(--color-pink-btn); }
+    .reg-check span small { display: block; font-size: 13px; opacity: 0.75; margin-top: 2px; }
+
+    /* Plan cards (cadence selector) */
+    .plan-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    @media (max-width: 560px) { .plan-grid { grid-template-columns: 1fr; } }
+    .plan-card {
+      position: relative; display: block; cursor: pointer;
+      border: 1.5px solid rgba(39, 36, 67, 0.18); border-radius: 10px;
+      padding: 18px 16px 16px; text-align: center; transition: border-color 0.2s, background 0.2s, transform 0.1s;
+    }
+    .plan-card:hover { border-color: var(--color-red); }
+    .plan-card.checked { border-color: var(--color-enroll-bg); background: var(--color-bg); }
+    .plan-card input { position: absolute; opacity: 0; pointer-events: none; }
+    .plan-card .plan-name {
+      font-family: var(--font-nav); font-weight: 700; font-size: 15px; letter-spacing: 0.5px;
+      text-transform: uppercase; color: var(--color-text);
+    }
+    .plan-card .plan-desc { font-size: 13px; opacity: 0.7; margin-top: 4px; line-height: 1.4; }
+    .plan-card .plan-badge {
+      display: inline-block; margin-top: 8px; font-family: var(--font-nav); font-size: 11px;
+      font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+      color: var(--color-white); background: var(--color-enroll-bg);
+      padding: 3px 10px; border-radius: 999px;
+    }
+
+    /* Child card */
+    .child-card {
+      background: var(--color-bg); border: 1.5px solid rgba(39, 36, 67, 0.14);
+      border-radius: 8px; padding: 20px 22px; margin-bottom: 14px;
+    }
+    .child-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .child-card-title { font-family: var(--font-display); font-weight: 700; font-size: 17px; color: var(--color-text); }
+    .child-remove {
+      background: none; border: 1px solid rgba(39, 36, 67, 0.25); border-radius: 4px;
+      padding: 4px 10px; font-size: 13px; cursor: pointer; color: var(--color-text); opacity: 0.7;
+    }
+    .child-remove:hover { opacity: 1; border-color: var(--color-red); color: var(--color-red); }
+
+    /* Live calculator card */
+    .calc {
+      background: var(--color-enroll-bg); color: var(--color-white);
+      border-radius: 12px; padding: 26px 28px; box-shadow: 0 6px 24px rgba(39, 36, 67, 0.18);
+    }
+    .calc-title {
+      font-family: var(--font-nav); font-size: 13px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; opacity: 0.85; margin-bottom: 16px;
+    }
+    .calc-empty { font-size: 15px; opacity: 0.85; line-height: 1.5; }
+    .calc-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-size: 16px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.14);
+    }
+    .calc-row .lbl { opacity: 0.9; }
+    .calc-row .val { font-weight: 600; }
+    .calc-row.credit .val { color: #ffd9d3; }
+    .calc-headline {
+      margin-top: 18px; padding-top: 16px; border-top: 2px solid rgba(255,255,255,0.3);
+    }
+    .calc-headline .big {
+      font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 6vw, 40px); line-height: 1.05;
+    }
+    .calc-headline .sub { font-size: 14px; opacity: 0.85; margin-top: 6px; line-height: 1.45; }
+    .calc-note { font-size: 13px; opacity: 0.8; margin-top: 14px; line-height: 1.45; }
+
+    .reg-consent {
+      background: var(--color-bg); padding: 20px 24px; margin-bottom: 18px;
+      font-size: 14px; line-height: 1.6; border-radius: 6px;
+    }
+
+    .reg-submit {
+      display: block; width: 100%; padding: 18px; background: var(--color-enroll-bg);
+      color: var(--color-white); font-family: var(--font-nav); font-size: 18px;
+      font-weight: 700; letter-spacing: 0.5px; border: none; border-radius: 6px;
+      cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+    }
+    .reg-submit:hover { opacity: 0.92; }
+    .reg-submit:active { transform: translateY(1px); }
+    .reg-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .reg-error {
+      background: #fef0f0; border-left: 4px solid var(--color-red); color: var(--color-red);
+      padding: 12px 16px; margin-bottom: 16px; font-size: 15px; border-radius: 0 4px 4px 0; display: none;
+    }
+    .reg-error.show { display: block; }
+
+    .reg-back {
+      display: inline-block; font-size: 15px; color: var(--color-text); opacity: 0.7;
+      text-decoration: none; margin-bottom: 8px;
+    }
+    .reg-back:hover { opacity: 1; color: var(--color-red); }
+
+    .reg-progress { display: none; margin: 10px 0 0; font-size: 13px; color: var(--color-text); opacity: 0.75; text-align: center; }
+    .reg-progress.show { display: block; }
+
+    .conditional { display: none; }
+    .conditional.show { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+    <a href="../index.html">River Tech School</a>
+    <div class="sidebar-submenu">
+      <a href="../index.html">About River Tech</a>
+      <a href="elementary-school.html">Elementary School</a>
+      <a href="middle-school.html">Middle School</a>
+      <a href="high-school.html">High School</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="a-la-carte.html">River Tech À La Carte</a>
+    <div class="sidebar-submenu">
+      <a href="a-la-carte.html">Homeschooling</a>
+      <a href="monday-performing-arts.html">Monday: Performing Arts</a>
+      <a href="tuesday-science.html">Tuesday: Science &amp; Social Studies</a>
+      <a href="thursday-life-skills.html">Thursday: Life Skills</a>
+      <a href="friday-technology.html">Friday: Technology</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="why-river-tech.html">Why River Tech?</a>
+    <div class="sidebar-submenu">
+      <a href="our-culture.html">Our Culture</a>
+      <a href="reviews.html">References &amp; Reviews</a>
+      <a href="technology.html">Technology</a>
+      <a href="performing-arts.html">Performing Arts</a>
+      <a href="sports-fitness.html">Sports &amp; Fitness</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="enrollment.html" class="active">Enrollment</a>
+    <div class="sidebar-submenu">
+      <a href="river-tech-days.html">River Tech Days</a>
+      <a href="enrollment.html">How to Enroll</a>
+      <a href="tuition.html">Tuition</a>
+      <a href="faq.html">FAQs</a>
+      <a href="tax-credit.html" class="active">Tax Credit</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="school-resources.html">School Resources</a>
+    <div class="sidebar-submenu">
+      <a href="calendar.html">Schedule &amp; Calendar</a>
+      <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+      <a href="scholarships.html">Scholarships</a>
+      <a href="volunteer.html">Volunteer</a>
+      <a href="our-needs.html">Our Needs</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="../pages/gallery.html">Media</a>
+    <div class="sidebar-submenu">
+      <a href="../pages/gallery.html">Photo Gallery</a>
+      <a href="../pages/vlog.html">Video Globe</a>
+      <a href="../pages/fieldtrips.html">Field Trips</a>
+    </div>
+    </div>
+  </nav>
+</div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <a href="enrollment.html" class="enroll-btn">School starts Sept 1</a>
+  <div class="social-icons">
+    <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" fill="#c0392b"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.13C5.12 19.56 12 19.56 12 19.56s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon fill="white" points="9.75,15.02 15.5,11.75 9.75,8.48"/></svg>
+    </a>
+    <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" fill="#3b5998"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- Mobile Header -->
+<div class="mobile-header">
+  <a href="../index.html" class="mobile-logo">River Tech</a>
+  <button class="hamburger" aria-label="Open menu">☰</button>
+</div>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav-overlay">
+  <button class="close-btn" aria-label="Close menu">✕</button>
+  <a href="../index.html">River Tech School</a>
+        <div class="mobile-submenu">
+    <a href="../index.html">About River Tech</a>
+    <a href="elementary-school.html">Elementary School</a>
+    <a href="middle-school.html">Middle School</a>
+    <a href="high-school.html">High School</a>
+  </div>
+  <a href="a-la-carte.html">River Tech À La Carte</a>
+        <div class="mobile-submenu">
+    <a href="a-la-carte.html">Homeschooling</a>
+    <a href="monday-performing-arts.html">Monday: Performing Arts</a>
+    <a href="tuesday-science.html">Tuesday: Science &amp; Social Studies</a>
+    <a href="thursday-life-skills.html">Thursday: Life Skills</a>
+    <a href="friday-technology.html">Friday: Technology</a>
+  </div>
+  <a href="why-river-tech.html">Why River Tech?</a>
+        <div class="mobile-submenu">
+    <a href="our-culture.html">Our Culture</a>
+    <a href="reviews.html">References &amp; Reviews</a>
+    <a href="technology.html">Technology</a>
+    <a href="performing-arts.html">Performing Arts</a>
+    <a href="sports-fitness.html">Sports &amp; Fitness</a>
+  </div>
+  <a href="enrollment.html" class="active">Enrollment</a>
+        <div class="mobile-submenu">
+    <a href="river-tech-days.html">River Tech Days</a>
+    <a href="enrollment.html">How to Enroll</a>
+    <a href="tuition.html">Tuition</a>
+    <a href="faq.html">FAQs</a>
+    <a href="tax-credit.html">Tax Credit</a>
+  </div>
+  <a href="school-resources.html">School Resources</a>
+        <div class="mobile-submenu">
+    <a href="calendar.html">Schedule &amp; Calendar</a>
+    <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+    <a href="scholarships.html">Scholarships</a>
+    <a href="volunteer.html">Volunteer</a>
+    <a href="our-needs.html">Our Needs</a>
+  </div>
+  <a href="../pages/gallery.html">Media</a>
+        <div class="mobile-submenu">
+    <a href="../pages/gallery.html">Photo Gallery</a>
+    <a href="../pages/vlog.html">Video Globe</a>
+    <a href="../pages/fieldtrips.html">Field Trips</a>
+  </div>
+  <a href="enrollment.html" style="color: var(--color-red); font-weight: 700; border-bottom: none;">School starts Sept 1</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="content-area">
+
+    <div class="reg-wrap">
+
+      <a href="tax-credit.html" class="reg-back">← Back to Tax Credit</a>
+
+      <div class="reg-hero">
+        <span class="reg-pill">2026&ndash;27 School Year</span>
+        <h1>Apply Your Tax Credit</h1>
+        <p class="reg-subtitle">River Tech School of Performing Arts &amp; Technology</p>
+      </div>
+
+      <div class="reg-info">
+        <p><strong>This form is for families who received the Idaho Parental Choice Tax Credit</strong> and want to put it toward 2026&ndash;27 tuition. If you didn&rsquo;t receive the credit, no action is needed.</p>
+        <p>Tell us your choice below and you&rsquo;ll see your exact payment update live as you go. <strong>Please use this form rather than replying by email</strong> &mdash; it lets us set up your invoices correctly. Have a special situation? Email us anytime at <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>.</p>
+      </div>
+
+      <div id="reg-error" class="reg-error" role="alert"></div>
+
+      <form id="reg-form" novalidate>
+
+        <!-- 1. Parent / Guardian -->
+        <div class="reg-section">
+          <div class="reg-section-head">
+            <div class="reg-step">1</div>
+            <div>
+              <div class="reg-section-title">Parent / Guardian</div>
+              <p class="reg-section-subtitle">We&rsquo;ll send your invoice and confirmation here.</p>
+            </div>
+          </div>
+          <div class="reg-row">
+            <label class="reg-label" for="parentName">Full name<span class="req">*</span></label>
+            <input class="reg-input" type="text" id="parentName" name="parentName" required autocomplete="name">
+          </div>
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="parentEmail">Email<span class="req">*</span></label>
+              <input class="reg-input" type="email" id="parentEmail" name="parentEmail" required autocomplete="email">
+            </div>
+            <div>
+              <label class="reg-label" for="parentPhone">Phone<span class="req">*</span></label>
+              <input class="reg-input" type="tel" id="parentPhone" name="parentPhone" required autocomplete="tel">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Children -->
+        <div class="reg-section">
+          <div class="reg-section-head">
+            <div class="reg-step">2</div>
+            <div>
+              <div class="reg-section-title">Your children &amp; program</div>
+              <p class="reg-section-subtitle">Add each enrolled child and choose their program. This sets your tuition.</p>
+            </div>
+          </div>
+          <div class="reg-row">
+            <label class="reg-label" for="childCount">Number of children<span class="req">*</span></label>
+            <select class="reg-select" id="childCount" name="childCount" required style="max-width: 200px;">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+          <div id="children-container" style="margin-top: 4px;"></div>
+        </div>
+
+        <!-- 3. Payment plan -->
+        <div class="reg-section">
+          <div class="reg-section-head">
+            <div class="reg-step">3</div>
+            <div>
+              <div class="reg-section-title">Payment plan</div>
+              <p class="reg-section-subtitle">How would you like to be billed? Quarterly is the best value.</p>
+            </div>
+          </div>
+          <div class="plan-grid">
+            <label class="plan-card" data-plan="quarterly">
+              <input type="radio" name="cadence" value="quarterly" required>
+              <span class="plan-name">Quarterly</span>
+              <span class="plan-desc">Four payments a year</span>
+              <span class="plan-badge">★ Best deal</span>
+            </label>
+            <label class="plan-card" data-plan="annual">
+              <input type="radio" name="cadence" value="annual">
+              <span class="plan-name">Annual</span>
+              <span class="plan-desc">One payment, done</span>
+            </label>
+            <label class="plan-card" data-plan="monthly">
+              <input type="radio" name="cadence" value="monthly">
+              <span class="plan-name">Monthly</span>
+              <span class="plan-desc">Twelve payments</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 4. Tax credit decision -->
+        <div class="reg-section">
+          <div class="reg-section-head">
+            <div class="reg-step">4</div>
+            <div>
+              <div class="reg-section-title">Your tax credit</div>
+              <p class="reg-section-subtitle">Would you like to apply your credit toward tuition, or keep it and pay the regular price?</p>
+            </div>
+          </div>
+          <div class="reg-choices">
+            <label class="reg-check">
+              <input type="radio" name="decision" value="apply" required>
+              <span>Apply my credit toward tuition<small>We&rsquo;ll invoice your credit, then you pay only the reduced balance.</small></span>
+            </label>
+            <label class="reg-check">
+              <input type="radio" name="decision" value="keep">
+              <span>Keep my credit &mdash; I&rsquo;ll pay regular tuition<small>You hold onto the funds and pay the normal schedule.</small></span>
+            </label>
+          </div>
+
+          <div id="credit-block" class="conditional" style="margin-top: 16px;">
+            <label class="reg-label" for="creditAmount">How much of your credit would you like to apply?<span class="req">*</span></label>
+            <span class="reg-help" style="margin-bottom: 8px;">Most families apply the full $5,000 per child. Special-needs credits are $7,500. You can apply part if you prefer.</span>
+            <div style="position: relative; max-width: 240px;">
+              <span style="position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:16px; opacity:0.6;">$</span>
+              <input class="reg-input" type="number" id="creditAmount" name="creditAmount" min="0" step="50" style="padding-left: 26px;" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Live summary -->
+        <div class="reg-section">
+          <div class="reg-section-head">
+            <div class="reg-step">5</div>
+            <div>
+              <div class="reg-section-title">Your tuition, calculated</div>
+              <p class="reg-section-subtitle">This updates automatically as you make your choices above.</p>
+            </div>
+          </div>
+          <div class="calc" id="calc">
+            <div class="calc-title">Your 2026&ndash;27 tuition</div>
+            <div id="calc-body">
+              <p class="calc-empty">Choose your children&rsquo;s programs, a payment plan, and your credit option above to see your exact payment here.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Anything else -->
+        <div class="reg-section">
+          <div class="reg-section-head">
+            <div class="reg-step">6</div>
+            <div>
+              <div class="reg-section-title">Anything else?</div>
+              <p class="reg-section-subtitle">Optional &mdash; tell us anything that helps, or flag a special situation.</p>
+            </div>
+          </div>
+          <div class="reg-row">
+            <label class="reg-check">
+              <input type="checkbox" id="specialSituation" name="specialSituation">
+              <span>I have a special situation I&rsquo;d like to discuss</span>
+            </label>
+          </div>
+          <div id="special-block" class="conditional" style="margin-top: 12px;">
+            <label class="reg-label" for="specialDetails">Please tell us about it<span class="req">*</span></label>
+            <textarea class="reg-textarea" id="specialDetails" name="specialDetails" rows="3" placeholder="Briefly describe your situation"></textarea>
+            <span class="reg-help" style="margin-top: 6px;">We&rsquo;re a small team without admin staff, so the fastest way to sort this out is to email us directly at <a href="mailto:learn@rivertech.me" style="color: var(--color-red);">learn@rivertech.me</a>. Please reach out and we&rsquo;ll take it from there.</span>
+          </div>
+          <div class="reg-row" style="margin-top: 14px;">
+            <label class="reg-label" for="notes">Notes (optional)</label>
+            <textarea class="reg-textarea" id="notes" name="notes" rows="3" placeholder="Anything you&rsquo;d like us to know"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" id="reg-submit" class="reg-submit">Submit my choice →</button>
+        <p id="reg-progress" class="reg-progress"></p>
+        <p style="text-align:center; font-size:13px; color:var(--color-text); opacity:0.6; margin-top:12px;">No payment is taken here &mdash; we&rsquo;ll email your invoice based on the choice above.</p>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <a href="../index.html" class="footer-logo">rivertechschool.com</a>
+    <div class="footer-tagline">Life is a Stage. <span class="love">Love</span> is our Script.</div>
+  </div>
+
+  <div class="footer-columns">
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>
+      <span>Tel: 425-444-2081</span>
+      <span>The Heart</span>
+      <span>927 E Polston Ave</span>
+      <span>Post Falls, ID 83854</span>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="why-river-tech.html">Why River Tech?</a>
+      <a href="enrollment.html" class="active">Enrollment</a>
+      <a href="school-resources.html">School Resources</a>
+      <a href="a-la-carte.html">À La Carte</a>
+    </div>
+    <div class="footer-col">
+      <h4>Social</h4>
+      <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/rivertechschool/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 by Faithful Five Inc. (d.b.a. River Tech and Post Falls Art). <em>Life is a Stage. <span class="love">Love</span> is our Script.</em></p>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js?v=4" defer></script>
+<script src="../assets/js/register-tax-credit-2026-27.js?v=1" defer></script>
+
+<button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+(function(){
+  var btn=document.querySelector('.scroll-to-top');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible',window.scrollY>400);
+  });
+})();
+</script>
+</body>
+</html>
