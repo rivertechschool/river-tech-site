@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>River Tech Enrollment Hub — 2026–27</title>
+  <style>
+    :root{
+      color-scheme: light;
+      --bg:#f7f5f2; --panel:#fff; --ink:#272443; --ink-soft:#6b6883;
+      --line:rgba(39,36,67,0.12);
+      --rt-red:#d63232; --rt-red-soft:#fbe6e3;
+      --ft-blue:#2257a0; --ft-blue-soft:#e6efff;
+      --hs-green:#2f7d3a; --hs-green-soft:#e0f3e3;
+      --re-blue:#4a78c2; --re-blue-soft:#e3ecf6;
+      --amber:#b07b00; --amber-soft:#fff4d6;
+      --neutral:#8a8aa0;
+      --shadow:0 1px 3px rgba(0,0,0,0.05),0 4px 12px rgba(0,0,0,0.04);
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI",system-ui,sans-serif;font-size:14px;line-height:1.4;}
+    a{color:var(--rt-red);}
+
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line);}
+    .topbar h1{margin:0;font-size:18px;font-weight:700;}
+    .topbar .meta{font-size:12px;color:var(--ink-soft);display:flex;align-items:center;gap:12px;}
+    .refresh-btn{background:var(--rt-red);color:#fff;border:none;border-radius:4px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;}
+    .refresh-btn:hover{background:#b82828;} .refresh-btn:disabled{opacity:.5;cursor:wait;}
+
+    /* main view tabs */
+    .main-tabs{display:flex;gap:2px;padding:0 14px;background:var(--ink);overflow-x:auto;}
+    .main-tab{background:transparent;border:none;border-bottom:3px solid transparent;padding:12px 16px;font-size:13px;font-weight:600;color:rgba(255,255,255,.7);cursor:pointer;white-space:nowrap;}
+    .main-tab:hover{color:#fff;background:rgba(255,255,255,.06);}
+    .main-tab.active{color:#fff;border-bottom-color:var(--rt-red);}
+
+    .view{display:none;} .view.active{display:block;}
+
+    /* summary bar */
+    .summary-bar{background:var(--panel);padding:10px 18px;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink-soft);display:flex;gap:18px;flex-wrap:wrap;}
+    .summary-bar strong{color:var(--ink);font-weight:700;}
+
+    /* filter chips */
+    .filter-row{display:flex;gap:8px;padding:10px 18px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center;}
+    .filter-label{font-size:11px;color:var(--ink-soft);margin-right:4px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+    .chip{font-size:12px;padding:4px 10px;border-radius:14px;background:rgba(0,0,0,.06);color:var(--ink);border:1px solid transparent;cursor:pointer;font-weight:600;}
+    .chip:hover{background:rgba(0,0,0,.1);} .chip.active{background:var(--ink);color:#fff;}
+    .legend{display:inline-flex;gap:12px;margin-left:16px;align-items:center;font-size:12px;color:var(--ink-soft);}
+    .legend .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle;}
+    .ctrl-num{width:60px;padding:4px 6px;border:1px solid var(--line);border-radius:4px;font-size:13px;}
+
+    /* ===== Families pipeline ===== */
+    .subtabs{display:flex;gap:2px;padding:10px 14px 0;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap;}
+    .subtab{background:transparent;border:1px solid transparent;border-bottom:2px solid transparent;padding:8px 14px;font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;border-radius:4px 4px 0 0;}
+    .subtab:hover{background:rgba(0,0,0,.04);color:var(--ink);} .subtab.active{color:var(--ink);border-bottom-color:var(--rt-red);}
+    .subtab[data-source="homeschool"].active{border-bottom-color:var(--hs-green);}
+    .subtab[data-source="re-enrollment"].active{border-bottom-color:var(--re-blue);}
+    .subtab[data-source="declined"].active{border-bottom-color:var(--neutral);}
+    .subtab .count{display:inline-block;margin-left:4px;font-size:11px;padding:1px 7px;border-radius:10px;background:rgba(0,0,0,.08);color:var(--ink-soft);font-weight:700;}
+    .pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;}
+    .pipeline.declined-view{grid-template-columns:1fr;max-width:700px;margin:0 auto;}
+    .col{background:var(--panel);border:1px solid var(--line);border-radius:6px;min-height:200px;display:flex;flex-direction:column;}
+    .col-head{padding:10px 12px;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center;}
+    .col-head .col-count{font-size:11px;color:var(--ink);background:rgba(0,0,0,.06);padding:1px 7px;border-radius:10px;}
+    .col-body{padding:8px;display:flex;flex-direction:column;gap:8px;flex:1;}
+    .col-empty{color:var(--ink-soft);font-style:italic;padding:14px 8px;font-size:12px;text-align:center;}
+    .tile{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--rt-red);border-radius:4px;padding:10px 12px;cursor:pointer;}
+    .tile:hover{box-shadow:var(--shadow);border-color:var(--rt-red);}
+    .tile.src-homeschool{border-left-color:var(--hs-green);background:var(--hs-green-soft);}
+    .tile.src-re-enrollment{border-left-color:var(--re-blue);background:var(--re-blue-soft);}
+    .tile.src-declined{border-left-color:var(--neutral);background:rgba(0,0,0,.04);opacity:.85;}
+    .tile-new-badge,.tile-paid-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.05em;padding:1px 6px;border-radius:8px;color:#fff;vertical-align:middle;margin-left:6px;}
+    .tile-new-badge{background:var(--rt-red);} .tile-paid-badge{background:#2f7d3a;}
+    .tile-fam{font-weight:700;font-size:14px;color:var(--ink);margin-bottom:2px;}
+    .tile-email{font-size:11px;color:var(--ink-soft);margin-bottom:6px;word-break:break-all;}
+    .tile-kid{font-size:12px;color:var(--ink);padding:2px 0;display:flex;align-items:center;gap:7px;}
+    .tile-kid .kid-name{font-weight:600;} .tile-kid .kid-meta{color:var(--ink-soft);font-size:11px;}
+    .tile-kid .kid-text{flex:1;min-width:0;}
+    .tile-foot{margin-top:6px;font-size:11px;color:var(--ink-soft);display:flex;justify-content:space-between;}
+    .avatar{position:relative;flex:none;border-radius:50%;background:rgba(0,0,0,.08);overflow:hidden;display:inline-flex;align-items:center;justify-content:center;color:var(--ink-soft);font-weight:700;}
+    .avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+    .avatar.s-sm{width:28px;height:28px;font-size:11px;} .avatar.s-lg{width:84px;height:84px;font-size:28px;}
+    .child-card-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:6px;}
+    .child-card-head .child-card-text{flex:1;min-width:0;}
+
+    /* modal */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:30px 20px;overflow-y:auto;}
+    .overlay.open{display:flex;}
+    .modal{background:var(--panel);border-radius:8px;max-width:720px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+    .modal-head{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+    .modal-head h2{margin:0;font-size:18px;}
+    .modal-head .close{background:transparent;border:1px solid var(--line);border-radius:4px;width:28px;height:28px;cursor:pointer;font-size:16px;line-height:1;color:var(--ink-soft);}
+    .modal-body{padding:18px 20px;} .modal-body section{margin-bottom:18px;}
+    .modal-body h3{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:700;}
+    .modal-body .kv{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;font-size:13px;}
+    .modal-body .kv dt{color:var(--ink-soft);} .modal-body .kv dd{margin:0;word-break:break-word;}
+    .modal-body .child-card{background:var(--bg);border-radius:4px;padding:10px 12px;margin-bottom:8px;}
+    .modal-body .child-card-title{font-weight:700;font-size:14px;margin-bottom:4px;}
+    .stage-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:var(--rt-red-soft);color:var(--rt-red);font-weight:700;}
+    .stage-Decided{background:#fff4d6;color:#b07b00;} .stage-Confirmed{background:#d8eed1;color:#2f7d3a;}
+    .stage-Committed{background:#d2e6f8;color:#1e5da6;} .stage-Declined{background:#e5e5e5;color:#555;}
+    .action-bar{display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--line);background:var(--bg);border-radius:0 0 8px 8px;flex-wrap:wrap;}
+    .action-btn{font-size:13px;font-weight:600;padding:8px 14px;border-radius:4px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);}
+    .action-btn.primary{background:var(--rt-red);border-color:var(--rt-red);color:#fff;}
+    .action-btn.danger{color:#a73838;border-color:#e6c0c0;} .action-btn:disabled{opacity:.4;cursor:wait;}
+
+    /* ===== By Day grid ===== */
+    .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px;}
+    @media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr);} .pipeline{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:700px){.grid{grid-template-columns:1fr;} .pipeline{grid-template-columns:1fr;}}
+    .day-col{display:flex;flex-direction:column;gap:6px;}
+    .day-head{font-size:14px;font-weight:800;text-align:center;padding:6px 8px;background:var(--ink);color:#fff;border-radius:4px;}
+    .block{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 10px;box-shadow:var(--shadow);}
+    .block-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:4px;margin-bottom:6px;}
+    .block-time{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+    .block-count{font-size:11px;color:var(--ink-soft);font-weight:700;}
+    .block-note{font-size:10px;color:var(--ink-soft);font-style:italic;}
+    .block.all-day .block-head{background:linear-gradient(90deg,var(--ft-blue-soft),transparent);padding:6px 6px 4px;margin:-8px -10px 6px;border-radius:4px 4px 0 0;border-bottom:1px solid var(--line);}
+    .kid{display:flex;justify-content:space-between;align-items:baseline;padding:3px 6px;margin-bottom:2px;border-radius:3px;font-size:12px;}
+    .kid.ft{background:var(--ft-blue-soft);color:var(--ft-blue);} .kid.hs{background:var(--hs-green-soft);color:var(--hs-green);}
+    .kid .kid-name{font-weight:600;} .kid .kid-gender{font-size:11px;opacity:.7;margin-left:4px;}
+    .kid .stage-pill{font-size:9px;padding:1px 4px;border-radius:6px;background:rgba(0,0,0,.08);margin-left:4px;}
+    .kid.stage-inbox .stage-pill{background:#fff4d6;color:#b07b00;} .kid.stage-paid .stage-pill{background:var(--hs-green-soft);color:var(--hs-green);}
+    .kid .flag-dot{color:var(--rt-red);font-weight:800;margin-left:4px;}
+    .empty{font-size:11px;font-style:italic;color:var(--ink-soft);text-align:center;padding:6px 0;}
+    .subgroup{margin-top:4px;}
+    .subgroup-head{font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:4px 6px;border-radius:3px;margin:4px 0;display:flex;justify-content:space-between;align-items:baseline;}
+    .subgroup-head.ft{background:var(--ft-blue);color:#fff;} .subgroup-head.hs{background:var(--hs-green);color:#fff;}
+    .subgroup-count{font-weight:600;opacity:.85;}
+
+    /* ===== tables (program / grades / contacts / sheets / flags) ===== */
+    .pad{padding:14px 18px;}
+    table.tbl{border-collapse:collapse;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden;font-size:13px;}
+    table.tbl th,table.tbl td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);}
+    table.tbl th{background:var(--ink);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+    table.tbl tr:last-child td{border-bottom:none;}
+    table.tbl td.num,table.tbl th.num{text-align:right;font-variant-numeric:tabular-nums;}
+    table.tbl tr.total-row td{font-weight:800;background:var(--bg);border-top:2px solid var(--ink);}
+    .bar{display:inline-block;height:10px;background:var(--ft-blue);border-radius:2px;vertical-align:middle;}
+    .bar.hs{background:var(--hs-green);}
+    .pill-ft{color:var(--ft-blue);font-weight:700;} .pill-hs{color:var(--hs-green);font-weight:700;}
+    .twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media(max-width:800px){.twocol{grid-template-columns:1fr;}}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px;box-shadow:var(--shadow);}
+    .card h2{margin:0 0 10px;font-size:14px;}
+    .note{font-size:12px;color:var(--ink-soft);margin:6px 0 0;}
+
+    /* flags */
+    .flag-card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--rt-red);border-radius:6px;padding:10px 14px;margin-bottom:10px;}
+    .flag-card.med{border-left-color:var(--amber);}
+    .flag-card .fc-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;}
+    .flag-card .fc-name{font-weight:700;font-size:15px;}
+    .flag-card .fc-meta{font-size:12px;color:var(--ink-soft);}
+    .tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.04em;padding:1px 7px;border-radius:8px;margin-left:6px;text-transform:uppercase;}
+    .tag.ldb{background:var(--rt-red-soft);color:var(--rt-red);}
+    .tag.med{background:var(--amber-soft);color:var(--amber);}
+    .tag.sus{background:#eee;color:#777;}
+    .tag.ft{background:var(--ft-blue-soft);color:var(--ft-blue);} .tag.hs{background:var(--hs-green-soft);color:var(--hs-green);}
+    .flag-card .fc-text{font-size:12px;color:var(--ink);margin-top:6px;}
+    .flag-card .fc-text b{color:var(--ink-soft);}
+    .flag-daybar{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--ink-soft);}
+    .flag-daybar .fb{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 12px;}
+    .flag-daybar .fb strong{color:var(--rt-red);font-size:15px;}
+
+    .loader{padding:40px;text-align:center;color:var(--ink-soft);}
+    .loader .spinner{display:inline-block;width:20px;height:20px;border:3px solid var(--line);border-top-color:var(--rt-red);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:10px;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .error-banner{background:#fae9e9;border-left:3px solid #a73838;color:#a73838;padding:10px 14px;margin:14px;font-size:13px;}
+    .toast{position:fixed;bottom:20px;right:20px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:4px;font-size:13px;z-index:200;opacity:0;transition:opacity .2s;pointer-events:none;}
+    .toast.show{opacity:1;} .toast.error{background:#a73838;}
+    .btn{font-size:12px;font-weight:600;padding:6px 12px;border-radius:4px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);}
+    .btn:hover{background:var(--rt-red-soft);border-color:var(--rt-red);color:var(--rt-red);}
+
+    @media print{
+      .no-print{display:none!important;}
+      .view{display:none!important;} #view-sheets.active{display:block!important;}
+      body{background:#fff;} .sheet-day{page-break-after:always;}
+      table.tbl th{background:#333!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar no-print">
+    <h1>River Tech Enrollment Hub <span style="font-weight:400;color:var(--ink-soft);font-size:14px;">— 2026–27</span></h1>
+    <div class="meta"><span id="meta-line">Loading…</span>
+      <button class="refresh-btn" id="refresh-btn" onclick="loadData()">Refresh</button></div>
+  </div>
+
+  <div class="main-tabs no-print" id="main-tabs"></div>
+  <div id="global-summary" class="summary-bar no-print"></div>
+
+  <div id="view-families" class="view">
+    <div class="subtabs" id="fam-subtabs"></div>
+    <div class="pipeline" id="pipeline"><div class="loader"><span class="spinner"></span>Loading…</div></div>
+  </div>
+  <div id="view-byday" class="view">
+    <div class="filter-row no-print">
+      <span class="filter-label">Age group</span>
+      <button class="chip active" data-age="all">All</button>
+      <button class="chip" data-age="younger">9 &amp; under</button>
+      <button class="chip" data-age="older">10 &amp; up</button>
+      <span class="legend"><span><span class="sw" style="background:var(--ft-blue);"></span> Full-time</span>
+      <span><span class="sw" style="background:var(--hs-green);"></span> Homeschool</span>
+      <span><span class="flag-dot" style="color:var(--rt-red);font-weight:800;">●</span> support flag</span></span>
+    </div>
+    <div id="byday-root"></div>
+  </div>
+  <div id="view-program" class="view"><div id="program-root" class="pad"></div></div>
+  <div id="view-grades" class="view"><div id="grades-root" class="pad"></div></div>
+  <div id="view-sheets" class="view"><div id="sheets-controls" class="filter-row no-print"></div><div id="sheets-root" class="pad"></div></div>
+  <div id="view-contacts" class="view"><div id="contacts-controls" class="filter-row no-print"></div><div id="contacts-root" class="pad"></div></div>
+  <div id="view-flags" class="view"><div id="flags-controls" class="filter-row no-print"></div><div id="flags-root" class="pad"></div></div>
+
+  <div class="overlay no-print" id="overlay" onclick="if(event.target.id==='overlay')closeModal()"><div class="modal" id="modal"></div></div>
+  <div class="toast" id="toast"></div>
+<script>
+  // ===== Config =========================================================
+  const PIPELINE_TOKEN = "8ff4851af82ed79c4a3b75ff454b12172c67fac5fbdfffb9";
+  const BACKENDS = {
+    "full-time":     "https://script.google.com/macros/s/AKfycbwggeLDK4kzV0HOXXhfqW7aX2ow5zUZwuOpET8RmXuZCOhmiWSGP-OSPrrH9ouqkZxC/exec",
+    "homeschool":    "https://script.google.com/macros/s/AKfycbxbZ8U_EhvQTJLrXLLo1EsS45grDHTtCRnOJbU_Di_o16Rc4bJSSV0Kf3yTOQk9dbEUDQ/exec",
+    "re-enrollment": "https://script.google.com/macros/s/AKfycbz7duCV6kqLV8brjz0ujhgsoqY7LOMW7501hjUg_oX42xykAZ-6NSY8I_kBzx93fcO1/exec"
+  };
+  const SCHEDULE_LABELS = {
+    "performing-arts":"Performing Arts Major — Mon–Thu (4 days)",
+    "technology":"Technology Major — Tue–Fri (4 days)",
+    "double-major":"Double Major — Mon–Fri (5 days)"
+  };
+  const MAJOR_SHORT = {"performing-arts":"Perf Arts","technology":"Technology","double-major":"Double"};
+  const MAJOR_DAYS = {"performing-arts":["Mon","Tue","Wed","Thu"],"technology":["Tue","Wed","Thu","Fri"],"double-major":["Mon","Tue","Wed","Thu","Fri"]};
+  const DAYS_ORDER = ["Mon","Tue","Wed","Thu","Fri"];
+  const DAY_LABEL = {"Mon":"Monday","Tue":"Tuesday","Wed":"Wednesday","Thu":"Thursday","Fri":"Friday"};
+  const STAGES = ["Inbox","Decided","Confirmed","Committed"];
+  const SEP1 = new Date("2026-09-01T00:00:00");
+
+  // learning/developmental/behavioral + medical keyword sets for Support Flags
+  const RE_LDB = /(autis|autistic|asperger|spectrum|\basd\b|adhd|\badd\b(?!ress|ition|ed)|dyslex|dysgraph|dyscalc|dysprax|apraxia|\biep\b|\b504\b|learning (disab|differ|challeng)|special (need|ed)|auditory processing|processing (delay|disorder)|sensory|nonverbal|non-verbal|developmental delay|pda profile|oppositional|\bodd\b|tourette|selective mut|speech (delay|therap)|occupational therap)/i;
+  const RE_MED = /(epilep|seizure|diabet|insulin|asthma|inhaler|epi-?pen|anaphyla|allergic to|severe allerg|gluten|peanut|tree nut|bee sting|wasp|hornet|migraine|\bg-tube\b|wheelchair|type one|type 1)/i;
+  const RE_SUS = /(think|wonder|may be|maybe|possibly|not officially|never (been )?tested|suspect|slight|a bit of|i don.t think)/i;
+  const RE_NEG = /\bno\b|none|n\/a|\bnot\b/i;
+
+  // ===== State ==========================================================
+  let DATA = {}, ALL = {"full-time":[],"homeschool":[],"re-enrollment":[]}, KIDS = [];
+  let currentView = "families";
+  let famSource = "full-time";
+  let ageFilter = "all";
+  let ratio = 8;
+  let sheetDay = "all";
+  let contactProg = "all", contactPay = "all";
+  let flagCat = "all", flagProg = "all";
+  let openModalRegId = null;
+  const LAST_VISIT_KEY = "rts.hubLastVisit";
+  let lastVisitWatermark = (()=>{try{return localStorage.getItem(LAST_VISIT_KEY)||"";}catch{return "";}})();
+
+  const VIEWS = [
+    {id:"families",label:"Families"},
+    {id:"byday",label:"By Day"},
+    {id:"program",label:"Day × Program + Staffing"},
+    {id:"grades",label:"Grades & Ages"},
+    {id:"sheets",label:"Day Sheets (print)"},
+    {id:"contacts",label:"Contacts & Payments"},
+    {id:"flags",label:"Support Flags"}
+  ];
+
+  // ===== Boot ===========================================================
+  function init(){
+    const mt = document.getElementById("main-tabs");
+    mt.innerHTML = "";
+    for(const v of VIEWS){
+      const b=document.createElement("button");
+      b.className="main-tab"+(v.id===currentView?" active":"");
+      b.textContent=v.label; b.dataset.view=v.id;
+      b.onclick=()=>showView(v.id);
+      mt.appendChild(b);
+    }
+    document.querySelectorAll('.chip[data-age]').forEach(b=>{
+      b.onclick=()=>{ageFilter=b.dataset.age;document.querySelectorAll('.chip[data-age]').forEach(x=>x.classList.toggle("active",x.dataset.age===ageFilter));renderByDay();};
+    });
+    document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+    let lastAuto=Date.now();
+    document.addEventListener("visibilitychange",()=>{
+      if(document.visibilityState!=="visible")return;
+      if(Date.now()-lastAuto<60000)return; lastAuto=Date.now(); loadData();
+    });
+    loadData();
+  }
+
+  function showView(id){
+    currentView=id;
+    document.querySelectorAll(".main-tab").forEach(t=>t.classList.toggle("active",t.dataset.view===id));
+    document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+    document.getElementById("view-"+id).classList.add("active");
+    renderCurrent();
+  }
+  function renderCurrent(){
+    ({families:renderFamilies,byday:renderByDay,program:renderProgram,grades:renderGrades,
+      sheets:renderSheets,contacts:renderContacts,flags:renderFlags}[currentView]||(()=>{}))();
+  }
+
+  // ===== Data fetching ==================================================
+  async function loadData(){
+    const rb=document.getElementById("refresh-btn"); rb.disabled=true;
+    const meta=document.getElementById("meta-line"); meta.textContent="Refreshing…";
+    try{
+      const results=await Promise.all(Object.entries(BACKENDS).map(async([source,url])=>{
+        const res=await fetch(`${url}?action=list&token=${encodeURIComponent(PIPELINE_TOKEN)}`);
+        if(!res.ok)throw new Error(`${source}: HTTP ${res.status}`);
+        const j=await res.json();
+        if(!j.ok)throw new Error(`${source}: ${j.error||"unknown error"}`);
+        return [source,j];
+      }));
+      DATA={};
+      for(const [source,j] of results) DATA[source]={headers:j.headers,rows:j.rows};
+      ALL=parseAll(); KIDS=buildRoster();
+      const total=Object.values(ALL).reduce((s,a)=>s+a.length,0);
+      const now=new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+      meta.textContent=`${total} families · ${KIDS.length} students · refreshed ${now}`;
+      renderGlobalSummary(); renderCurrent();
+      const w=new Date().toISOString(); try{localStorage.setItem(LAST_VISIT_KEY,w);}catch{} lastVisitWatermark=w;
+      if(openModalRegId){const f=Object.values(ALL).flat().find(x=>x.regId===openModalRegId); if(f)openModal(f);}
+    }catch(err){
+      meta.textContent="Error";
+      document.getElementById("pipeline").innerHTML=`<div class="error-banner">Failed to load: ${escapeHtml(err.message)}</div>`;
+      console.error(err);
+    }finally{ rb.disabled=false; }
+  }
+
+  async function postAction(source,action,params){
+    const url=BACKENDS[source];
+    const body=new URLSearchParams({token:PIPELINE_TOKEN,...params});
+    const res=await fetch(`${url}?action=${encodeURIComponent(action)}`,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body.toString()});
+    if(!res.ok)throw new Error(`HTTP ${res.status}`);
+    const j=await res.json(); if(!j.ok)throw new Error(j.error||"unknown error"); return j;
+  }
+  async function advanceFamily(family,toStage){
+    const btn=event&&event.target; if(btn)btn.disabled=true;
+    try{ await postAction(family.source,"advance",{regId:family.regId,toStage}); toast(`${family.parent1.lastName}: → ${toStage}`); await loadData(); }
+    catch(err){ toast(`Failed: ${err.message}`,true); if(btn)btn.disabled=false; }
+  }
+  async function declineFamily(family){
+    if(!confirm(`Decline ${family.parent1.lastName}? They’ll move to the Declined tab.`))return;
+    const btn=event&&event.target; if(btn)btn.disabled=true;
+    try{ await postAction(family.source,"advance",{regId:family.regId,toStage:"Declined"}); toast(`${family.parent1.lastName}: declined`); closeModal(); await loadData(); }
+    catch(err){ toast(`Failed: ${err.message}`,true); if(btn)btn.disabled=false; }
+  }
+  function toast(msg,isErr){const t=document.getElementById("toast");t.textContent=msg;t.className="toast show"+(isErr?" error":"");setTimeout(()=>{t.className="toast";},2400);}
+
+  // ===== Parsing ========================================================
+  function ageFromDob(dob){ if(!dob)return ""; const d=new Date(dob); if(isNaN(d))return ""; const t=new Date(); let a=t.getFullYear()-d.getFullYear(); const m=t.getMonth()-d.getMonth(); if(m<0||(m===0&&t.getDate()<d.getDate()))a--; return a; }
+  function ageOn(dob,ref){ if(!dob)return null; const b=new Date(dob); if(isNaN(b))return null; let a=ref.getFullYear()-b.getFullYear(); if(ref.getMonth()<b.getMonth()||(ref.getMonth()===b.getMonth()&&ref.getDate()<b.getDate()))a--; return a; }
+  function getCol(row,headers,name){const i=headers.indexOf(name);return i>=0?row[i]:"";}
+  function normalizeMajor(s){ if(!s)return null; const t=String(s).toLowerCase(); if(t.includes("double"))return "double-major"; if(t.includes("perform"))return "performing-arts"; if(t.includes("tech"))return "technology"; return null; }
+  function gradeInfo(g){ const raw=(g==null)?"":String(g).trim(); if(!raw)return {key:"none",label:"(no grade)",order:1000};
+    if(/^\d{4}-\d{2}-\d{2}T/.test(raw))return {key:"unreadable",label:"(unreadable — check sheet)",order:1001};
+    const lo=raw.toLowerCase();
+    if(lo==="k"||lo==="kindergarten")return {key:"K",label:"K",order:0};
+    if(/^\d+$/.test(raw))return {key:raw,label:"Grade "+raw,order:parseInt(raw)};
+    if(lo.includes("element"))return {key:"elementary",label:"Elementary",order:900};
+    if(lo.includes("middle"))return {key:"middle",label:"Middle",order:901};
+    if(lo.includes("high"))return {key:"high",label:"High school",order:902};
+    return {key:lo,label:raw,order:950}; }
+  function parseHomeschoolDays(s){ if(!s)return []; const l=String(s).toLowerCase(); const d=[]; if(/\bmonday\b/.test(l))d.push("Mon"); if(/\btuesday\b/.test(l))d.push("Tue"); if(/\bthursday\b/.test(l))d.push("Thu"); if(/\bfriday\b/.test(l))d.push("Fri"); return d; }
+  function genderEmoji(g){const s=String(g||"").toLowerCase();return s.startsWith("m")?"♂":s.startsWith("f")?"♀":"";}
+  function displayName(name,preferred){ if(preferred&&preferred.trim()){const p=preferred.trim();const m=p.match(/^([A-Za-z]+(?:[\-' ]?[A-Za-z]+)*)/);return m?m[1]:p;} if(!name)return "(unnamed)"; return String(name).split(/\s+/)[0]; }
+
+  function parseFamily(source,headers,row){
+    const get=n=>getCol(row,headers,n);
+    const children=[];
+    for(let i=1;i<=6;i++){
+      const name=get(`Child ${i} Name`); if(!name)continue;
+      const dob=get(`Child ${i} DOB`);
+      const c={name,preferredName:get(`Child ${i} Preferred Name`),dob,age:ageFromDob(dob),ageSep1:ageOn(dob,SEP1),
+        gender:get(`Child ${i} Gender`),grade:get(`Child ${i} Grade`),
+        livesWith:get(`Child ${i} Lives With`),livesWithNotes:get(`Child ${i} Lives With Notes`),
+        health:get(`Child ${i} Health`),notes:get(`Child ${i} Notes`)||get(`Child ${i} Notes for New Year`),
+        attitude:get(`Child ${i} Attitude`),hopes:get(`Child ${i} Hopes`)};
+      if(source==="homeschool"){ c.programs=get(`Child ${i} Programs`); c.reading=get(`Child ${i} Reading`); c.photoUrl=get(`Child ${i} Photo URL`); }
+      else { c.schedule=get(`Child ${i} Schedule`); c.scheduleLabel=SCHEDULE_LABELS[c.schedule]||c.schedule; c.photoUrl=get(`Child ${i} Photo URL`); c.reportCardUrl=get(`Child ${i} Report Card URL`); }
+      children.push(c);
+    }
+    const rawStage=get("Pipeline Stage")||"Inbox";
+    const stage=rawStage==="Paid"?"Inbox":rawStage; const paid=rawStage==="Paid";
+    return {source,regId:String(get("Registration ID")||""),submittedAt:get("Submitted (UTC)"),stage,paid,
+      decidedDate:get("Decided Date"),confirmedDate:get("Confirmed Date"),committedDate:get("Committed Date"),declinedDate:get("Declined Date"),
+      parent1:{firstName:get("Parent 1 First"),lastName:get("Parent 1 Last"),email:get("Parent 1 Email"),phone:get("Parent 1 Phone"),address:get("Parent 1 Address")},
+      parent2:{firstName:get("Parent 2 First"),lastName:get("Parent 2 Last"),email:get("Parent 2 Email"),phone:get("Parent 2 Phone")},
+      emergency:{name:get("Emergency Name"),relationship:get("Emergency Relationship"),phone:get("Emergency Phone"),altPhone:get("Emergency Alt Phone")},
+      pickup:[1,2,3].map(n=>({name:get(`Pickup ${n} Name`),relationship:get(`Pickup ${n} Relationship`),phone:get(`Pickup ${n} Phone`)})),
+      maxDays:source==="homeschool"?get("Max Days"):null, childrenCount:parseInt(get("Children Count"))||children.length, children};
+  }
+  function parseAll(){
+    const out={"full-time":[],"homeschool":[],"re-enrollment":[]};
+    for(const src of Object.keys(out)){ const b=DATA[src]; if(!b||!b.rows)continue; for(const row of b.rows){ if(!row[0])continue; out[src].push(parseFamily(src,b.headers,row)); } }
+    return out;
+  }
+
+  function detectFlags(child){
+    const fields=[["Health",child.health],["Notes",child.notes],["Attitude",child.attitude]];
+    const snippets=fields.filter(([l,t])=>t&&String(t).trim()).map(([l,t])=>({label:l,text:String(t).trim()}));
+    const blob=snippets.map(s=>s.text).join("  ");
+    const ldb=RE_LDB.test(blob);
+    let med=false;
+    if(RE_MED.test(blob)){
+      // reduce "no allergies / none" noise: require a medical hit not immediately negated
+      const m=blob.match(RE_MED); const around=blob.slice(Math.max(0,m.index-6),m.index);
+      med=!/\bno\s$|\bno-?\s?$/i.test(around);
+    }
+    const suspected=ldb&&RE_SUS.test(blob);
+    return {ldb,med,suspected,snippets};
+  }
+
+  function buildRoster(){
+    const out=[];
+    for(const src of Object.keys(ALL)){
+      for(const fam of ALL[src]){
+        if(fam.stage==="Declined")continue;
+        for(const c of fam.children){
+          let type,days=[],major=null;
+          if(src==="homeschool"){ type="hs"; days=parseHomeschoolDays(c.programs); }
+          else { type="ft"; major=normalizeMajor(c.schedule); days=MAJOR_DAYS[major]||[]; }
+          out.push({source:src,type,name:String(c.name).trim(),preferred:c.preferredName,display:displayName(c.name,c.preferredName),
+            dob:c.dob,age:c.ageSep1,gender:c.gender,grade:c.grade,major,days,stage:fam.paid?"Inbox-Paid":fam.stage,paid:fam.paid,
+            flags:detectFlags(c),family:fam,child:c});
+        }
+      }
+    }
+    out.sort((a,b)=>{const ag=(a.age==null?999:a.age)-(b.age==null?999:b.age);return ag||a.display.localeCompare(b.display);});
+    return out;
+  }
+
+  function escapeHtml(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);}
+  function gradeLabel(g){ const gi=gradeInfo(g); const short={none:"",unreadable:"gr ?",elementary:"elem",middle:"mid",high:"HS",K:"K"}; if(gi.key in short)return short[gi.key]; return /^\d+$/.test(gi.key)?("gr "+gi.key):gi.label; }
+
+  // ===== Global summary =================================================
+  function renderGlobalSummary(){
+    const live=KIDS.length;
+    const ft=KIDS.filter(k=>k.type==="ft").length, hs=KIDS.filter(k=>k.type==="hs").length;
+    const paid=Object.values(ALL).flat().filter(f=>f.paid&&f.stage!=="Declined").length;
+    const fams=Object.values(ALL).flat().filter(f=>f.stage!=="Declined").length;
+    const flagged=KIDS.filter(k=>k.flags.ldb||k.flags.med).length;
+    document.getElementById("global-summary").innerHTML=
+      `<span><strong>${fams}</strong> active families</span>`+
+      `<span><strong>${live}</strong> students</span>`+
+      `<span><strong class="pill-ft">${ft}</strong> full-time · <strong class="pill-hs">${hs}</strong> homeschool</span>`+
+      `<span><strong>${paid}</strong> paid families</span>`+
+      `<span><strong style="color:var(--rt-red)">${flagged}</strong> with support flags</span>`;
+  }
+  // ===== Families =======================================================
+  function renderFamilies(){ renderSubtabs(); renderPipeline(); }
+  function renderSubtabs(){
+    const sources=[{id:"full-time",label:"Full-Time"},{id:"homeschool",label:"Homeschool"},{id:"re-enrollment",label:"Re-Enrollment"},{id:"declined",label:"Declined"}];
+    const el=document.getElementById("fam-subtabs"); el.innerHTML="";
+    for(const s of sources){
+      let count = s.id==="declined"
+        ? ["full-time","homeschool","re-enrollment"].reduce((a,k)=>a+ALL[k].filter(f=>f.stage==="Declined").length,0)
+        : ALL[s.id].filter(f=>f.stage!=="Declined").length;
+      const b=document.createElement("button");
+      b.className="subtab"+(s.id===famSource?" active":""); b.dataset.source=s.id;
+      b.innerHTML=`${s.label} <span class="count">${count}</span>`;
+      b.onclick=()=>{famSource=s.id;renderSubtabs();renderPipeline();};
+      el.appendChild(b);
+    }
+  }
+  function scheduleLine(family){
+    if(family.source==="homeschool"){ const m=family.maxDays; return m?`Up to ${m} day${m>1?"s":""}/week`:""; }
+    if(family.children.length&&family.children[0].scheduleLabel){ const k=family.children; return k.every(x=>x.schedule===k[0].schedule)?(SCHEDULE_LABELS[k[0].schedule]||k[0].schedule):"Mixed schedules"; }
+    return "";
+  }
+  function driveThumbnail(url,sz){ if(!url)return ""; const m=/\/file\/d\/([^\/?]+)/.exec(url); return m?`https://drive.google.com/thumbnail?id=${encodeURIComponent(m[1])}&sz=w${sz||200}`:""; }
+  function avatarHtml(c,size){ const initial=(c.preferredName||c.name||"?").trim().charAt(0).toUpperCase(); const thumb=driveThumbnail(c.photoUrl,size==="lg"?200:80); const img=thumb?`<img loading="lazy" referrerpolicy="no-referrer" src="${escapeHtml(thumb)}" alt="" onerror="this.remove()">`:""; return `<span class="avatar s-${size}">${escapeHtml(initial)}${img}</span>`; }
+  function isNewSinceLastVisit(f){ if(!lastVisitWatermark||!f.submittedAt)return false; if(/^[A-Z]+-COG-/.test(f.regId||""))return false; const t=new Date(f.submittedAt),w=new Date(lastVisitWatermark); return !isNaN(t)&&!isNaN(w)&&t>w; }
+  function renderTile(family){
+    const fam=family.parent1.lastName||"(no last name)";
+    const p1=(family.parent1.firstName+" "+family.parent1.lastName).trim();
+    const kids=family.children.map(c=>{const nm=c.preferredName||(c.name?c.name.split(" ")[0]:"");const age=(c.age!==""&&c.age!=null)?`, ${c.age}`:"";const fl=detectFlags(c);const dot=(fl.ldb||fl.med)?` <span class="flag-dot" title="support flag">●</span>`:"";return `<div class="tile-kid">${avatarHtml(c,"sm")}<span class="kid-text"><span class="kid-name">${escapeHtml(nm)}${age}</span> <span class="kid-meta">${escapeHtml(gradeLabel(c.grade))}</span>${dot}</span></div>`;}).join("");
+    const sched=scheduleLine(family);
+    const t=document.createElement("div"); t.className="tile src-"+family.source;
+    t.innerHTML=`<div class="tile-fam">${escapeHtml(fam)} — ${escapeHtml(p1)}${isNewSinceLastVisit(family)?'<span class="tile-new-badge">NEW</span>':""}${family.paid?'<span class="tile-paid-badge">$ PAID</span>':""}</div>
+      <div class="tile-email">${escapeHtml(family.parent1.email)}</div>${kids}
+      ${sched?`<div class="tile-kid kid-meta" style="margin-top:4px;font-style:italic;">${escapeHtml(sched)}</div>`:""}
+      <div class="tile-foot"><span>${escapeHtml((family.regId||"").replace(/^[A-Z]+-/,""))}</span></div>`;
+    t.onclick=()=>openModal(family); return t;
+  }
+  function sortNewestFirst(a){return a.slice().sort((x,y)=>(y.submittedAt?Date.parse(y.submittedAt):0)-(x.submittedAt?Date.parse(x.submittedAt):0));}
+  function renderPipeline(){
+    const root=document.getElementById("pipeline"); root.innerHTML="";
+    if(famSource==="declined"){
+      root.classList.add("declined-view");
+      const dec=sortNewestFirst(["full-time","homeschool","re-enrollment"].flatMap(k=>ALL[k].filter(f=>f.stage==="Declined")));
+      const col=document.createElement("div"); col.className="col";
+      col.innerHTML=`<div class="col-head"><span>Declined</span><span class="col-count">${dec.length}</span></div>`;
+      const body=document.createElement("div"); body.className="col-body";
+      if(!dec.length)body.innerHTML='<div class="col-empty">No families have been declined.</div>'; else dec.forEach(f=>body.appendChild(renderTile(f)));
+      col.appendChild(body); root.appendChild(col); return;
+    }
+    root.classList.remove("declined-view");
+    const fams=ALL[famSource].filter(f=>f.stage!=="Declined");
+    for(const stage of STAGES){
+      const col=document.createElement("div"); col.className="col";
+      const inStage=sortNewestFirst(fams.filter(f=>f.stage===stage));
+      col.innerHTML=`<div class="col-head"><span>${stage}</span><span class="col-count">${inStage.length}</span></div>`;
+      const body=document.createElement("div"); body.className="col-body";
+      if(!inStage.length)body.innerHTML='<div class="col-empty">—</div>'; else inStage.forEach(f=>body.appendChild(renderTile(f)));
+      col.appendChild(body); root.appendChild(col);
+    }
+  }
+  // modal
+  function openModal(f){ openModalRegId=f.regId; document.getElementById("modal").innerHTML=renderModal(f); document.getElementById("overlay").classList.add("open"); window.__currentFamily=f; }
+  function closeModal(){ openModalRegId=null; document.getElementById("overlay").classList.remove("open"); }
+  function nextStage(s){return {"Inbox":"Decided","Decided":"Confirmed","Confirmed":"Committed"}[s]||null;}
+  function advanceLabel(s){return {"Inbox":"Mark as Decided (acceptance email sent)","Decided":"Mark as Confirmed (first package sent)","Confirmed":"Mark as Committed (Q1 paid, larger package sent)"}[s]||null;}
+  function renderChild(c,n,source){
+    const ageStr=(c.age!==""&&c.age!=null)?`${c.age} yo`:""; const sub=[ageStr,gradeLabel(c.grade)].filter(Boolean).join(" · ");
+    let sched = source==="homeschool" ? (c.programs?`Programs: ${c.programs}`:"") : (c.scheduleLabel||"");
+    const fl=detectFlags(c);
+    const flagLine=(fl.ldb||fl.med)?`<div style="font-size:12px;margin-top:4px;color:var(--rt-red);"><strong>Support flag:</strong> ${fl.ldb?'<span class="tag ldb">learning/dev</span>':""}${fl.med?'<span class="tag med">medical</span>':""}${fl.suspected?'<span class="tag sus">suspected</span>':""}</div>`:"";
+    return `<div class="child-card"><div class="child-card-head">${avatarHtml(c,"lg")}<div class="child-card-text">
+      <div class="child-card-title">${escapeHtml(c.preferredName||c.name)} ${c.preferredName&&c.name&&c.name!==c.preferredName?`<span style="font-weight:400;color:var(--ink-soft);font-size:12px;">(${escapeHtml(c.name)})</span>`:""}</div>
+      <div style="font-size:12px;color:var(--ink-soft);margin-bottom:6px;">${escapeHtml(sub)}</div>
+      ${sched?`<div style="font-size:13px;margin-bottom:4px;">${escapeHtml(sched)}</div>`:""}${flagLine}</div></div>
+      ${c.health?`<div style="font-size:12px;color:var(--ink-soft);margin-top:4px;"><strong>Health:</strong> ${escapeHtml(c.health)}</div>`:""}
+      ${c.notes?`<div style="font-size:12px;color:var(--ink-soft);margin-top:4px;"><strong>Notes:</strong> ${escapeHtml(c.notes)}</div>`:""}
+      ${c.attitude?`<div style="font-size:12px;color:var(--ink-soft);margin-top:4px;"><strong>Attitude:</strong> ${escapeHtml(c.attitude)}</div>`:""}</div>`;
+  }
+  function renderModal(f){
+    const fam=(f.parent1.firstName+" "+f.parent1.lastName).trim();
+    const childrenHtml=f.children.map((c,i)=>renderChild(c,i+1,f.source)).join("");
+    const sl=f.source==="full-time"?"Full-Time":f.source==="homeschool"?"Homeschool":"Re-Enrollment";
+    const ns=nextStage(f.stage), advLbl=advanceLabel(f.stage);
+    let actionBar;
+    if(f.stage==="Declined") actionBar=`<div class="action-bar"><button class="action-btn" onclick='advanceFamily(window.__currentFamily,"Inbox")'>Restore to Inbox</button><button class="action-btn" onclick="closeModal()">Close</button></div>`;
+    else if(f.stage==="Committed") actionBar=`<div class="action-bar"><span style="color:var(--ink-soft);align-self:center;">At the end of the pipeline.</span><button class="action-btn" onclick="closeModal()" style="margin-left:auto;">Close</button></div>`;
+    else actionBar=`<div class="action-bar"><button class="action-btn primary" onclick='advanceFamily(window.__currentFamily,"${ns}")'>${escapeHtml(advLbl)}</button>${f.stage==="Inbox"?`<button class="action-btn danger" onclick="declineFamily(window.__currentFamily)">Decline</button>`:""}<button class="action-btn" onclick="closeModal()" style="margin-left:auto;">Close</button></div>`;
+    return `<div class="modal-head"><h2>${escapeHtml(f.parent1.lastName)} family <span style="font-weight:400;font-size:14px;color:var(--ink-soft);">— ${escapeHtml(sl)}</span></h2><button class="close" onclick="closeModal()">×</button></div>
+      <div class="modal-body">
+      <section><div class="kv"><dt>Stage:</dt><dd><span class="stage-badge stage-${escapeHtml(f.stage)}">${escapeHtml(f.stage)}</span>${f.paid?' <span class="tile-paid-badge">$ PAID</span>':""}</dd><dt>Reg ID:</dt><dd><code style="font-size:11px;">${escapeHtml(f.regId)}</code></dd></div></section>
+      <section><h3>Parent 1</h3><div class="kv"><dt>Name:</dt><dd>${escapeHtml(fam)}</dd><dt>Email:</dt><dd><a href="mailto:${escapeHtml(f.parent1.email)}">${escapeHtml(f.parent1.email)}</a></dd><dt>Phone:</dt><dd>${escapeHtml(f.parent1.phone)}</dd>${f.parent1.address?`<dt>Address:</dt><dd>${escapeHtml(f.parent1.address)}</dd>`:""}</div></section>
+      ${f.parent2.firstName?`<section><h3>Parent 2</h3><div class="kv"><dt>Name:</dt><dd>${escapeHtml((f.parent2.firstName+" "+f.parent2.lastName).trim())}</dd><dt>Email:</dt><dd>${f.parent2.email?`<a href="mailto:${escapeHtml(f.parent2.email)}">${escapeHtml(f.parent2.email)}</a>`:""}</dd><dt>Phone:</dt><dd>${escapeHtml(f.parent2.phone)}</dd></div></section>`:""}
+      <section><h3>Children (${f.children.length})</h3>${childrenHtml}</section>
+      ${f.emergency.name?`<section><h3>Emergency Contact</h3><div class="kv"><dt>Name:</dt><dd>${escapeHtml(f.emergency.name)} ${f.emergency.relationship?`(${escapeHtml(f.emergency.relationship)})`:""}</dd><dt>Phone:</dt><dd>${escapeHtml(f.emergency.phone)} ${f.emergency.altPhone?`/ alt: ${escapeHtml(f.emergency.altPhone)}`:""}</dd></div></section>`:""}
+      ${f.pickup.some(p=>p.name)?`<section><h3>Authorized pickup</h3><div class="kv">${f.pickup.filter(p=>p.name).map(p=>`<dt>${escapeHtml(p.name)}</dt><dd>${escapeHtml(p.relationship)} · ${escapeHtml(p.phone)}</dd>`).join("")}</div></section>`:""}
+      </div>${actionBar}`;
+  }
+
+  // ===== By Day =========================================================
+  function ageMatch(k){ if(ageFilter==="all"||k.age==null)return true; if(ageFilter==="younger")return k.age<=9; if(ageFilter==="older")return k.age>=10; return true; }
+  function kidPill(k){
+    const sc=k.stage==="Inbox-Paid"?"stage-paid":(/inbox/i.test(k.stage)?"stage-inbox":"");
+    const pt=k.stage==="Inbox-Paid"?"$":(/inbox/i.test(k.stage)?"?":"");
+    const pill=pt?`<span class="stage-pill" title="${escapeHtml(k.stage)}">${pt}</span>`:"";
+    const flag=(k.flags.ldb||k.flags.med)?`<span class="flag-dot" title="support flag">●</span>`:"";
+    return `<div class="kid ${k.type} ${sc}"><span><span class="kid-name">${escapeHtml(k.display)}</span><span class="kid-gender">${genderEmoji(k.gender)}</span>${pill}${flag}</span><span class="kid-meta">${k.age==null?"?":k.age}</span></div>`;
+  }
+  function dayBlock(day,period){
+    const today=KIDS.filter(k=>k.days.includes(day)&&ageMatch(k));
+    const ft=today.filter(k=>k.type==="ft"), hs=today.filter(k=>k.type==="hs");
+    const time=period==="morning"?"8:30 – 10:30":period==="all-day"?"All day":"10:30 onward";
+    const note=period==="morning"?"Full-timers only":period==="all-day"?"Full-timers only (no a-la-carte)":"Full-time + a-la-carte side by side";
+    let body="";
+    if(period==="morning"||period==="all-day"){ body=ft.length?ft.map(kidPill).join(""):`<div class="empty">— no one —</div>`; }
+    else{
+      body+=`<div class="subgroup"><div class="subgroup-head ft"><span>Full-time</span><span class="subgroup-count">${ft.length}</span></div>`+(ft.length?ft.map(kidPill).join(""):`<div class="empty">— none —</div>`)+`</div>`;
+      body+=`<div class="subgroup"><div class="subgroup-head hs"><span>Homeschool</span><span class="subgroup-count">${hs.length}</span></div>`+(hs.length?hs.map(kidPill).join(""):`<div class="empty">— no a-la-carte today —</div>`)+`</div>`;
+    }
+    const total=(period==="morning"||period==="all-day")?ft.length:(ft.length+hs.length);
+    return `<div class="block${period==="all-day"?" all-day":""}"><div class="block-head"><span><span class="block-time">${time}</span><span class="block-note"> · ${escapeHtml(note)}</span></span><span class="block-count">${total}</span></div>${body}</div>`;
+  }
+  function renderByDay(){
+    const root=document.getElementById("byday-root"); root.innerHTML="";
+    const grid=document.createElement("div"); grid.className="grid";
+    for(const day of DAYS_ORDER){
+      const col=document.createElement("div"); col.className="day-col";
+      let inner=`<div class="day-head">${DAY_LABEL[day]}</div>`;
+      inner+= day==="Wed" ? dayBlock(day,"all-day") : dayBlock(day,"morning")+dayBlock(day,"afternoon");
+      col.innerHTML=inner; grid.appendChild(col);
+    }
+    root.appendChild(grid);
+  }
+
+  // ===== Day × Program + Staffing =======================================
+  function renderProgram(){
+    const root=document.getElementById("program-root");
+    let rows="";
+    const tot={pa:0,tech:0,dbl:0,hs:0};
+    for(const day of DAYS_ORDER){
+      const ft=KIDS.filter(k=>k.type==="ft"&&k.days.includes(day));
+      const pa=ft.filter(k=>k.major==="performing-arts").length;
+      const tech=ft.filter(k=>k.major==="technology").length;
+      const dbl=ft.filter(k=>k.major==="double-major").length;
+      const other=ft.filter(k=>!k.major).length;
+      const hs=KIDS.filter(k=>k.type==="hs"&&k.days.includes(day)).length;
+      const ftTot=pa+tech+dbl+other, all=ftTot+hs;
+      tot.pa+=pa;tot.tech+=tech;tot.dbl+=dbl;tot.hs+=hs;
+      const am=Math.ceil(ftTot/ratio)||0, pm=Math.ceil(all/ratio)||0;
+      const wed=day==="Wed";
+      rows+=`<tr><td><strong>${DAY_LABEL[day]}</strong></td><td class="num">${pa||"–"}</td><td class="num">${tech||"–"}</td><td class="num">${dbl||"–"}</td><td class="num">${ftTot}</td><td class="num">${wed?"—":hs||"–"}</td><td class="num"><strong>${wed?ftTot:all}</strong></td><td class="num">${am}</td><td class="num">${wed?"—":pm}</td></tr>`;
+    }
+    const grandFt=tot.pa+tot.tech+tot.dbl;
+    root.innerHTML=`
+      <div class="card" style="margin-bottom:14px;">
+        <label class="filter-label">Students per teacher:</label>
+        <input class="ctrl-num" id="ratio-input" type="number" min="1" max="40" value="${ratio}" oninput="ratio=Math.max(1,parseInt(this.value)||1);renderProgram();">
+        <span class="note" style="display:inline;margin-left:10px;">Staff columns = ⌈students ÷ ratio⌉. AM = full-timers only (8:30–10:30); PM = full-time + à-la-carte (10:30 on). Wednesday is full-time all-day, no à-la-carte.</span>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>Day</th><th class="num">Perf Arts</th><th class="num">Tech</th><th class="num">Double</th><th class="num">FT total</th><th class="num">Homeschool</th><th class="num">Day total</th><th class="num">Staff AM</th><th class="num">Staff PM</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <p class="note">Program day-rules: Performing Arts = Mon–Thu · Technology = Tue–Fri · Double = Mon–Fri · Homeschool à-la-carte = Mon/Tue/Thu/Fri (no Wed).</p>`;
+  }
+
+  // ===== Grades & Ages ==================================================
+  const GLABEL={}, GORDER={};
+  function distTable(title,keys,ftMap,hsMap,labelFn){
+    const max=Math.max(1,...keys.map(k=>(ftMap[k]||0)+(hsMap[k]||0)));
+    let rows="",tf=0,th=0;
+    for(const k of keys){ const f=ftMap[k]||0,h=hsMap[k]||0; tf+=f;th+=h; const w=Math.round(((f+h)/max)*120);
+      rows+=`<tr><td>${escapeHtml(labelFn(k))}</td><td class="num pill-ft">${f||""}</td><td class="num pill-hs">${h||""}</td><td class="num"><strong>${f+h}</strong></td><td><span class="bar" style="width:${Math.round((f/(f+h||1))*w)}px"></span><span class="bar hs" style="width:${w-Math.round((f/(f+h||1))*w)}px"></span></td></tr>`; }
+    rows+=`<tr class="total-row"><td>Total</td><td class="num">${tf}</td><td class="num">${th}</td><td class="num">${tf+th}</td><td></td></tr>`;
+    return `<div class="card"><h2>${title}</h2><table class="tbl"><thead><tr><th>${title.split(" ")[0]}</th><th class="num">FT</th><th class="num">HS</th><th class="num">All</th><th>Mix</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  function renderGrades(){
+    const root=document.getElementById("grades-root");
+    const ftG={},hsG={},ftA={},hsA={};
+    for(const k of KIDS){
+      const gi=gradeInfo(k.grade); const g=gi.key; GLABEL[g]=gi.label; GORDER[g]=gi.order;
+      (k.type==="ft"?ftG:hsG)[g]=((k.type==="ft"?ftG:hsG)[g]||0)+1;
+      const a=k.age==null?"(unknown)":String(k.age);
+      (k.type==="ft"?ftA:hsA)[a]=((k.type==="ft"?ftA:hsA)[a]||0)+1;
+    }
+    const gKeys=[...new Set([...Object.keys(ftG),...Object.keys(hsG)])].sort((a,b)=>(GORDER[a]||999)-(GORDER[b]||999));
+    const aKeys=[...new Set([...Object.keys(ftA),...Object.keys(hsA)])].sort((a,b)=>(parseInt(a)||999)-(parseInt(b)||999));
+    const younger=KIDS.filter(k=>k.age!=null&&k.age<=9), older=KIDS.filter(k=>k.age!=null&&k.age>=10);
+    root.innerHTML=`
+      <div class="summary-bar" style="border:1px solid var(--line);border-radius:6px;margin-bottom:14px;">
+        <span><strong>${younger.length}</strong> age 9 &amp; under (<span class="pill-ft">${younger.filter(k=>k.type==="ft").length} FT</span> · <span class="pill-hs">${younger.filter(k=>k.type==="hs").length} HS</span>)</span>
+        <span><strong>${older.length}</strong> age 10 &amp; up (<span class="pill-ft">${older.filter(k=>k.type==="ft").length} FT</span> · <span class="pill-hs">${older.filter(k=>k.type==="hs").length} HS</span>)</span>
+      </div>
+      <div class="twocol">${distTable("Grade distribution",gKeys,ftG,hsG,g=>GLABEL[g]||g)}
+      ${distTable("Age distribution (on Sept 1)",aKeys,ftA,hsA,a=>a==="(unknown)"?"(unknown)":a+" yrs")}</div>
+      <p class="note">Ages computed as of Sept 1, 2026. Blue = full-time, green = homeschool.</p>`;
+  }
+
+  // ===== Day Sheets (printable) =========================================
+  function renderSheets(){
+    const ctrl=document.getElementById("sheets-controls");
+    ctrl.innerHTML=`<span class="filter-label">Day</span>`+
+      ["all",...DAYS_ORDER].map(d=>`<button class="chip${sheetDay===d?" active":""}" onclick="sheetDay='${d}';renderSheets();">${d==="all"?"All days":DAY_LABEL[d]}</button>`).join("")+
+      `<button class="btn" style="margin-left:auto;" onclick="window.print()">🖨 Print</button>`;
+    const root=document.getElementById("sheets-root");
+    const days=sheetDay==="all"?DAYS_ORDER:[sheetDay];
+    let html="";
+    for(const day of days){
+      const today=KIDS.filter(k=>k.days.includes(day)).sort((a,b)=>(a.age==null?999:a.age)-(b.age==null?999:b.age)||a.display.localeCompare(b.display));
+      let rows=today.map(k=>{const f=k.family;const prog=k.type==="hs"?"Homeschool":(MAJOR_SHORT[k.major]||"Full-time");
+        const pickups=f.pickup.filter(p=>p.name).map(p=>escapeHtml(p.name)).join(", ");
+        const flag=(k.flags.ldb||k.flags.med)?`<span class="flag-dot">●</span>`:"";
+        return `<tr><td>${escapeHtml(k.display)}${flag} <span class="kid-meta">${escapeHtml(k.name)}</span></td><td>${escapeHtml(gradeLabel(k.grade))}</td><td class="num">${k.age==null?"?":k.age}</td><td>${escapeHtml(prog)}</td><td>${escapeHtml((f.parent1.firstName+" "+f.parent1.lastName).trim())}</td><td>${escapeHtml(f.parent1.phone)}</td><td>${escapeHtml(f.emergency.name)} ${f.emergency.phone?"· "+escapeHtml(f.emergency.phone):""}</td><td>${pickups}</td></tr>`;}).join("");
+      html+=`<div class="sheet-day" style="margin-bottom:22px;"><h2 style="border-bottom:2px solid var(--ink);padding-bottom:4px;">${DAY_LABEL[day]} — ${today.length} students</h2>
+        <table class="tbl"><thead><tr><th>Student</th><th>Grade</th><th class="num">Age</th><th>Program</th><th>Parent</th><th>Parent phone</th><th>Emergency</th><th>Pickups</th></tr></thead>
+        <tbody>${rows||'<tr><td colspan="8" class="col-empty">No students this day.</td></tr>'}</tbody></table>
+        <p class="note">● = has a support flag (see Support Flags tab).</p></div>`;
+    }
+    root.innerHTML=html;
+  }
+
+  // ===== Contacts & Payments ============================================
+  function contactRows(){
+    let fams=Object.values(ALL).flat().filter(f=>f.stage!=="Declined");
+    if(contactProg!=="all")fams=fams.filter(f=>f.source===contactProg);
+    if(contactPay==="paid")fams=fams.filter(f=>f.paid);
+    if(contactPay==="unpaid")fams=fams.filter(f=>!f.paid);
+    return fams.sort((a,b)=>(a.parent1.lastName||"").localeCompare(b.parent1.lastName||""));
+  }
+  function collectEmails(){ const s=new Set(); for(const f of contactRows()){ if(f.parent1.email)s.add(f.parent1.email.trim()); if(f.parent2.email)s.add(f.parent2.email.trim()); } return [...s]; }
+  function copyEmails(){ const e=collectEmails(); navigator.clipboard.writeText(e.join(", ")).then(()=>toast(`Copied ${e.length} emails`)).catch(()=>toast("Copy failed",true)); }
+  function downloadCsv(){
+    const rows=[["Last name","Parent 1","Email","Phone","Program","Stage","Paid"]];
+    for(const f of contactRows())rows.push([f.parent1.lastName,(f.parent1.firstName+" "+f.parent1.lastName).trim(),f.parent1.email,f.parent1.phone,f.source,f.stage,f.paid?"Yes":"No"]);
+    const csv=rows.map(r=>r.map(c=>`"${String(c==null?"":c).replace(/"/g,'""')}"`).join(",")).join("\n");
+    const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download="rts-contacts.csv"; a.click();
+    toast("CSV downloaded");
+  }
+  function renderContacts(){
+    const ctrl=document.getElementById("contacts-controls");
+    const progBtns=[["all","All"],["full-time","Full-Time"],["homeschool","Homeschool"],["re-enrollment","Re-Enroll"]].map(([v,l])=>`<button class="chip${contactProg===v?" active":""}" onclick="contactProg='${v}';renderContacts();">${l}</button>`).join("");
+    const payBtns=[["all","All"],["paid","Paid"],["unpaid","Unpaid"]].map(([v,l])=>`<button class="chip${contactPay===v?" active":""}" onclick="contactPay='${v}';renderContacts();">${l}</button>`).join("");
+    ctrl.innerHTML=`<span class="filter-label">Program</span>${progBtns}<span class="filter-label" style="margin-left:10px;">Payment</span>${payBtns}<button class="btn" style="margin-left:auto;" onclick="copyEmails()">📋 Copy emails</button><button class="btn" onclick="downloadCsv()">⬇ CSV</button>`;
+    const fams=contactRows();
+    const rows=fams.map(f=>{const followup=!f.paid&&f.stage!=="Inbox";
+      return `<tr${followup?' style="background:var(--amber-soft);"':""}><td><strong>${escapeHtml(f.parent1.lastName)}</strong></td><td>${escapeHtml((f.parent1.firstName+" "+f.parent1.lastName).trim())}</td><td><a href="mailto:${escapeHtml(f.parent1.email)}">${escapeHtml(f.parent1.email)}</a></td><td>${escapeHtml(f.parent1.phone)}</td><td>${escapeHtml({"full-time":"Full-Time","homeschool":"Homeschool","re-enrollment":"Re-Enroll"}[f.source])}</td><td><span class="stage-badge stage-${escapeHtml(f.stage)}">${escapeHtml(f.stage)}</span></td><td>${f.paid?'<span class="pill-hs">Yes</span>':'<span style="color:var(--rt-red)">No</span>'}</td></tr>`;}).join("");
+    document.getElementById("contacts-root").innerHTML=`<p class="note">${fams.length} families · ${collectEmails().length} unique emails. Amber rows = accepted but not yet paid (follow up).</p>
+      <table class="tbl"><thead><tr><th>Last</th><th>Parent 1</th><th>Email</th><th>Phone</th><th>Program</th><th>Stage</th><th>Paid</th></tr></thead><tbody>${rows||'<tr><td colspan="7" class="col-empty">No families.</td></tr>'}</tbody></table>`;
+  }
+
+  // ===== Support Flags ==================================================
+  function renderFlags(){
+    const ctrl=document.getElementById("flags-controls");
+    const catBtns=[["all","All flags"],["ldb","Learning / dev"],["med","Medical / safety"]].map(([v,l])=>`<button class="chip${flagCat===v?" active":""}" onclick="flagCat='${v}';renderFlags();">${l}</button>`).join("");
+    const progBtns=[["all","All"],["ft","Full-time"],["hs","Homeschool"]].map(([v,l])=>`<button class="chip${flagProg===v?" active":""}" onclick="flagProg='${v}';renderFlags();">${l}</button>`).join("");
+    ctrl.innerHTML=`<span class="filter-label">Type</span>${catBtns}<span class="filter-label" style="margin-left:10px;">Program</span>${progBtns}`;
+    let flagged=KIDS.filter(k=>k.flags.ldb||k.flags.med);
+    if(flagProg!=="all")flagged=flagged.filter(k=>k.type===flagProg);
+    if(flagCat==="ldb")flagged=flagged.filter(k=>k.flags.ldb);
+    if(flagCat==="med")flagged=flagged.filter(k=>k.flags.med);
+    // per-day counts (helps put the right aide on the right day)
+    const dayCounts=DAYS_ORDER.map(d=>({d,n:flagged.filter(k=>k.days.includes(d)).length}));
+    const daybar=`<div class="flag-daybar" style="margin-bottom:14px;">`+dayCounts.map(x=>`<span class="fb">${DAY_LABEL[x.d]}: <strong>${x.n}</strong></span>`).join("")+`</div>`;
+    const cards=flagged.map(k=>{
+      const cls="flag-card"+(k.flags.med&&!k.flags.ldb?" med":"");
+      const tags=`${k.flags.ldb?'<span class="tag ldb">learning/dev</span>':""}${k.flags.med?'<span class="tag med">medical</span>':""}${k.flags.suspected?'<span class="tag sus">suspected</span>':""}<span class="tag ${k.type}">${k.type==="ft"?"Full-time":"Homeschool"}</span>`;
+      const prog=k.type==="hs"?"Homeschool":(MAJOR_SHORT[k.major]||"Full-time");
+      const snip=k.flags.snippets.map(s=>`<div class="fc-text"><b>${escapeHtml(s.label)}:</b> ${escapeHtml(s.text)}</div>`).join("");
+      return `<div class="${cls}"><div class="fc-head"><span class="fc-name">${escapeHtml(k.display)} <span style="font-weight:400;color:var(--ink-soft);font-size:12px;">(${escapeHtml(k.name)})</span>${tags}</span><span class="fc-meta">${k.age==null?"?":k.age} yrs · ${escapeHtml(gradeLabel(k.grade))} · ${escapeHtml(prog)} · ${k.days.join("/")||"no days"}</span></div>${snip}</div>`;
+    }).join("");
+    document.getElementById("flags-root").innerHTML=
+      `<p class="note">Flags are scanned from the free-text <b>Health</b> and <b>Notes</b> fields — there is no dedicated special-needs field on the forms, so treat this as "what families disclosed," not a verified register. ${flagged.length} student${flagged.length===1?"":"s"} shown.</p>`+
+      daybar+(cards||'<div class="col-empty">No flags match this filter.</div>');
+  }
+
+  init();
+</script>
+</body>
+</html>
