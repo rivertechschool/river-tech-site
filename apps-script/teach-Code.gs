@@ -42,7 +42,8 @@ const SHEET_NAME = "Teaching Applications 2026-27";
 const SHEET_TAB_NAME = "Applicants";
 const FORM_PAGE_URL = "https://www.rivertechschool.com/pages/teach.html";
 
-const STAGES = ["New", "Interview", "Offer", "Hired", "Passed"];
+const BACKEND_VERSION = "2"; // bump with each redeploy; reported by default GET
+const STAGES = ["New", "Interview", "Offer", "Hired", "Bench", "Passed"];
 
 const CONNECTION_LABELS = {
   "parent":   "Parent of a current/incoming student",
@@ -80,7 +81,7 @@ function doGet(e) {
   const params = (e && e.parameter) || {};
   if (params.action === "setupSheet") return json_(setupSheet_());
   if (params.action === "list") return json_(adminList_(params));
-  return json_({ ok: true, message: "Teach at River Tech backend is alive." });
+  return json_({ ok: true, message: "Teach at River Tech backend is alive.", version: BACKEND_VERSION });
 }
 
 function json_(obj) {
