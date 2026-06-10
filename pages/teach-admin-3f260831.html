@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <title>Teaching Applications — Review</title>
+  <meta name="robots" content="noindex,nofollow">
+  <style>
+    :root {
+      --bg: #f6f4f0;
+      --text: #272443;
+      --red: #e21c21;
+      --darkred: #c0392b;
+      --pink: #f0dddd;
+      --white: #ffffff;
+      --green: #2e7d32;
+      --amber: #b26a00;
+      --blue: #1565c0;
+      --gray: #777;
+      --border: rgba(39, 36, 67, 0.14);
+      --font: "Avenir Next", "Avenir", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
+    a { color: var(--red); }
+
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 18px 80px; }
+
+    header.app-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+    header.app-head h1 { font-size: 24px; font-weight: 700; }
+    header.app-head .sub { font-size: 13px; opacity: 0.65; }
+    .head-actions { margin-left: auto; display: flex; gap: 8px; }
+
+    .btn {
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      padding: 7px 14px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--white); cursor: pointer; transition: all 0.15s;
+    }
+    .btn:hover { border-color: var(--red); color: var(--red); }
+    .btn.primary { background: var(--darkred); border-color: var(--darkred); color: #fff; }
+    .btn.primary:hover { opacity: 0.9; color: #fff; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; }
+    .stat {
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 14px; font-size: 13px;
+    }
+    .stat b { font-size: 17px; display: block; line-height: 1.2; }
+
+    .tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 18px; }
+    .tab {
+      font-family: var(--font); font-size: 14px; font-weight: 600; padding: 9px 18px;
+      background: none; border: none; cursor: pointer; color: var(--text); opacity: 0.6;
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+    }
+    .tab.active { opacity: 1; color: var(--red); border-bottom-color: var(--red); }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center; }
+    .controls select, .controls input[type="search"] {
+      font-family: var(--font); font-size: 13px; padding: 7px 10px;
+      border: 1px solid var(--border); border-radius: 6px; background: var(--white); color: var(--text);
+    }
+    .controls input[type="search"] { min-width: 200px; }
+
+    /* Candidate cards */
+    .card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+      margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(39,36,67,0.05);
+    }
+    .card-head { display: flex; align-items: center; gap: 14px; padding: 14px 18px; cursor: pointer; }
+    .card-head:hover { background: rgba(39,36,67,0.025); }
+    .score-badge {
+      flex: 0 0 auto; width: 54px; height: 54px; border-radius: 50%;
+      background: var(--darkred); color: #fff; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; font-weight: 700;
+    }
+    .score-badge .n { font-size: 19px; line-height: 1; }
+    .score-badge .l { font-size: 9px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card-id { flex: 1 1 auto; min-width: 0; }
+    .card-id .nm { font-size: 17px; font-weight: 700; }
+    .card-id .meta { font-size: 12.5px; opacity: 0.7; margin-top: 1px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .chip {
+      font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 999px;
+      background: var(--bg); border: 1px solid var(--border);
+    }
+    .chip.day { background: #eef3fa; border-color: #c9d8ee; color: #244d7e; }
+    .chip.pay { background: #fdf3e3; border-color: #ecd9b0; color: #8a5b00; }
+    .chip.deg { background: var(--pink); border-color: #e4c4c4; color: #8b3a3a; }
+    .chip.need { background: #fff2b8; border-color: #e8d35e; color: #6b5900; }
+    .stage-pill {
+      flex: 0 0 auto; font-size: 12px; font-weight: 700; padding: 5px 13px; border-radius: 999px; color: #fff;
+    }
+    .st-New { background: var(--gray); }
+    .st-Interview { background: var(--amber); }
+    .st-Offer { background: var(--blue); }
+    .st-Hired { background: var(--green); }
+    .st-Bench { background: #6a4fa3; }
+    .st-Passed { background: #b5b5b5; }
+
+    .card-body { display: none; border-top: 1px solid var(--border); padding: 16px 18px 18px; }
+    .card.open .card-body { display: block; }
+    .cols { display: grid; grid-template-columns: 1.2fr 1fr; gap: 22px; }
+    @media (max-width: 760px) { .cols { grid-template-columns: 1fr; } }
+    .sect { margin-bottom: 14px; }
+    .sect h4 {
+      font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--red); margin-bottom: 5px;
+    }
+    .sect p, .sect li { font-size: 13.5px; margin-bottom: 3px; }
+    .sect ul { list-style: none; }
+    .muted { opacity: 0.55; }
+
+    .breakdown { background: var(--bg); border-radius: 8px; padding: 12px 14px; }
+    .breakdown .row { display: flex; justify-content: space-between; font-size: 13px; padding: 2px 0; }
+    .breakdown .row.total { border-top: 1px solid var(--border); margin-top: 6px; padding-top: 6px; font-weight: 700; }
+
+    .stage-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+    .stage-btn {
+      font-family: var(--font); font-size: 12.5px; font-weight: 600; padding: 6px 13px;
+      border-radius: 999px; border: 1.5px solid var(--border); background: var(--white); cursor: pointer;
+    }
+    .stage-btn:hover { border-color: var(--text); }
+    .stage-btn.cur { color: #fff; border-color: transparent; }
+    .stage-btn.cur.st-New { background: var(--gray); }
+    .stage-btn.cur.st-Interview { background: var(--amber); }
+    .stage-btn.cur.st-Offer { background: var(--blue); }
+    .stage-btn.cur.st-Hired { background: var(--green); }
+    .stage-btn.cur.st-Bench { background: #6a4fa3; }
+    .stage-btn.cur.st-Passed { background: #b5b5b5; }
+
+    .adjust { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; margin-top: 10px; }
+    .adjust input[type="number"] {
+      width: 70px; font-family: var(--font); font-size: 13px; padding: 7px 8px;
+      border: 1px solid var(--border); border-radius: 6px;
+    }
+    .adjust textarea {
+      flex: 1 1 260px; font-family: var(--font); font-size: 13px; padding: 7px 10px;
+      border: 1px solid var(--border); border-radius: 6px; min-height: 38px; resize: vertical;
+    }
+
+    /* Coverage matrix */
+    .matrix-wrap { overflow-x: auto; background: var(--white); border: 1px solid var(--border); border-radius: 10px; }
+    table.matrix { border-collapse: collapse; width: 100%; min-width: 720px; }
+    .matrix th, .matrix td { border-bottom: 1px solid var(--border); padding: 7px 10px; text-align: left; vertical-align: top; font-size: 12.5px; }
+    .matrix th { background: var(--bg); font-size: 12px; position: sticky; top: 0; }
+    .matrix td.subj { font-weight: 600; white-space: nowrap; }
+    .matrix tr.cat td {
+      background: var(--pink); font-weight: 700; font-size: 11.5px; text-transform: uppercase;
+      letter-spacing: 0.8px; color: #8b3a3a;
+    }
+    .mchip {
+      display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 8px;
+      border-radius: 999px; color: #fff; margin: 1px 2px 1px 0; cursor: pointer;
+    }
+    .matrix tr.empty-row td.subj { opacity: 0.45; font-weight: 400; }
+    .day-count { font-weight: 400; opacity: 0.7; font-size: 11px; display: block; }
+
+    /* High-need picker */
+    .need-groups h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--red); margin: 16px 0 8px; }
+    .need-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .need-chip {
+      font-family: var(--font); font-size: 13px; font-weight: 600; padding: 6px 14px;
+      border-radius: 999px; border: 1.5px solid var(--border); background: var(--white); cursor: pointer;
+    }
+    .need-chip.on { background: #fff2b8; border-color: #d4b500; color: #6b5900; }
+
+    #status {
+      position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+      background: var(--text); color: #fff; font-size: 13px; padding: 9px 20px;
+      border-radius: 999px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 50;
+    }
+    #status.show { opacity: 1; }
+    .loading { text-align: center; padding: 60px 0; opacity: 0.6; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app-head">
+    <h1>Teaching Applications</h1>
+    <span class="sub">Part-time teacher pipeline &middot; 2026&ndash;27</span>
+    <div class="head-actions">
+      <button class="btn" id="btn-refresh">&#8635; Refresh</button>
+    </div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="candidates">Candidates</button>
+    <button class="tab" data-tab="coverage">Coverage Matrix</button>
+    <button class="tab" data-tab="need">High-Need Subjects</button>
+  </div>
+
+  <!-- Candidates -->
+  <div id="tab-candidates">
+    <div class="controls">
+      <select id="f-stage">
+        <option value="">All stages</option>
+        <option>New</option><option>Interview</option><option>Offer</option>
+        <option>Hired</option><option>Bench</option><option>Passed</option>
+      </select>
+      <select id="f-day">
+        <option value="">Any day</option>
+        <option value="Monday">Monday</option><option value="Tuesday">Tuesday</option>
+        <option value="Thursday">Thursday</option><option value="Friday">Friday</option>
+      </select>
+      <select id="f-sort">
+        <option value="score">Sort: Fit score</option>
+        <option value="new">Sort: Newest</option>
+        <option value="name">Sort: Name</option>
+      </select>
+      <input type="search" id="f-search" placeholder="Search name, subject, city&hellip;">
+    </div>
+    <div id="cards"><p class="loading">Loading applications&hellip;</p></div>
+  </div>
+
+  <!-- Coverage -->
+  <div id="tab-coverage" style="display:none;">
+    <p style="font-size:13px; opacity:0.7; margin-bottom:10px;">Who could teach what, on which day. Passed candidates are excluded. Click a name to jump to their card. <b>⭐ = high-need subject.</b></p>
+    <div class="matrix-wrap"><table class="matrix" id="matrix"></table></div>
+  </div>
+
+  <!-- High-need -->
+  <div id="tab-need" style="display:none;">
+    <p style="font-size:13px; opacity:0.7;">Mark the subjects the school most needs. High-need subjects earn candidates +10 bonus points and a ⭐ in the coverage matrix. Saved on this computer.</p>
+    <div class="need-groups" id="need-groups"></div>
+  </div>
+
+</div>
+<div id="status"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var API = "https://script.google.com/macros/s/AKfycbwSPOvg1al8rhWRcoPnOG76KOEFFUjlKi6b8Va9ImNDEDrzrG3EbShEOH5Cvg6YKF6F2A/exec";
+  var TOKEN = "200fad238a4b00a466b0b2ab5537b3e9";
+  var STAGES = ["New", "Interview", "Offer", "Hired", "Bench", "Passed"];
+  var DAYS = ["Monday", "Tuesday", "Thursday", "Friday"];
+
+  var SUBJECT_GROUPS = [
+    { title: "Science & Engineering", subjects: ["Physics","Chemistry","Biology","General Science","Scientific Literacy","Astronomy & Rocketry","Molecular Biology","Medicine & Anatomy","Engineering & Electronics"] },
+    { title: "Technology", subjects: ["Coding","AI & Machine Learning","Robotics","Drones","Digital Arts","Game Development","3D Design & Printing"] },
+    { title: "Arts & Media", subjects: ["Filmmaking","Photography","Animation","Music Production & Sound Engineering","Instruments (must be skilled)","Creative Writing","Crafts"] },
+    { title: "Humanities & Life", subjects: ["History","Geography","Personal Finance & Family Life","Leadership Mindset","Critical Thinking & Debate","Public Speaking","Entrepreneurship","Foreign Languages (must be fluent)"] },
+    { title: "Body & Movement", subjects: ["P.E.","Martial Arts (must be instructor)","Dance","Chess & Strategy Games"] }
+  ];
+
+  var rows = [];        // raw sheet objects
+  var people = [];      // parsed
+  var highNeed = loadNeed();
+
+  // ---------- utilities ----------
+  function $(s) { return document.querySelector(s); }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function toast(msg) {
+    var el = $("#status");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(el._t);
+    el._t = setTimeout(function () { el.classList.remove("show"); }, 2600);
+  }
+  function loadNeed() {
+    try { return JSON.parse(localStorage.getItem("teach-admin-highneed") || "[]"); }
+    catch (e) { return []; }
+  }
+  function saveNeed() {
+    localStorage.setItem("teach-admin-highneed", JSON.stringify(highNeed));
+  }
+
+  // ---------- parsing ----------
+  function parsePerson(r) {
+    var p = {};
+    p.raw = r;
+    p.id = r["Application ID"];
+    p.submitted = r["Submitted (UTC)"];
+    p.stage = r["Stage"] || "New";
+    p.first = r["First Name"]; p.last = r["Last Name"];
+    p.name = (p.first + " " + p.last).trim();
+    p.email = r["Email"]; p.phone = r["Phone"]; p.city = r["City"];
+    p.connection = r["Connection"] || "";
+    p.connectionDetail = r["Connection Detail"] || "";
+    p.degrees = [];
+    [["Doctorate", 40], ["Master's", 30], ["Bachelor's", 20], ["Associate's", 10]].forEach(function (d) {
+      if (String(r[d[0] + "?"]).trim() === "Yes") {
+        p.degrees.push({ level: d[0], pts: d[1], field: r[d[0] + " Field"], inst: r[d[0] + " Institution"], year: r[d[0] + " Year"] });
+      }
+    });
+    p.certs = [];
+    [1, 2, 3].forEach(function (i) {
+      if (r["Cert " + i + " Name"]) p.certs.push({ name: r["Cert " + i + " Name"], issuer: r["Cert " + i + " Issuer"], year: r["Cert " + i + " Year"] });
+    });
+    p.eduOther = r["Other Education"] || "";
+    p.exp = [];
+    [["Classroom", "Classroom teaching", 15], ["Co-op", "Homeschool / co-op", 10], ["Tutoring", "Tutoring / coaching", 5], ["Professional", "Professional mastery", 15]].forEach(function (x) {
+      if (String(r["Exp " + x[0] + "?"]).trim() === "Yes") {
+        p.exp.push({ key: x[0], label: x[1], pts: x[2], years: r["Exp " + x[0] + " Years"], desc: r["Exp " + x[0] + " Detail"] });
+      }
+    });
+    p.highlight = r["Experience Highlight"] || "";
+    p.subjects = String(r["Subjects"] || "").split(",").map(function (s) { return s.trim(); }).filter(String);
+    p.subjectsOther = r["Suggested Subjects"] || "";
+    p.strengths = r["Strengths"] || "";
+    p.days = DAYS.filter(function (d) { return String(r["Days"] || "").indexOf(d) >= 0; });
+    p.idealDays = r["Ideal Days/Week"];
+    p.compensation = r["Compensation"] || "";
+    p.references = r["References"] || "";
+    p.adjustment = Number(r["Dan Adjustment"]) || 0;
+    p.notes = r["Dan Notes"] || "";
+    return p;
+  }
+
+  function scarcestDay() {
+    var counts = {};
+    DAYS.forEach(function (d) { counts[d] = 0; });
+    people.forEach(function (p) {
+      if (p.stage === "Passed") return;
+      p.days.forEach(function (d) { counts[d]++; });
+    });
+    var min = Infinity, day = null;
+    DAYS.forEach(function (d) { if (counts[d] < min) { min = counts[d]; day = d; } });
+    return day;
+  }
+
+  function scoreOf(p, scarce) {
+    var b = [];
+    var edu = 0, eduLabel = "No degree listed";
+    if (p.degrees.length) { edu = p.degrees[0].pts; eduLabel = p.degrees[0].level; }
+    else if (p.certs.length) { edu = 5; eduLabel = "Certificate"; }
+    b.push(["Education — " + eduLabel, edu]);
+    p.exp.forEach(function (x) { b.push(["Experience — " + x.label, x.pts]); });
+    b.push(["Subjects ×" + p.subjects.length, p.subjects.length * 5]);
+    var needCount = p.subjects.filter(function (s) { return highNeed.indexOf(s) >= 0; }).length;
+    if (needCount) b.push(["High-need subjects ×" + needCount, needCount * 10]);
+    b.push(["Days available ×" + p.days.length, p.days.length * 5]);
+    if (scarce && p.days.indexOf(scarce) >= 0) b.push(["Covers scarcest day (" + scarce + ")", 5]);
+    if (/^Parent/.test(p.connection)) b.push(["Connection — parent", 10]);
+    else if (/^Relative|^Partner church/.test(p.connection)) b.push(["Connection — relative/church", 5]);
+    if (p.adjustment) b.push(["Dan's adjustment", p.adjustment]);
+    var total = b.reduce(function (s, x) { return s + x[1]; }, 0);
+    return { total: total, breakdown: b };
+  }
+
+  // ---------- data ----------
+  function refresh() {
+    toast("Loading…");
+    fetch(API + "?action=list&token=" + TOKEN)
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) throw new Error(d.error || "load failed");
+        rows = d.applicants || [];
+        people = rows.map(parsePerson);
+        renderAll();
+        toast(people.length + " application" + (people.length === 1 ? "" : "s") + " loaded");
+      })
+      .catch(function (e) {
+        console.error(e);
+        $("#cards").innerHTML = '<p class="loading">Could not load: ' + esc(e.message) + "</p>";
+        toast("Load failed");
+      });
+  }
+
+  function update(appId, fields, cb) {
+    var body = new URLSearchParams();
+    body.append("action", "update");
+    body.append("token", TOKEN);
+    body.append("appId", appId);
+    Object.keys(fields).forEach(function (k) { body.append(k, fields[k]); });
+    fetch(API, { method: "POST", body: body })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) throw new Error(d.error || "update failed");
+        cb && cb(null, d);
+      })
+      .catch(function (e) { console.error(e); cb && cb(e); });
+  }
+
+  // ---------- render: stats ----------
+  function renderStats() {
+    var by = {};
+    STAGES.forEach(function (s) { by[s] = 0; });
+    people.forEach(function (p) { by[p.stage] = (by[p.stage] || 0) + 1; });
+    var vol = people.filter(function (p) { return /Volunteer/.test(p.compensation); }).length;
+    var either = people.filter(function (p) { return /Either/.test(p.compensation); }).length;
+    var html = '<div class="stat"><b>' + people.length + "</b>Total</div>";
+    STAGES.forEach(function (s) {
+      if (by[s]) html += '<div class="stat"><b>' + by[s] + "</b>" + s + "</div>";
+    });
+    html += '<div class="stat"><b>' + vol + (either ? "+" + either : "") + "</b>Volunteer" + (either ? " (+either)" : "") + "</div>";
+    $("#stats").innerHTML = html;
+  }
+
+  // ---------- render: candidate cards ----------
+  function renderCards() {
+    var scarce = scarcestDay();
+    var fStage = $("#f-stage").value, fDay = $("#f-day").value, fSort = $("#f-sort").value;
+    var q = $("#f-search").value.trim().toLowerCase();
+
+    var list = people.slice();
+    if (fStage) list = list.filter(function (p) { return p.stage === fStage; });
+    if (fDay) list = list.filter(function (p) { return p.days.indexOf(fDay) >= 0; });
+    if (q) list = list.filter(function (p) {
+      return (p.name + " " + p.city + " " + p.subjects.join(" ") + " " + p.subjectsOther + " " + p.connectionDetail).toLowerCase().indexOf(q) >= 0;
+    });
+
+    list.forEach(function (p) { p._score = scoreOf(p, scarce); });
+    if (fSort === "score") list.sort(function (a, b) { return b._score.total - a._score.total; });
+    else if (fSort === "new") list.sort(function (a, b) { return String(b.submitted).localeCompare(String(a.submitted)); });
+    else list.sort(function (a, b) { return a.name.localeCompare(b.name); });
+
+    if (!list.length) { $("#cards").innerHTML = '<p class="loading">No applications match.</p>'; return; }
+
+    $("#cards").innerHTML = list.map(function (p) {
+      var s = p._score;
+      var degChip = p.degrees.length ? '<span class="chip deg">' + esc(p.degrees[0].level) + "</span>" :
+        (p.certs.length ? '<span class="chip deg">Certificate</span>' : "");
+      var needChips = p.subjects.filter(function (x) { return highNeed.indexOf(x) >= 0; })
+        .map(function (x) { return '<span class="chip need">⭐ ' + esc(x) + "</span>"; }).join("");
+      var payChip = /Volunteer/.test(p.compensation) ? "🤝 Volunteer" : (/Either/.test(p.compensation) ? "⚖️ Either" : "💰 Paid");
+
+      return '<div class="card" id="card-' + esc(p.id) + '" data-id="' + esc(p.id) + '">' +
+        '<div class="card-head" data-toggle="1">' +
+          '<div class="score-badge"><span class="n">' + s.total + '</span><span class="l">fit</span></div>' +
+          '<div class="card-id">' +
+            '<div class="nm">' + esc(p.name) + "</div>" +
+            '<div class="meta">' + esc(p.city) + " &middot; " + esc(p.connectionDetail || p.connection) + "</div>" +
+            '<div class="chips">' +
+              p.days.map(function (d) { return '<span class="chip day">' + d.slice(0, 3) + "</span>"; }).join("") +
+              '<span class="chip pay">' + payChip + "</span>" + degChip + needChips +
+            "</div>" +
+          "</div>" +
+          '<span class="stage-pill st-' + esc(p.stage) + '">' + esc(p.stage) + "</span>" +
+        "</div>" +
+        '<div class="card-body">' + cardBody(p, s) + "</div>" +
+      "</div>";
+    }).join("");
+
+    // events
+    Array.prototype.forEach.call(document.querySelectorAll(".card-head"), function (h) {
+      h.addEventListener("click", function () { h.parentNode.classList.toggle("open"); });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".stage-btn"), function (btn) {
+      btn.addEventListener("click", function () { setStage(btn.dataset.id, btn.dataset.stage, btn); });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".save-adjust"), function (btn) {
+      btn.addEventListener("click", function () { saveAdjust(btn.dataset.id); });
+    });
+  }
+
+  function cardBody(p, s) {
+    var eduLines = p.degrees.map(function (d) {
+      return "<li><b>" + esc(d.level) + "</b> — " + esc(d.field || "?") + ", " + esc(d.inst || "?") + (d.year ? " (" + esc(d.year) + ")" : "") + "</li>";
+    }).concat(p.certs.map(function (c) {
+      return "<li><b>Cert</b> — " + esc(c.name) + (c.issuer ? ", " + esc(c.issuer) : "") + (c.year ? " (" + esc(c.year) + ")" : "") + "</li>";
+    }));
+    if (p.eduOther) eduLines.push("<li><b>Other</b> — " + esc(p.eduOther) + "</li>");
+    if (!eduLines.length) eduLines.push('<li class="muted">None listed</li>');
+
+    var expLines = p.exp.map(function (x) {
+      return "<li><b>" + esc(x.label) + "</b>" + (x.years ? " — " + esc(x.years) + " yrs" : "") + (x.desc ? " — " + esc(x.desc) : "") + "</li>";
+    });
+    if (!expLines.length) expLines.push('<li class="muted">None listed</li>');
+
+    var subjHtml = p.subjects.map(function (x) {
+      var hot = highNeed.indexOf(x) >= 0;
+      return '<span class="chip' + (hot ? " need" : "") + '">' + (hot ? "⭐ " : "") + esc(x) + "</span>";
+    }).join(" ");
+    if (p.subjectsOther) subjHtml += ' <span class="chip">suggests: ' + esc(p.subjectsOther) + "</span>";
+
+    var bdRows = s.breakdown.map(function (r) {
+      return '<div class="row"><span>' + esc(r[0]) + "</span><span>" + (r[1] >= 0 ? "+" : "") + r[1] + "</span></div>";
+    }).join("");
+
+    var stageBtns = STAGES.map(function (st) {
+      return '<button class="stage-btn' + (p.stage === st ? " cur st-" + st : "") + '" data-id="' + esc(p.id) + '" data-stage="' + st + '">' + st + "</button>";
+    }).join("");
+
+    return '<div class="cols"><div>' +
+      '<div class="sect"><h4>Contact</h4><p><a href="mailto:' + esc(p.email) + '">' + esc(p.email) + "</a> &middot; <a href=\"tel:" + esc(p.phone) + '">' + esc(p.phone) + "</a></p>" +
+        "<p>" + esc(p.connection) + (p.connectionDetail ? " — " + esc(p.connectionDetail) : "") + "</p></div>" +
+      '<div class="sect"><h4>Education</h4><ul>' + eduLines.join("") + "</ul></div>" +
+      '<div class="sect"><h4>Experience</h4><ul>' + expLines.join("") + "</ul>" +
+        (p.highlight ? '<p style="margin-top:6px;"><b>Most interesting:</b> ' + esc(p.highlight) + "</p>" : "") + "</div>" +
+      '<div class="sect"><h4>Subjects</h4><div class="chips">' + subjHtml + "</div>" +
+        (p.strengths ? '<p style="margin-top:6px;"><b>Strongest:</b> ' + esc(p.strengths) + "</p>" : "") + "</div>" +
+      '<div class="sect"><h4>Availability</h4><p>' + (p.days.join(", ") || "—") + " &middot; wants " + esc(p.idealDays) + " day(s)/week</p></div>" +
+      '<div class="sect"><h4>Compensation</h4><p>' + esc(p.compensation) + "</p></div>" +
+      (p.references ? '<div class="sect"><h4>References</h4><p>' + esc(p.references) + "</p></div>" : "") +
+      '<div class="sect"><h4>Submitted</h4><p>' + esc(String(p.submitted).slice(0, 10)) + " &middot; " + esc(p.id) + "</p></div>" +
+    "</div><div>" +
+      '<div class="breakdown">' + bdRows + '<div class="row total"><span>Fit score</span><span>' + s.total + "</span></div></div>" +
+      '<div class="sect" style="margin-top:14px;"><h4>Stage</h4><div class="stage-row">' + stageBtns + "</div></div>" +
+      '<div class="sect"><h4>Dan&rsquo;s adjustment (±15) &amp; notes</h4>' +
+        '<div class="adjust">' +
+          '<input type="number" min="-15" max="15" step="1" id="adj-' + esc(p.id) + '" value="' + p.adjustment + '">' +
+          '<textarea id="note-' + esc(p.id) + '" placeholder="Why? (required if adjusting) — plus any notes">' + esc(p.notes) + "</textarea>" +
+          '<button class="btn primary save-adjust" data-id="' + esc(p.id) + '">Save</button>' +
+        "</div></div>" +
+    "</div></div>";
+  }
+
+  function setStage(appId, stage, btn) {
+    var p = people.filter(function (x) { return x.id === appId; })[0];
+    if (!p || p.stage === stage) return;
+    btn.disabled = true;
+    update(appId, { stage: stage }, function (err) {
+      btn.disabled = false;
+      if (err) { toast("Failed: " + err.message); return; }
+      p.stage = stage;
+      p.raw["Stage"] = stage;
+      toast(p.name + " → " + stage);
+      renderAll(appId);
+    });
+  }
+
+  function saveAdjust(appId) {
+    var p = people.filter(function (x) { return x.id === appId; })[0];
+    var adj = Math.max(-15, Math.min(15, Number($("#adj-" + CSS.escape(appId)).value) || 0));
+    var note = $("#note-" + CSS.escape(appId)).value.trim();
+    if (adj !== 0 && !note) { toast("A reason is required when adjusting the score."); return; }
+    update(appId, { danAdjustment: adj === 0 ? "" : adj, danNotes: note }, function (err) {
+      if (err) { toast("Failed: " + err.message); return; }
+      p.adjustment = adj; p.notes = note;
+      toast("Saved for " + p.name);
+      renderAll(appId);
+    });
+  }
+
+  // ---------- render: coverage matrix ----------
+  function renderMatrix() {
+    var active = people.filter(function (p) { return p.stage !== "Passed"; });
+    var head = "<tr><th>Subject</th>" + DAYS.map(function (d) {
+      var n = active.filter(function (p) { return p.days.indexOf(d) >= 0; }).length;
+      return "<th>" + d + '<span class="day-count">' + n + " available</span></th>";
+    }).join("") + "</tr>";
+
+    var bodyRows = "";
+    var extraSubjects = {};
+    active.forEach(function (p) {
+      if (p.subjectsOther) extraSubjects[p.subjectsOther] = true;
+    });
+
+    SUBJECT_GROUPS.forEach(function (g) {
+      bodyRows += '<tr class="cat"><td colspan="5">' + esc(g.title) + "</td></tr>";
+      g.subjects.forEach(function (subj) {
+        var teachers = active.filter(function (p) { return p.subjects.indexOf(subj) >= 0; });
+        var hot = highNeed.indexOf(subj) >= 0;
+        var cells = DAYS.map(function (d) {
+          var here = teachers.filter(function (p) { return p.days.indexOf(d) >= 0; });
+          return "<td>" + here.map(function (p) {
+            return '<span class="mchip st-' + esc(p.stage) + '" data-jump="' + esc(p.id) + '" title="' + esc(p.name) + " — " + esc(p.stage) + '">' + esc(p.last || p.first) + "</span>";
+          }).join("") + "</td>";
+        }).join("");
+        bodyRows += '<tr class="' + (teachers.length ? "" : "empty-row") + '"><td class="subj">' + (hot ? "⭐ " : "") + esc(subj) + "</td>" + cells + "</tr>";
+      });
+    });
+
+    var extras = Object.keys(extraSubjects);
+    if (extras.length) {
+      bodyRows += '<tr class="cat"><td colspan="5">Suggested by applicants</td></tr>';
+      extras.forEach(function (subj) {
+        var teachers = active.filter(function (p) { return p.subjectsOther === subj; });
+        var cells = DAYS.map(function (d) {
+          var here = teachers.filter(function (p) { return p.days.indexOf(d) >= 0; });
+          return "<td>" + here.map(function (p) {
+            return '<span class="mchip st-' + esc(p.stage) + '" data-jump="' + esc(p.id) + '">' + esc(p.last || p.first) + "</span>";
+          }).join("") + "</td>";
+        }).join("");
+        bodyRows += '<tr><td class="subj">' + esc(subj) + "</td>" + cells + "</tr>";
+      });
+    }
+
+    $("#matrix").innerHTML = head + bodyRows;
+    Array.prototype.forEach.call(document.querySelectorAll("[data-jump]"), function (chip) {
+      chip.addEventListener("click", function () {
+        switchTab("candidates");
+        var card = document.getElementById("card-" + chip.dataset.jump);
+        if (card) { card.classList.add("open"); card.scrollIntoView({ behavior: "smooth", block: "center" }); }
+      });
+    });
+  }
+
+  // ---------- render: high-need picker ----------
+  function renderNeed() {
+    $("#need-groups").innerHTML = SUBJECT_GROUPS.map(function (g) {
+      return "<h3>" + esc(g.title) + "</h3><div class=\"need-chips\">" + g.subjects.map(function (s) {
+        var on = highNeed.indexOf(s) >= 0;
+        return '<button class="need-chip' + (on ? " on" : "") + '" data-subj="' + esc(s) + '">' + (on ? "⭐ " : "") + esc(s) + "</button>";
+      }).join("") + "</div>";
+    }).join("");
+    Array.prototype.forEach.call(document.querySelectorAll(".need-chip"), function (chip) {
+      chip.addEventListener("click", function () {
+        var s = chip.dataset.subj;
+        var i = highNeed.indexOf(s);
+        if (i >= 0) highNeed.splice(i, 1); else highNeed.push(s);
+        saveNeed();
+        renderAll();
+      });
+    });
+  }
+
+  // ---------- shell ----------
+  function renderAll(keepOpenId) {
+    renderStats();
+    renderCards();
+    renderMatrix();
+    renderNeed();
+    if (keepOpenId) {
+      var card = document.getElementById("card-" + keepOpenId);
+      if (card) card.classList.add("open");
+    }
+  }
+
+  function switchTab(name) {
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (t) {
+      t.classList.toggle("active", t.dataset.tab === name);
+    });
+    ["candidates", "coverage", "need"].forEach(function (n) {
+      document.getElementById("tab-" + n).style.display = (n === name) ? "" : "none";
+    });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (t) {
+    t.addEventListener("click", function () { switchTab(t.dataset.tab); });
+  });
+  ["f-stage", "f-day", "f-sort"].forEach(function (id) {
+    document.getElementById(id).addEventListener("change", renderCards);
+  });
+  $("#f-search").addEventListener("input", renderCards);
+  $("#btn-refresh").addEventListener("click", refresh);
+
+  refresh();
+})();
+</script>
+</body>
+</html>
