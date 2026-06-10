@@ -9,7 +9,7 @@
 
   // ---- Configuration ----------------------------------------------------
   // Set this to the deployed Apps Script web-app URL before go-live.
-  const BACKEND_URL = "__BACKEND_URL__";
+  const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwSPOvg1al8rhWRcoPnOG76KOEFFUjlKi6b8Va9ImNDEDrzrG3EbShEOH5Cvg6YKF6F2A/exec";
 
   const EDU_LEVELS = [
     { id: "assoc",  label: "Associate’s degree" },
