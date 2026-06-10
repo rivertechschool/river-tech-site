@@ -222,6 +222,7 @@ function sendApplicantEmail_(applicationId, p) {
     "• The principal reads every application personally — your education, your experience, and especially what you can teach.",
     "• If your subjects and availability fit the school's needs, we'll reach out to talk — usually within a few weeks.",
     "• New part-time teachers start in September, one day a week, with our full support.",
+    "• Not a fit right now? Timing matters as much as talent — a subject we don't offer this semester may be exactly what next year needs. Strong applications stay on file for future semesters and school years.",
     "",
     "Subjects you offered: " + ((p.subjects || []).join(", ") || "(see your suggestion)"),
     "Days you're available: " + (p.days || []).map(function (d) { return label_(DAY_LABELS, d); }).join(", "),
