@@ -125,23 +125,74 @@
     .teach-pay p:last-child { margin-bottom: 0; }
     .teach-pay strong.pay-rate { color: var(--color-red); font-size: 18px; }
 
-    /* Landing: good company */
-    .teach-company {
-      background: var(--color-bg);
+    /* Landing: who can apply */
+    .teach-eligible {
+      background: var(--color-white);
+      border: 1px solid rgba(39, 36, 67, 0.12);
       border-radius: 8px;
-      padding: 20px 24px;
-      margin-bottom: 28px;
-      font-size: 16px;
-      line-height: 1.65;
+      padding: 22px 26px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(39, 36, 67, 0.05);
     }
-    .teach-company h3 {
+    .teach-eligible h3 {
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .teach-eligible .te-intro { font-size: 16px; margin-bottom: 14px; }
+    .te-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 560px) { .te-grid { grid-template-columns: 1fr; } }
+    .te-col h4 {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-red);
       margin-bottom: 8px;
     }
-    .teach-company p { margin-bottom: 8px; }
-    .teach-company p:last-child { margin-bottom: 0; }
+    .te-col h4 span { font-weight: 400; color: var(--color-text); opacity: 0.7; font-size: 13px; }
+    .te-col ul li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 6px;
+    }
+    .te-col ul li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--color-red);
+      font-weight: 700;
+    }
+    .teach-eligible .te-note {
+      font-size: 15px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(39, 36, 67, 0.10);
+    }
+
+    /* Landing: commitment */
+    .teach-commit {
+      background: var(--color-bg);
+      border-radius: 8px;
+      padding: 18px 24px;
+      margin-bottom: 28px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .teach-commit h3 {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .teach-commit p { margin: 0; }
+    .teach-commit a { color: var(--color-red); }
 
     /* Landing: how it works */
     .teach-how {
@@ -639,7 +690,7 @@
         <p class="reg-subtitle">Share what you love, one day a week.</p>
       </div>
 
-      <p class="teach-lead">River Tech has nearly doubled &mdash; about 130 students join us this fall. We&rsquo;re inviting parents, relatives, and friends of the school to teach a subject they know and love, one day a week, <strong>10:30&nbsp;a.m.&ndash;2:30&nbsp;p.m.</strong> No teaching degree required &mdash; just real knowledge, a warm heart, and a love for kids.</p>
+      <p class="teach-lead">River Tech has nearly doubled &mdash; about 130 students join us this fall. We&rsquo;re inviting parents, relatives, and friends of the school to teach a subject they know and love, one day a week, <strong>10:30&nbsp;a.m.&ndash;2:30&nbsp;p.m.</strong></p>
 
       <div class="teach-cards">
         <div class="teach-card">
@@ -670,9 +721,35 @@
         <p>Prefer to volunteer? Volunteer teachers may qualify for a <strong>tuition discount</strong> for their own children &mdash; discussed personally with the principal.</p>
       </div>
 
-      <div class="teach-company">
-        <h3>You&rsquo;d Be in Good Company</h3>
-        <p>Our part-time teachers include an electrical engineer with a Master&rsquo;s degree and ten international patents who teaches robotics, and a retired Army veteran who brings her native Spanish into the classroom. Some are parents. Some are friends of the school. All of them teach what they genuinely know.</p>
+      <div class="teach-eligible">
+        <h3>Who Can Apply?</h3>
+        <p class="te-intro">Adults 18 and older who meet <strong>both</strong> of these criteria:</p>
+        <div class="te-grid">
+          <div class="te-col">
+            <h4>A. Education or Expertise <span>(one or more)</span></h4>
+            <ul>
+              <li>College degree (any discipline)</li>
+              <li>Relevant industry certification</li>
+              <li>Military service with leadership or technical specialization</li>
+              <li>Proven entrepreneurial or professional experience</li>
+            </ul>
+          </div>
+          <div class="te-col">
+            <h4>B. Direct Work with Children or Youth <span>(one or more)</span></h4>
+            <ul>
+              <li>Classroom teaching or homeschool co-op instruction</li>
+              <li>Church programs / Sunday school</li>
+              <li>Tutoring or mentoring</li>
+              <li>Camps, scouts, Civil Air Patrol, coaching, etc.</li>
+            </ul>
+          </div>
+        </div>
+        <p class="te-note">All part-time teachers must pass an Idaho background check. <strong>River Tech covers the fee.</strong></p>
+      </div>
+
+      <div class="teach-commit">
+        <h3>Commitment &amp; Reliability</h3>
+        <p>By accepting a teaching role, you agree to be present every week during your assigned slot. If you must be absent, notify <a href="mailto:learn@rivertech.me">learn@rivertech.me</a> at least 24 hours in advance.</p>
       </div>
 
       <div class="teach-how">
@@ -680,7 +757,7 @@
         <div class="teach-how-steps">
           <div class="teach-how-step">
             <div class="ths-num">1</div>
-            <p><strong>Apply below</strong> &mdash; about 10 minutes. Tell us what you can teach and when.</p>
+            <p><strong>Apply below</strong> &mdash; about 20 minutes. Tell us what you can teach and when.</p>
           </div>
           <div class="teach-how-step">
             <div class="ths-num">2</div>
@@ -861,7 +938,7 @@
             <div class="reg-step">7</div>
             <div>
               <div class="reg-section-title">Background Check &amp; References</div>
-              <p class="reg-section-subtitle">Every adult who teaches at River Tech completes a background check before working with students.</p>
+              <p class="reg-section-subtitle">Every adult who teaches at River Tech completes an Idaho background check before working with students. River Tech covers the fee.</p>
             </div>
           </div>
           <div class="reg-row">
