@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
+  <title>Teach at River Tech | Part-Time Teaching | River Tech School</title>
+  <meta name="description" content="Teach what you love, one day a week, at River Tech School of Performing Arts &amp; Technology in Post Falls, Idaho. Paid part-time teaching ($25&ndash;$35/hour) or volunteer with a potential tuition discount.">
+
+  <meta property="og:title" content="Teach at River Tech | Part-Time Teaching">
+  <meta property="og:description" content="Share what you love, one day a week. Paid part-time teaching or volunteer with a potential tuition discount at River Tech School in Post Falls, Idaho.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.rivertechschool.com/pages/teach.html">
+  <meta property="og:image" content="https://www.rivertechschool.com/assets/images/og-image.png">
+
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/style.css?v=27">
+
+  <link rel="canonical" href="https://www.rivertechschool.com/pages/teach.html">
+
+  <style>
+    /* --- Teach at River Tech: scoped styles (inherits the register-form design language) --- */
+    .reg-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 20px 0 120px;
+    }
+
+    /* Hero */
+    .reg-hero {
+      text-align: center;
+      padding: 34px 0 22px;
+      position: relative;
+    }
+    .reg-hero::after {
+      content: "";
+      display: block;
+      width: 72px;
+      height: 4px;
+      margin: 18px auto 0;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--color-red), var(--color-enroll-bg));
+    }
+    .reg-pill {
+      display: inline-block;
+      font-family: var(--font-nav);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--color-red);
+      background: var(--color-pink-btn);
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .reg-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 5vw, 46px);
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--color-text);
+      line-height: 1.1;
+    }
+    .reg-hero .reg-subtitle {
+      font-family: var(--font-display);
+      font-size: clamp(18px, 2.4vw, 24px);
+      font-weight: 600;
+      color: var(--color-text);
+      opacity: 0.85;
+      margin-bottom: 4px;
+    }
+
+    /* Landing: lead paragraph */
+    .teach-lead {
+      font-size: 19px;
+      line-height: 1.7;
+      margin: 8px 0 28px;
+      text-align: center;
+    }
+
+    /* Landing: benefit cards */
+    .teach-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 560px) { .teach-cards { grid-template-columns: 1fr; } }
+    .teach-card {
+      background: var(--color-white);
+      border: 1px solid rgba(39, 36, 67, 0.12);
+      border-radius: 8px;
+      padding: 20px 22px;
+      box-shadow: 0 1px 3px rgba(39, 36, 67, 0.05);
+    }
+    .teach-card .tc-emoji { font-size: 26px; display: block; margin-bottom: 8px; }
+    .teach-card h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .teach-card p { font-size: 15px; line-height: 1.55; opacity: 0.85; margin: 0; }
+
+    /* Landing: compensation banner */
+    .teach-pay {
+      background: var(--color-pink-btn);
+      border-left: 4px solid var(--color-red);
+      border-radius: 0 6px 6px 0;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+    }
+    .teach-pay h3 {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--color-text);
+    }
+    .teach-pay p { font-size: 16px; line-height: 1.6; margin-bottom: 8px; }
+    .teach-pay p:last-child { margin-bottom: 0; }
+    .teach-pay strong.pay-rate { color: var(--color-red); font-size: 18px; }
+
+    /* Landing: good company */
+    .teach-company {
+      background: var(--color-bg);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+    .teach-company h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .teach-company p { margin-bottom: 8px; }
+    .teach-company p:last-child { margin-bottom: 0; }
+
+    /* Landing: how it works */
+    .teach-how {
+      margin-bottom: 34px;
+    }
+    .teach-how h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .teach-how-steps {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 560px) { .teach-how-steps { grid-template-columns: 1fr; } }
+    .teach-how-step {
+      text-align: center;
+      padding: 14px 10px;
+    }
+    .teach-how-step .ths-num {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--color-enroll-bg);
+      color: var(--color-white);
+      font-family: var(--font-nav);
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+    }
+    .teach-how-step p { font-size: 15px; line-height: 1.5; margin: 0; }
+
+    .teach-start-btn {
+      display: block;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto 40px;
+      padding: 16px;
+      text-align: center;
+      background: var(--color-enroll-bg);
+      color: var(--color-white);
+      font-family: var(--font-nav);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .teach-start-btn:hover { opacity: 0.92; }
+
+    /* Progress bar above the form */
+    .teach-progress-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 15;
+      background: var(--color-bg);
+      padding: 10px 0 8px;
+      margin-bottom: 8px;
+    }
+    .teach-progress-track {
+      height: 6px;
+      background: rgba(39, 36, 67, 0.12);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .teach-progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--color-red), var(--color-enroll-bg));
+      transition: width 0.4s ease;
+    }
+    .teach-progress-label {
+      font-size: 12px;
+      text-align: right;
+      opacity: 0.65;
+      margin-top: 4px;
+      font-family: var(--font-display);
+    }
+
+    /* Form sections with numbered step badges */
+    .reg-section {
+      background: var(--color-white);
+      border: 1px solid rgba(39, 36, 67, 0.12);
+      border-radius: 8px;
+      padding: 26px 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(39, 36, 67, 0.05);
+      transition: box-shadow 0.2s;
+    }
+    .reg-section:focus-within { box-shadow: 0 4px 16px rgba(39, 36, 67, 0.10); }
+    .reg-section-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .reg-step {
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--color-enroll-bg);
+      color: var(--color-white);
+      font-family: var(--font-nav);
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+    .reg-section-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+    .reg-section-subtitle {
+      font-size: 15px;
+      color: var(--color-text);
+      opacity: 0.75;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Field rows */
+    .reg-row { margin-bottom: 18px; }
+    .reg-row:last-child { margin-bottom: 0; }
+    .reg-row-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .reg-row-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 520px) {
+      .reg-row-grid-2, .reg-row-grid-3 { grid-template-columns: 1fr; }
+    }
+    .reg-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .reg-label .req { color: var(--color-red); margin-left: 3px; }
+    .reg-help {
+      display: block;
+      font-size: 13px;
+      color: var(--color-text);
+      opacity: 0.7;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .reg-input, .reg-select, .reg-textarea {
+      width: 100%;
+      padding: 11px 13px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: var(--color-text);
+      background: var(--color-white);
+      border: 1.5px solid rgba(39, 36, 67, 0.25);
+      border-radius: 4px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .reg-input:focus, .reg-select:focus, .reg-textarea:focus {
+      outline: none;
+      border-color: var(--color-red);
+      box-shadow: 0 0 0 3px var(--color-pink-btn);
+    }
+    .reg-textarea { resize: vertical; min-height: 90px; }
+
+    /* Choice cards (radio / checkbox) */
+    .reg-choices {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .reg-check {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1.5px solid rgba(39, 36, 67, 0.18);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-size: 16px;
+    }
+    .reg-check:hover { border-color: var(--color-red); }
+    .reg-check input { width: 18px; height: 18px; accent-color: var(--color-red); cursor: pointer; flex: 0 0 auto; }
+    .reg-check.checked { border-color: var(--color-red); background: var(--color-pink-btn); }
+    .reg-check span small { display: block; font-size: 13px; opacity: 0.75; margin-top: 2px; }
+
+    /* Education degree cards */
+    .edu-card {
+      border: 1.5px solid rgba(39, 36, 67, 0.15);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .edu-card.on { border-color: var(--color-red); }
+    .edu-card-toggle {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      background: var(--color-white);
+      transition: background 0.2s;
+    }
+    .edu-card.on .edu-card-toggle { background: var(--color-pink-btn); }
+    .edu-card-toggle input { width: 18px; height: 18px; accent-color: var(--color-red); cursor: pointer; flex: 0 0 auto; }
+    .edu-card-body { display: none; padding: 16px; background: var(--color-white); border-top: 1px solid rgba(39, 36, 67, 0.10); }
+    .edu-card.on .edu-card-body { display: block; }
+
+    /* Subject groups */
+    .subj-group { margin-bottom: 18px; }
+    .subj-group:last-child { margin-bottom: 0; }
+    .subj-group-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--color-red);
+      margin-bottom: 8px;
+    }
+    .subj-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    @media (max-width: 560px) { .subj-grid { grid-template-columns: 1fr; } }
+    .subj-grid .reg-check { padding: 9px 12px; font-size: 15px; }
+
+    /* Day cards */
+    .day-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 560px) { .day-grid { grid-template-columns: 1fr; } }
+    .day-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border: 1.5px solid rgba(39, 36, 67, 0.18);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .day-card:hover { border-color: var(--color-red); }
+    .day-card.checked { border-color: var(--color-red); background: var(--color-pink-btn); }
+    .day-card input { width: 18px; height: 18px; accent-color: var(--color-red); cursor: pointer; flex: 0 0 auto; }
+    .day-card .dc-name { font-weight: 700; font-size: 16px; font-family: var(--font-display); display: block; }
+    .day-card .dc-theme { font-size: 13px; opacity: 0.75; display: block; }
+    .day-card .dc-time { font-size: 12px; opacity: 0.6; display: block; }
+
+    /* Consent block */
+    .reg-consent {
+      background: var(--color-bg);
+      padding: 20px 24px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      line-height: 1.6;
+      border-radius: 6px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .reg-consent h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 12px 0 4px;
+      color: var(--color-text);
+    }
+    .reg-consent h4:first-child { margin-top: 0; }
+    .reg-consent p { margin-bottom: 8px; }
+
+    /* Submit */
+    .reg-submit {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      background: var(--color-enroll-bg);
+      color: var(--color-white);
+      font-family: var(--font-nav);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .reg-submit:hover { opacity: 0.92; }
+    .reg-submit:active { transform: translateY(1px); }
+    .reg-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Status messages */
+    .reg-error {
+      background: #fef0f0;
+      border-left: 4px solid var(--color-red);
+      color: var(--color-red);
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      border-radius: 0 4px 4px 0;
+      display: none;
+    }
+    .reg-error.show { display: block; }
+
+    .reg-progress {
+      display: none;
+      margin: 10px 0 0;
+      font-size: 13px;
+      color: var(--color-text);
+      opacity: 0.75;
+      text-align: center;
+    }
+    .reg-progress.show { display: block; }
+
+    .conditional { display: none; margin-top: 12px; }
+    .conditional.show { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+    <a href="../index.html">River Tech School</a>
+    <div class="sidebar-submenu">
+      <a href="../index.html">About River Tech</a>
+      <a href="elementary-school.html">Elementary School</a>
+      <a href="middle-school.html">Middle School</a>
+      <a href="high-school.html">High School</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="a-la-carte.html">River Tech À La Carte</a>
+    <div class="sidebar-submenu">
+      <a href="a-la-carte.html">Homeschooling</a>
+      <a href="monday-performing-arts.html">Monday: Performing Arts</a>
+      <a href="tuesday-science.html">Tuesday: Science &amp; Social Studies</a>
+      <a href="thursday-life-skills.html">Thursday: Life Skills</a>
+      <a href="friday-technology.html">Friday: Technology</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="why-river-tech.html">Why River Tech?</a>
+    <div class="sidebar-submenu">
+      <a href="our-culture.html">Our Culture</a>
+      <a href="reviews.html">References &amp; Reviews</a>
+      <a href="technology.html">Technology</a>
+      <a href="performing-arts.html">Performing Arts</a>
+      <a href="sports-fitness.html">Sports &amp; Fitness</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="enrollment.html">Enrollment</a>
+    <div class="sidebar-submenu">
+      <a href="river-tech-days.html">River Tech Days</a>
+      <a href="enrollment.html">How to Enroll</a>
+      <a href="tuition.html">Tuition</a>
+      <a href="faq.html">FAQs</a>
+      <a href="tax-credit.html">Tax Credit</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="school-resources.html">School Resources</a>
+    <div class="sidebar-submenu">
+      <a href="calendar.html">Schedule &amp; Calendar</a>
+      <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+      <a href="scholarships.html">Scholarships</a>
+      <a href="volunteer.html">Volunteer</a>
+      <a href="our-needs.html">Our Needs</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="teach.html" class="active">Teach at River Tech</a>
+    </div>
+    <div class="nav-group">
+    <a href="../pages/gallery.html">Media</a>
+    <div class="sidebar-submenu">
+      <a href="../pages/gallery.html">Photo Gallery</a>
+      <a href="../pages/vlog.html">Video Globe</a>
+      <a href="../pages/fieldtrips.html">Field Trips</a>
+    </div>
+    </div>
+  </nav>
+</div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <a href="enrollment.html" class="enroll-btn">School starts Sept 1</a>
+  <div class="social-icons">
+    <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" fill="#c0392b"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.13C5.12 19.56 12 19.56 12 19.56s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon fill="white" points="9.75,15.02 15.5,11.75 9.75,8.48"/></svg>
+    </a>
+    <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" fill="#3b5998"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- Mobile Header -->
+<div class="mobile-header">
+  <a href="../index.html" class="mobile-logo">River Tech</a>
+  <button class="hamburger" aria-label="Open menu">☰</button>
+</div>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav-overlay">
+  <button class="close-btn" aria-label="Close menu">✕</button>
+  <a href="../index.html">River Tech School</a>
+        <div class="mobile-submenu">
+    <a href="../index.html">About River Tech</a>
+    <a href="elementary-school.html">Elementary School</a>
+    <a href="middle-school.html">Middle School</a>
+    <a href="high-school.html">High School</a>
+  </div>
+  <a href="a-la-carte.html">River Tech À La Carte</a>
+        <div class="mobile-submenu">
+    <a href="a-la-carte.html">Homeschooling</a>
+    <a href="monday-performing-arts.html">Monday: Performing Arts</a>
+    <a href="tuesday-science.html">Tuesday: Science &amp; Social Studies</a>
+    <a href="thursday-life-skills.html">Thursday: Life Skills</a>
+    <a href="friday-technology.html">Friday: Technology</a>
+  </div>
+  <a href="why-river-tech.html">Why River Tech?</a>
+        <div class="mobile-submenu">
+    <a href="our-culture.html">Our Culture</a>
+    <a href="reviews.html">References &amp; Reviews</a>
+    <a href="technology.html">Technology</a>
+    <a href="performing-arts.html">Performing Arts</a>
+    <a href="sports-fitness.html">Sports &amp; Fitness</a>
+  </div>
+  <a href="enrollment.html">Enrollment</a>
+        <div class="mobile-submenu">
+    <a href="river-tech-days.html">River Tech Days</a>
+    <a href="enrollment.html">How to Enroll</a>
+    <a href="tuition.html">Tuition</a>
+    <a href="faq.html">FAQs</a>
+    <a href="tax-credit.html">Tax Credit</a>
+  </div>
+  <a href="school-resources.html">School Resources</a>
+        <div class="mobile-submenu">
+    <a href="calendar.html">Schedule &amp; Calendar</a>
+    <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+    <a href="scholarships.html">Scholarships</a>
+    <a href="volunteer.html">Volunteer</a>
+    <a href="our-needs.html">Our Needs</a>
+  </div>
+  <a href="teach.html" class="active">Teach at River Tech</a>
+  <a href="../pages/gallery.html">Media</a>
+        <div class="mobile-submenu">
+    <a href="../pages/gallery.html">Photo Gallery</a>
+    <a href="../pages/vlog.html">Video Globe</a>
+    <a href="../pages/fieldtrips.html">Field Trips</a>
+  </div>
+  <a href="enrollment.html" style="color: var(--color-red); font-weight: 700; border-bottom: none;">School starts Sept 1</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="content-area">
+
+    <div class="reg-wrap">
+
+      <!-- ===================== LANDING ===================== -->
+
+      <div class="reg-hero">
+        <span class="reg-pill">Part-Time Teaching &middot; 2026&ndash;27</span>
+        <h1>Teach at River Tech</h1>
+        <p class="reg-subtitle">Share what you love, one day a week.</p>
+      </div>
+
+      <p class="teach-lead">River Tech has nearly doubled &mdash; about 130 students join us this fall. We&rsquo;re inviting parents, relatives, and friends of the school to teach a subject they know and love, one day a week, <strong>10:30&nbsp;a.m.&ndash;2:30&nbsp;p.m.</strong> No teaching degree required &mdash; just real knowledge, a warm heart, and a love for kids.</p>
+
+      <div class="teach-cards">
+        <div class="teach-card">
+          <span class="tc-emoji">📅</span>
+          <h3>One Day a Week</h3>
+          <p>Pick a day that fits your life &mdash; Monday, Tuesday, Thursday, or Friday, four hours of teaching. That&rsquo;s it.</p>
+        </div>
+        <div class="teach-card">
+          <span class="tc-emoji">💡</span>
+          <h3>Teach Your Passion</h3>
+          <p>Robotics, filmmaking, chemistry, debate, martial arts &mdash; teach the thing you&rsquo;d talk about for free, in small classes of about 15.</p>
+        </div>
+        <div class="teach-card">
+          <span class="tc-emoji">🤝</span>
+          <h3>Paid or Volunteer</h3>
+          <p>Be paid as a contractor, or volunteer with a potential tuition discount for your family. You choose what fits.</p>
+        </div>
+        <div class="teach-card">
+          <span class="tc-emoji">⛪</span>
+          <h3>Your Community</h3>
+          <p>Teach the kids of the families you already know, in a Christian school where love is the script.</p>
+        </div>
+      </div>
+
+      <div class="teach-pay">
+        <h3>Compensation</h3>
+        <p>Paid teachers earn <strong class="pay-rate">$25&ndash;$35 per hour</strong> depending on qualifications, as independent contractors.</p>
+        <p>Prefer to volunteer? Volunteer teachers may qualify for a <strong>tuition discount</strong> for their own children &mdash; discussed personally with the principal.</p>
+      </div>
+
+      <div class="teach-company">
+        <h3>You&rsquo;d Be in Good Company</h3>
+        <p>Our part-time teachers include an electrical engineer with a Master&rsquo;s degree and ten international patents who teaches robotics, and a retired Army veteran who brings her native Spanish into the classroom. Some are parents. Some are friends of the school. All of them teach what they genuinely know.</p>
+      </div>
+
+      <div class="teach-how">
+        <h3>How It Works</h3>
+        <div class="teach-how-steps">
+          <div class="teach-how-step">
+            <div class="ths-num">1</div>
+            <p><strong>Apply below</strong> &mdash; about 10 minutes. Tell us what you can teach and when.</p>
+          </div>
+          <div class="teach-how-step">
+            <div class="ths-num">2</div>
+            <p><strong>We talk</strong> &mdash; the principal reviews every application personally and follows up.</p>
+          </div>
+          <div class="teach-how-step">
+            <div class="ths-num">3</div>
+            <p><strong>You teach</strong> &mdash; starting September, one day a week, with our full support.</p>
+          </div>
+        </div>
+      </div>
+
+      <a class="teach-start-btn" href="#apply">Start My Application ↓</a>
+
+      <!-- ===================== APPLICATION ===================== -->
+
+      <div id="apply" class="teach-progress-wrap">
+        <div class="teach-progress-track"><div id="teach-progress-fill" class="teach-progress-fill"></div></div>
+        <div id="teach-progress-label" class="teach-progress-label">Application progress: 0%</div>
+      </div>
+
+      <div id="reg-error" class="reg-error" role="alert"></div>
+
+      <form id="reg-form" novalidate>
+
+        <!-- 1. About you -->
+        <div class="reg-section" data-step="1">
+          <div class="reg-section-head">
+            <div class="reg-step">1</div>
+            <div>
+              <div class="reg-section-title">About You</div>
+              <p class="reg-section-subtitle">Who you are and how you&rsquo;re connected to River Tech.</p>
+            </div>
+          </div>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="firstName">First name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="firstName" name="firstName" required autocomplete="given-name">
+            </div>
+            <div>
+              <label class="reg-label" for="lastName">Last name<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="lastName" name="lastName" required autocomplete="family-name">
+            </div>
+          </div>
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="email">Email<span class="req">*</span></label>
+              <input class="reg-input" type="email" id="email" name="email" required autocomplete="email">
+            </div>
+            <div>
+              <label class="reg-label" for="phone">Phone<span class="req">*</span></label>
+              <input class="reg-input" type="tel" id="phone" name="phone" required autocomplete="tel">
+            </div>
+          </div>
+          <div class="reg-row">
+            <label class="reg-label" for="city">City you live in<span class="req">*</span></label>
+            <input class="reg-input" type="text" id="city" name="city" required autocomplete="address-level2" style="max-width: 320px;">
+          </div>
+
+          <div class="reg-row">
+            <label class="reg-label">Your connection to River Tech<span class="req">*</span></label>
+            <div class="reg-choices" id="connection-choices">
+              <label class="reg-check"><input type="radio" name="connection" value="parent" required><span>Parent of a current/incoming River Tech student</span></label>
+              <label class="reg-check"><input type="radio" name="connection" value="relative"><span>Relative of a River Tech student <small>grandparent, aunt, uncle, adult sibling&hellip;</small></span></label>
+              <label class="reg-check"><input type="radio" name="connection" value="church"><span>Member of a partner church community</span></label>
+              <label class="reg-check"><input type="radio" name="connection" value="friend"><span>Friend of the school <small>tell us a little more below</small></span></label>
+            </div>
+          </div>
+          <div class="reg-row">
+            <label class="reg-label" for="connectionDetail">Which student(s) or family are you connected to?<span class="req">*</span></label>
+            <span class="reg-help" style="margin-bottom:6px;">E.g. &ldquo;Parent of Noah and Lily Smith&rdquo; or &ldquo;The Heart Church &mdash; friends with the Johnson family.&rdquo;</span>
+            <input class="reg-input" type="text" id="connectionDetail" name="connectionDetail" required>
+          </div>
+        </div>
+
+        <!-- 2. Education -->
+        <div class="reg-section" data-step="2">
+          <div class="reg-section-head">
+            <div class="reg-step">2</div>
+            <div>
+              <div class="reg-section-title">Education</div>
+              <p class="reg-section-subtitle">Check each level you hold and tell us about it. Skip any that don&rsquo;t apply &mdash; experience and mastery count here too.</p>
+            </div>
+          </div>
+          <div id="edu-container"></div>
+          <div class="reg-row" style="margin-top: 16px;">
+            <label class="reg-label" for="eduOther">Other education or training (optional)</label>
+            <span class="reg-help" style="margin-bottom:6px;">Trade school, military training, ministry training, online programs, self-taught mastery&hellip;</span>
+            <textarea class="reg-textarea" id="eduOther" name="eduOther" rows="2"></textarea>
+          </div>
+        </div>
+
+        <!-- 3. Experience -->
+        <div class="reg-section" data-step="3">
+          <div class="reg-section-head">
+            <div class="reg-step">3</div>
+            <div>
+              <div class="reg-section-title">Relevant Experience</div>
+              <p class="reg-section-subtitle">Teaching takes many forms. Check everything that applies.</p>
+            </div>
+          </div>
+          <div id="exp-container"></div>
+          <div class="reg-row" style="margin-top: 16px;">
+            <label class="reg-label" for="expHighlight">What&rsquo;s the most interesting thing about you? (optional, but encouraged)</label>
+            <span class="reg-help" style="margin-bottom:6px;">A career story, a passion project, a skill, an adventure &mdash; the thing students would find fascinating about you.</span>
+            <textarea class="reg-textarea" id="expHighlight" name="expHighlight" rows="3"></textarea>
+          </div>
+        </div>
+
+        <!-- 4. Subjects -->
+        <div class="reg-section" data-step="4">
+          <div class="reg-section-head">
+            <div class="reg-step">4</div>
+            <div>
+              <div class="reg-section-title">What Can You Teach?</div>
+              <p class="reg-section-subtitle">Check every subject you could teach with confidence. Don&rsquo;t be shy &mdash; we&rsquo;ll match subjects to needs together.</p>
+            </div>
+          </div>
+          <div id="subjects-container"></div>
+          <div class="reg-row" style="margin-top: 16px;">
+            <label class="reg-label" for="subjectsOther">Suggest your own subject(s) (optional)</label>
+            <span class="reg-help" style="margin-bottom:6px;">Something we didn&rsquo;t list that you&rsquo;d love to teach.</span>
+            <input class="reg-input" type="text" id="subjectsOther" name="subjectsOther">
+          </div>
+          <div class="reg-row">
+            <label class="reg-label" for="subjectsStrength">Where are you strongest? (optional)</label>
+            <span class="reg-help" style="margin-bottom:6px;">Of the subjects you checked, which could you teach in your sleep &mdash; and why?</span>
+            <textarea class="reg-textarea" id="subjectsStrength" name="subjectsStrength" rows="2"></textarea>
+          </div>
+        </div>
+
+        <!-- 5. Availability -->
+        <div class="reg-section" data-step="5">
+          <div class="reg-section-head">
+            <div class="reg-step">5</div>
+            <div>
+              <div class="reg-section-title">Availability</div>
+              <p class="reg-section-subtitle">Teaching days run 10:30 a.m.&ndash;2:30 p.m. Check every day you could teach &mdash; most part-time teachers pick one.</p>
+            </div>
+          </div>
+          <div class="reg-row">
+            <div class="day-grid" id="days-container"></div>
+          </div>
+          <div class="reg-row">
+            <label class="reg-label" for="idealDays">How many days a week would you ideally teach?<span class="req">*</span></label>
+            <select class="reg-select" id="idealDays" name="idealDays" required style="max-width: 240px;">
+              <option value="">Select&hellip;</option>
+              <option value="1">1 day a week</option>
+              <option value="2">2 days a week</option>
+              <option value="3">3 days a week</option>
+              <option value="4">4 days a week</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 6. Compensation -->
+        <div class="reg-section" data-step="6">
+          <div class="reg-section-head">
+            <div class="reg-step">6</div>
+            <div>
+              <div class="reg-section-title">Compensation Preference</div>
+              <p class="reg-section-subtitle">There&rsquo;s no wrong answer &mdash; both paths bless the school equally.</p>
+            </div>
+          </div>
+          <div class="reg-row">
+            <div class="reg-choices">
+              <label class="reg-check"><input type="radio" name="compensation" value="paid" required><span>Paid contractor <small>$25&ndash;$35/hour depending on qualifications</small></span></label>
+              <label class="reg-check"><input type="radio" name="compensation" value="volunteer"><span>Volunteer <small>with a potential tuition discount for my children</small></span></label>
+              <label class="reg-check"><input type="radio" name="compensation" value="either"><span>Either &mdash; let&rsquo;s talk <small>open to whatever serves the school best</small></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Background & references -->
+        <div class="reg-section" data-step="7">
+          <div class="reg-section-head">
+            <div class="reg-step">7</div>
+            <div>
+              <div class="reg-section-title">Background Check &amp; References</div>
+              <p class="reg-section-subtitle">Every adult who teaches at River Tech completes a background check before working with students.</p>
+            </div>
+          </div>
+          <div class="reg-row">
+            <label class="reg-check" style="border-color: var(--color-red);">
+              <input type="checkbox" id="backgroundConsent" name="backgroundConsent" required>
+              <span>I am willing to complete a background check if my application advances.<span class="req">*</span></span>
+            </label>
+          </div>
+          <div class="reg-row">
+            <label class="reg-label" for="references">References (optional)</label>
+            <span class="reg-help" style="margin-bottom:6px;">One or two people who know your character or your work &mdash; name, relationship, and phone or email.</span>
+            <textarea class="reg-textarea" id="references" name="references" rows="3"></textarea>
+          </div>
+        </div>
+
+        <!-- 8. Consent + signature -->
+        <div class="reg-section" data-step="8">
+          <div class="reg-section-head">
+            <div class="reg-step">8</div>
+            <div>
+              <div class="reg-section-title">Consent &amp; Signature</div>
+              <p class="reg-section-subtitle">Please read before signing below.</p>
+            </div>
+          </div>
+
+          <div class="reg-consent">
+            <h4>My word is good</h4>
+            <p>Everything in this application is true and accurate to the best of my knowledge.</p>
+            <h4>Understanding the role</h4>
+            <p>I understand that applying doesn&rsquo;t guarantee a teaching position, and that part-time teachers serve as volunteers or as paid independent contractors, not as employees.</p>
+            <h4>My information</h4>
+            <p>River Tech will use what I share here only for reviewing applications and staffing the school, will keep it confidential, and will gladly let me see or correct it at any time.</p>
+          </div>
+
+          <div class="reg-row">
+            <label class="reg-check" style="border-color: var(--color-red); background: var(--color-pink-btn);">
+              <input type="checkbox" id="consentAgree" name="consentAgree" required>
+              <span>I have read and agree to the statements above.<span class="req">*</span></span>
+            </label>
+          </div>
+
+          <div class="reg-row-grid-2">
+            <div>
+              <label class="reg-label" for="signature">Typed full name (signature)<span class="req">*</span></label>
+              <input class="reg-input" type="text" id="signature" name="signature" required placeholder="Type your full legal name">
+            </div>
+            <div>
+              <label class="reg-label" for="signatureDate">Today&rsquo;s date<span class="req">*</span></label>
+              <input class="reg-input" type="date" id="signatureDate" name="signatureDate" required>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="reg-submit" class="reg-submit">Submit My Application</button>
+        <p id="reg-progress" class="reg-progress"></p>
+        <p style="text-align:center; font-size:13px; color:var(--color-text); opacity:0.6; margin-top:12px;">Applications are reviewed personally by the principal. You&rsquo;ll receive a confirmation email right away.</p>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <a href="../index.html" class="footer-logo">rivertechschool.com</a>
+    <div class="footer-tagline">Life is a Stage. <span class="love">Love</span> is our Script.</div>
+  </div>
+
+  <div class="footer-columns">
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>
+      <span>Tel: 425-444-2081</span>
+      <span>The Heart</span>
+      <span>927 E Polston Ave</span>
+      <span>Post Falls, ID 83854</span>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="why-river-tech.html">Why River Tech?</a>
+      <a href="enrollment.html">Enrollment</a>
+      <a href="school-resources.html">School Resources</a>
+      <a href="a-la-carte.html">À La Carte</a>
+    </div>
+    <div class="footer-col">
+      <h4>Social</h4>
+      <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/rivertechschool/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 by Faithful Five Inc. (d.b.a. River Tech and Post Falls Art). <em>Life is a Stage. <span class="love">Love</span> is our Script.</em></p>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js?v=4" defer></script>
+<script src="../assets/js/teach.js?v=1" defer></script>
+
+<button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+(function(){
+  var btn=document.querySelector('.scroll-to-top');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible',window.scrollY>400);
+  });
+})();
+</script>
+</body>
+</html>
