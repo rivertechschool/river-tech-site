@@ -876,6 +876,24 @@
             <span class="reg-help" style="margin-bottom:6px;">A career story, a passion project, a skill, an adventure &mdash; the thing students would find fascinating about you.</span>
             <textarea class="reg-textarea" id="expHighlight" name="expHighlight" rows="3"></textarea>
           </div>
+
+          <div class="reg-row" style="margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(39, 36, 67, 0.10);">
+            <label class="reg-label">Beyond teaching &mdash; could you help behind the scenes? (optional)</label>
+            <span class="reg-help" style="margin-bottom:8px;">We&rsquo;re sometimes looking for people who are strong in operations and admin, not just teaching. Check anything that fits &mdash; it simply lets us know we might reach out.</span>
+            <div class="subj-grid" id="behind-scenes-container">
+              <label class="reg-check"><input type="checkbox" name="behindScenes" value="Organizing & admin"><span>Organizing &amp; admin</span></label>
+              <label class="reg-check"><input type="checkbox" name="behindScenes" value="Email & calendar"><span>Email &amp; calendar</span></label>
+              <label class="reg-check"><input type="checkbox" name="behindScenes" value="Writing & communication"><span>Writing &amp; communication</span></label>
+              <label class="reg-check"><input type="checkbox" name="behindScenes" value="Comfortable with AI tools"><span>Comfortable with AI tools</span></label>
+              <label class="reg-check"><input type="checkbox" name="behindScenes" value="Bookkeeping & invoices"><span>Bookkeeping &amp; invoices</span></label>
+              <label class="reg-check"><input type="checkbox" name="behindScenes" value="Events & logistics"><span>Events &amp; logistics</span></label>
+            </div>
+          </div>
+          <div class="reg-row">
+            <label class="reg-label" for="behindScenesNote">Tell us more (optional)</label>
+            <input class="reg-input" type="text" id="behindScenesNote" name="behindScenesNote">
+            <span class="reg-help" style="margin-top:6px;">Looking for a bigger role? We&rsquo;re also hiring an <a href="ea.html" style="color: var(--color-red);">AI-Fluent Executive Assistant</a>.</span>
+          </div>
         </div>
 
         <!-- 4. Subjects -->
@@ -1049,7 +1067,7 @@
 </footer>
 
 <script src="../assets/js/main.js?v=4" defer></script>
-<script src="../assets/js/teach.js?v=2" defer></script>
+<script src="../assets/js/teach.js?v=3" defer></script>
 
 <button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 <script>

@@ -393,6 +393,8 @@
       compensation:     getRadio("compensation"),
       backgroundConsent: true,
       references:       val("references"),
+      behindScenes:     getChecked("behindScenes"),
+      behindScenesNote: val("behindScenesNote"),
       consentAgreed:    true,
       signature:        form.signature.value.trim(),
       signatureDate:    form.signatureDate.value
@@ -468,6 +470,17 @@
         updateProgress();
       });
     });
+
+    // Behind-the-scenes (optional EA talent-flag) checkbox visuals
+    const behind = document.getElementById("behind-scenes-container");
+    if (behind) {
+      behind.addEventListener("change", function (e) {
+        if (e.target.name === "behindScenes") {
+          const lbl = e.target.closest(".reg-check");
+          if (lbl) lbl.classList.toggle("checked", e.target.checked);
+        }
+      });
+    }
 
     // Progress updates on typing
     form.addEventListener("input", updateProgress);
