@@ -8,7 +8,7 @@
 
   // ---- Configuration ----------------------------------------------------
   // Set this to the deployed Apps Script web-app URL before go-live.
-  const BACKEND_URL = "__BACKEND_URL__";
+  const BACKEND_URL = "https://script.google.com/macros/s/AKfycbz_LO-ocd9hKskJ5JNfcAscfkldR-HPE6yRddLVxayNG8ZUOFuH24yeiPPwUBvYSzGM/exec";
 
   const AI_TOOLS = [
     "Claude Cowork",
