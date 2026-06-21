@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <title>Executive Assistant Applications — Review</title>
+  <meta name="robots" content="noindex,nofollow">
+  <style>
+    :root {
+      --bg: #f6f4f0; --text: #272443; --red: #e21c21; --darkred: #c0392b; --pink: #f0dddd;
+      --white: #ffffff; --green: #2e7d32; --amber: #b26a00; --blue: #1565c0; --gray: #777;
+      --border: rgba(39, 36, 67, 0.14);
+      --font: "Avenir Next", "Avenir", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
+    a { color: var(--red); }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 18px 80px; }
+
+    header.app-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+    header.app-head h1 { font-size: 24px; font-weight: 700; }
+    header.app-head .sub { font-size: 13px; opacity: 0.65; }
+    .head-actions { margin-left: auto; display: flex; gap: 8px; }
+
+    .btn {
+      font-family: var(--font); font-size: 13px; font-weight: 600; padding: 7px 14px;
+      border-radius: 6px; border: 1px solid var(--border); background: var(--white); cursor: pointer; transition: all 0.15s;
+    }
+    .btn:hover { border-color: var(--red); color: var(--red); }
+    .btn.primary { background: var(--darkred); border-color: var(--darkred); color: #fff; }
+    .btn.primary:hover { opacity: 0.9; color: #fff; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; }
+    .stat { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 13px; }
+    .stat b { font-size: 17px; display: block; line-height: 1.2; }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center; }
+    .controls select, .controls input[type="search"] {
+      font-family: var(--font); font-size: 13px; padding: 7px 10px;
+      border: 1px solid var(--border); border-radius: 6px; background: var(--white); color: var(--text);
+    }
+    .controls input[type="search"] { min-width: 220px; }
+
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(39,36,67,0.05); }
+    .card-head { display: flex; align-items: center; gap: 14px; padding: 14px 18px; cursor: pointer; }
+    .card-head:hover { background: rgba(39,36,67,0.025); }
+    .card-id { flex: 1 1 auto; min-width: 0; }
+    .card-id .nm { font-size: 17px; font-weight: 700; }
+    .card-id .meta { font-size: 12.5px; opacity: 0.7; margin-top: 1px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .chip { font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: var(--bg); border: 1px solid var(--border); }
+    .chip.ai { background: #eef3fa; border-color: #c9d8ee; color: #244d7e; }
+    .chip.hrs { background: #fdf3e3; border-color: #ecd9b0; color: #8a5b00; }
+    .chip.mode { background: var(--pink); border-color: #e4c4c4; color: #8b3a3a; }
+    .chip.proof { background: #e7f5e9; border-color: #b6ddb9; color: #1f6b2b; }
+    .stage-pill { flex: 0 0 auto; font-size: 12px; font-weight: 700; padding: 5px 13px; border-radius: 999px; color: #fff; }
+    .st-New { background: var(--gray); }
+    .st-Reviewing { background: #4a7a9c; }
+    .st-Interview { background: var(--amber); }
+    .st-Offer { background: var(--blue); }
+    .st-Hired { background: var(--green); }
+    .st-Bench { background: #6a4fa3; }
+    .st-Passed { background: #b5b5b5; }
+
+    .card-body { display: none; border-top: 1px solid var(--border); padding: 16px 18px 18px; }
+    .card.open .card-body { display: block; }
+    .cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: 22px; }
+    @media (max-width: 760px) { .cols { grid-template-columns: 1fr; } }
+    .sect { margin-bottom: 14px; }
+    .sect h4 { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--red); margin-bottom: 5px; }
+    .sect p, .sect li { font-size: 13.5px; margin-bottom: 3px; }
+    .sect ul { list-style: none; }
+    .quote { background: var(--bg); border-left: 3px solid var(--border); border-radius: 0 6px 6px 0; padding: 10px 12px; font-size: 13.5px; white-space: pre-wrap; }
+    .muted { opacity: 0.55; }
+
+    .stage-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; }
+    .stage-btn { font-family: var(--font); font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: 999px; border: 1.5px solid var(--border); background: var(--white); cursor: pointer; }
+    .stage-btn:hover { border-color: var(--text); }
+    .stage-btn.cur { color: #fff; border-color: transparent; }
+    .stage-btn.cur.st-New { background: var(--gray); }
+    .stage-btn.cur.st-Reviewing { background: #4a7a9c; }
+    .stage-btn.cur.st-Interview { background: var(--amber); }
+    .stage-btn.cur.st-Offer { background: var(--blue); }
+    .stage-btn.cur.st-Hired { background: var(--green); }
+    .stage-btn.cur.st-Bench { background: #6a4fa3; }
+    .stage-btn.cur.st-Passed { background: #b5b5b5; }
+
+    .adjust { display: flex; flex-direction: column; gap: 8px; }
+    .adjust textarea { font-family: var(--font); font-size: 13px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; min-height: 70px; resize: vertical; }
+
+    #status { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; font-size: 13px; padding: 9px 20px; border-radius: 999px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 50; }
+    #status.show { opacity: 1; }
+    .loading { text-align: center; padding: 60px 0; opacity: 0.6; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app-head">
+    <h1>Executive Assistant Applications</h1>
+    <span class="sub">Confidential right-hand hire &middot; 2026&ndash;27</span>
+    <div class="head-actions">
+      <button class="btn" id="btn-refresh">&#8635; Refresh</button>
+    </div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <select id="f-stage">
+      <option value="">All stages</option>
+      <option>New</option><option>Reviewing</option><option>Interview</option>
+      <option>Offer</option><option>Hired</option><option>Bench</option><option>Passed</option>
+    </select>
+    <select id="f-sort">
+      <option value="new">Sort: Newest</option>
+      <option value="name">Sort: Name</option>
+    </select>
+    <input type="search" id="f-search" placeholder="Search name, city, AI tool, skill&hellip;">
+  </div>
+  <div id="cards"><p class="loading">Loading applications&hellip;</p></div>
+
+</div>
+<div id="status"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var API = "https://script.google.com/macros/s/AKfycbz_LO-ocd9hKskJ5JNfcAscfkldR-HPE6yRddLVxayNG8ZUOFuH24yeiPPwUBvYSzGM/exec";
+  var TOKEN = "8445c75eeae5ed2e3c0da41a932e6552";
+  var STAGES = ["New", "Reviewing", "Interview", "Offer", "Hired", "Bench", "Passed"];
+
+  var rows = [], people = [];
+
+  function $(s) { return document.querySelector(s); }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function toast(msg) {
+    var el = $("#status"); el.textContent = msg; el.classList.add("show");
+    clearTimeout(el._t); el._t = setTimeout(function () { el.classList.remove("show"); }, 2600);
+  }
+  function listify(s) { return String(s || "").split(",").map(function (x) { return x.trim(); }).filter(String); }
+
+  function parsePerson(r) {
+    var p = { raw: r };
+    p.id = r["Application ID"]; p.submitted = r["Submitted (UTC)"]; p.stage = r["Stage"] || "New";
+    p.first = r["First Name"]; p.last = r["Last Name"]; p.name = ((p.first || "") + " " + (p.last || "")).trim();
+    p.email = r["Email"]; p.phone = r["Phone"]; p.city = r["City"];
+    p.connection = r["Connection"] || ""; p.connectionDetail = r["Connection Detail"] || "";
+    p.aiTools = listify(r["AI Tools"]); p.aiYears = r["AI Experience Length"] || "";
+    p.aiExperience = r["AI Experience"] || ""; p.aiProof = r["AI Proof Link"] || "";
+    p.writingSample = r["Writing Sample"] || ""; p.writingLink = r["Writing Link"] || "";
+    p.skills = listify(r["Skills"]); p.degree = r["Highest Degree"] || ""; p.degreeDetail = r["Degree Detail"] || "";
+    p.yearsExp = r["Years Experience"] || ""; p.expSummary = r["Experience Summary"] || "";
+    p.futureExcites = r["Future Excites"] || ""; p.influences = r["Influences"] || "";
+    p.faith = r["Faith Affirmed"] || ""; p.faithNote = r["Faith Note"] || "";
+    p.hours = r["Ideal Hours/Week"] || ""; p.workMode = r["Work Mode"] || "";
+    p.start = r["Earliest Start"] || ""; p.availabilityNote = r["Availability Note"] || "";
+    p.bgCheck = r["Background Check OK"] || ""; p.notes = r["Dan Notes"] || "";
+    return p;
+  }
+
+  function refresh() {
+    toast("Loading…");
+    fetch(API + "?action=list&token=" + TOKEN)
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) throw new Error(d.error || "load failed");
+        rows = d.applicants || []; people = rows.map(parsePerson);
+        renderAll();
+        toast(people.length + " application" + (people.length === 1 ? "" : "s") + " loaded");
+      })
+      .catch(function (e) {
+        console.error(e);
+        $("#cards").innerHTML = '<p class="loading">Could not load: ' + esc(e.message) + "</p>";
+        toast("Load failed");
+      });
+  }
+
+  function update(appId, fields, cb) {
+    var body = new URLSearchParams();
+    body.append("action", "update"); body.append("token", TOKEN); body.append("appId", appId);
+    Object.keys(fields).forEach(function (k) { body.append(k, fields[k]); });
+    fetch(API, { method: "POST", body: body })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (!d.ok) throw new Error(d.error || "update failed"); cb && cb(null, d); })
+      .catch(function (e) { console.error(e); cb && cb(e); });
+  }
+
+  function renderStats() {
+    var by = {}; STAGES.forEach(function (s) { by[s] = 0; });
+    people.forEach(function (p) { by[p.stage] = (by[p.stage] || 0) + 1; });
+    var html = '<div class="stat"><b>' + people.length + "</b>Total</div>";
+    STAGES.forEach(function (s) { if (by[s]) html += '<div class="stat"><b>' + by[s] + "</b>" + s + "</div>"; });
+    $("#stats").innerHTML = html;
+  }
+
+  function renderCards() {
+    var fStage = $("#f-stage").value, fSort = $("#f-sort").value, q = $("#f-search").value.trim().toLowerCase();
+    var list = people.slice();
+    if (fStage) list = list.filter(function (p) { return p.stage === fStage; });
+    if (q) list = list.filter(function (p) {
+      return (p.name + " " + p.city + " " + p.aiTools.join(" ") + " " + p.skills.join(" ") + " " + p.aiExperience).toLowerCase().indexOf(q) >= 0;
+    });
+    if (fSort === "name") list.sort(function (a, b) { return a.name.localeCompare(b.name); });
+    else list.sort(function (a, b) { return String(b.submitted).localeCompare(String(a.submitted)); });
+
+    if (!list.length) { $("#cards").innerHTML = '<p class="loading">No applications match.</p>'; return; }
+
+    $("#cards").innerHTML = list.map(function (p) {
+      var toolChips = p.aiTools.slice(0, 3).map(function (t) { return '<span class="chip ai">' + esc(t.replace(/ \(.*\)/, "")) + "</span>"; }).join("") +
+        (p.aiTools.length > 3 ? '<span class="chip ai">+' + (p.aiTools.length - 3) + "</span>" : "");
+      var proofChip = p.aiProof ? '<span class="chip proof">★ proof</span>' : "";
+      return '<div class="card" id="card-' + esc(p.id) + '" data-id="' + esc(p.id) + '">' +
+        '<div class="card-head">' +
+          '<div class="card-id">' +
+            '<div class="nm">' + esc(p.name) + "</div>" +
+            '<div class="meta">' + esc(p.city) + (p.connectionDetail ? " &middot; " + esc(p.connectionDetail) : (p.connection ? " &middot; " + esc(p.connection) : "")) + "</div>" +
+            '<div class="chips">' + toolChips +
+              (p.aiYears ? '<span class="chip ai">' + esc(p.aiYears) + "</span>" : "") +
+              (p.hours ? '<span class="chip hrs">' + esc(p.hours) + " hrs/wk</span>" : "") +
+              (p.workMode ? '<span class="chip mode">' + esc(p.workMode) + "</span>" : "") + proofChip +
+            "</div>" +
+          "</div>" +
+          '<span class="stage-pill st-' + esc(p.stage) + '">' + esc(p.stage) + "</span>" +
+        "</div>" +
+        '<div class="card-body">' + cardBody(p) + "</div>" +
+      "</div>";
+    }).join("");
+
+    Array.prototype.forEach.call(document.querySelectorAll(".card-head"), function (h) {
+      h.addEventListener("click", function () { h.parentNode.classList.toggle("open"); });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".stage-btn"), function (btn) {
+      btn.addEventListener("click", function (e) { e.stopPropagation(); setStage(btn.dataset.id, btn.dataset.stage, btn); });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".save-note"), function (btn) {
+      btn.addEventListener("click", function (e) { e.stopPropagation(); saveNote(btn.dataset.id); });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".card-body"), function (b) {
+      b.addEventListener("click", function (e) { e.stopPropagation(); });
+    });
+  }
+
+  function cardBody(p) {
+    var writing = p.writingSample ? '<div class="quote">' + esc(p.writingSample) + "</div>" : "";
+    if (p.writingLink) writing += '<p style="margin-top:6px;"><a href="' + esc(p.writingLink) + '" target="_blank" rel="noopener">' + esc(p.writingLink) + "</a></p>";
+    if (!writing) writing = '<p class="muted">None provided</p>';
+
+    var stageBtns = STAGES.map(function (st) {
+      return '<button class="stage-btn' + (p.stage === st ? " cur st-" + st : "") + '" data-id="' + esc(p.id) + '" data-stage="' + st + '">' + st + "</button>";
+    }).join("");
+
+    var eduLine = [p.degree, p.degreeDetail].filter(String).join(" — ") || "—";
+
+    return '<div class="cols"><div>' +
+      '<div class="sect"><h4>Contact</h4><p><a href="mailto:' + esc(p.email) + '">' + esc(p.email) + "</a> &middot; <a href=\"tel:" + esc(p.phone) + '">' + esc(p.phone) + "</a> &middot; " + esc(p.city) + "</p>" +
+        '<p class="muted">' + esc(p.connection) + (p.connectionDetail ? " — " + esc(p.connectionDetail) : "") + "</p></div>" +
+      '<div class="sect"><h4>AI fluency (the keystone)</h4>' +
+        "<p><b>Tools:</b> " + (p.aiTools.join(", ") || "—") + (p.aiYears ? " &middot; " + esc(p.aiYears) : "") + "</p>" +
+        (p.aiProof ? '<p><b>Proof:</b> <a href="' + esc(p.aiProof) + '" target="_blank" rel="noopener">' + esc(p.aiProof) + "</a></p>" : "") +
+        '<div class="quote" style="margin-top:6px;">' + (esc(p.aiExperience) || '<span class="muted">—</span>') + "</div></div>" +
+      '<div class="sect"><h4>Writing sample</h4>' + writing + "</div>" +
+      '<div class="sect"><h4>Skills</h4><div class="chips">' + (p.skills.map(function (s) { return '<span class="chip">' + esc(s) + "</span>"; }).join("") || '<span class="muted">—</span>') + "</div></div>" +
+      '<div class="sect"><h4>Experience &amp; education</h4><p>' + esc(eduLine) + (p.yearsExp ? " &middot; " + esc(p.yearsExp) + " yrs" : "") + "</p>" +
+        (p.expSummary ? "<p>" + esc(p.expSummary) + "</p>" : "") + "</div>" +
+      ((p.futureExcites || p.influences) ? '<div class="sect"><h4>Forward thinking</h4>' + (p.futureExcites ? "<p>" + esc(p.futureExcites) + "</p>" : "") + (p.influences ? '<p><b>Influences:</b> ' + esc(p.influences) + "</p>" : "") + "</div>" : "") +
+      '<div class="sect"><h4>Faith</h4><p>' + (p.faith === "Yes" ? "Affirmed Christian faith" : esc(p.faith || "—")) + (p.faithNote ? " — " + esc(p.faithNote) : "") + "</p></div>" +
+      '<div class="sect"><h4>Logistics</h4><p>' + esc(p.hours || "—") + " hrs/wk &middot; " + esc(p.workMode || "—") + (p.start ? " &middot; start " + esc(p.start) : "") + " &middot; bg-check: " + esc(p.bgCheck || "—") + "</p>" +
+        (p.availabilityNote ? "<p>" + esc(p.availabilityNote) + "</p>" : "") + "</div>" +
+      '<div class="sect"><h4>Submitted</h4><p>' + esc(String(p.submitted).slice(0, 10)) + " &middot; " + esc(p.id) + "</p></div>" +
+    "</div><div>" +
+      '<div class="sect"><h4>Stage</h4><div class="stage-row">' + stageBtns + "</div></div>" +
+      '<div class="sect"><h4>Notes</h4><div class="adjust">' +
+        '<textarea id="note-' + esc(p.id) + '" placeholder="Your private notes on this candidate">' + esc(p.notes) + "</textarea>" +
+        '<button class="btn primary save-note" data-id="' + esc(p.id) + '">Save notes</button>' +
+      "</div></div>" +
+    "</div></div>";
+  }
+
+  function setStage(appId, stage, btn) {
+    var p = people.filter(function (x) { return x.id === appId; })[0];
+    if (!p || p.stage === stage) return;
+    btn.disabled = true;
+    update(appId, { stage: stage }, function (err) {
+      btn.disabled = false;
+      if (err) { toast("Failed: " + err.message); return; }
+      p.stage = stage; p.raw["Stage"] = stage;
+      toast(p.name + " → " + stage);
+      renderAll(appId);
+    });
+  }
+
+  function saveNote(appId) {
+    var p = people.filter(function (x) { return x.id === appId; })[0];
+    var note = $("#note-" + CSS.escape(appId)).value.trim();
+    update(appId, { danNotes: note }, function (err) {
+      if (err) { toast("Failed: " + err.message); return; }
+      p.notes = note; toast("Notes saved for " + p.name); renderAll(appId);
+    });
+  }
+
+  function renderAll(keepOpenId) {
+    renderStats(); renderCards();
+    if (keepOpenId) { var c = document.getElementById("card-" + keepOpenId); if (c) c.classList.add("open"); }
+  }
+
+  ["f-stage", "f-sort"].forEach(function (id) { document.getElementById(id).addEventListener("change", renderCards); });
+  $("#f-search").addEventListener("input", renderCards);
+  $("#btn-refresh").addEventListener("click", refresh);
+  refresh();
+})();
+</script>
+</body>
+</html>
