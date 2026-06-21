@@ -42,7 +42,7 @@ const SHEET_NAME = "Teaching Applications 2026-27";
 const SHEET_TAB_NAME = "Applicants";
 const FORM_PAGE_URL = "https://www.rivertechschool.com/pages/teach.html";
 
-const BACKEND_VERSION = "2"; // bump with each redeploy; reported by default GET
+const BACKEND_VERSION = "3"; // bump with each redeploy; reported by default GET
 const STAGES = ["New", "Interview", "Offer", "Hired", "Bench", "Passed"];
 
 const CONNECTION_LABELS = {
@@ -80,6 +80,7 @@ function doPost(e) {
 function doGet(e) {
   const params = (e && e.parameter) || {};
   if (params.action === "setupSheet") return json_(setupSheet_());
+  if (params.action === "addBehindCols") return json_(addBehindCols_(params));
   if (params.action === "list") return json_(adminList_(params));
   return json_({ ok: true, message: "Teach at River Tech backend is alive.", version: BACKEND_VERSION });
 }
@@ -143,7 +144,8 @@ function headerRow_() {
     "Days", "Ideal Days/Week",
     "Compensation", "Background Check OK", "References",
     "Signature", "Signature Date", "Consent Agreed",
-    "Dan Adjustment", "Dan Notes"
+    "Dan Adjustment", "Dan Notes",
+    "Behind-the-Scenes Help", "Behind-the-Scenes Note"
   );
   return h;
 }
@@ -202,7 +204,9 @@ function writeToSheet_(applicationId, p) {
     p.signatureDate || "",
     p.consentAgreed ? "Yes" : "No",
     "",  // Dan Adjustment
-    ""   // Dan Notes
+    "",  // Dan Notes
+    (p.behindScenes || []).join(", "),
+    p.behindScenesNote || ""
   );
 
   sh.appendRow(row);
@@ -269,7 +273,8 @@ function sendNotificationEmail_(applicationId, p) {
     ((p.subjects || []).length > 3 ? "…" : "") +
     " — " + (dayShort || "no days?") +
     " — " + label_(COMPENSATION_LABELS, p.compensation) +
-    (degrees.length ? " — " + degrees.join("/") : "");
+    (degrees.length ? " — " + degrees.join("/") : "") +
+    ((p.behindScenes && p.behindScenes.length) ? " — ★ops" : "");
 
   function degreeLine(label, d) {
     if (!d || !d.has) return label + ": —";
@@ -320,6 +325,10 @@ function sendNotificationEmail_(applicationId, p) {
     "Background check OK: " + (p.backgroundConsent ? "Yes" : "No"),
     "References: " + (p.references || "—"),
     "Signature: " + (p.signature || "") + " · Date: " + (p.signatureDate || ""),
+    "",
+    (p.behindScenes && p.behindScenes.length
+      ? "★ BEHIND-THE-SCENES HELP OFFERED: " + p.behindScenes.join(", ") + (p.behindScenesNote ? " — " + p.behindScenesNote : "")
+      : "Behind-the-scenes help: —"),
     "",
     "Row appended to '" + SHEET_NAME + "' with Stage = New."
   ].join("\n");
@@ -412,6 +421,26 @@ function setupSheet_() {
     url: ss.getUrl(),
     tokenSet: !!props.getProperty("PIPELINE_TOKEN")
   };
+}
+
+// ---- Migration: add Behind-the-Scenes columns to an existing sheet ------
+// Idempotent. Token-protected. Trigger once after the v3 redeploy:
+//   GET <webapp>/exec?action=addBehindCols&token=<PIPELINE_TOKEN>
+function addBehindCols_(params) {
+  const tokenErr = checkToken_(params);
+  if (tokenErr) return { ok: false, error: tokenErr };
+  const sh = getSheet_();
+  if (sh.getLastRow() === 0) {
+    return { ok: true, message: "Sheet empty; columns will be created on first submission." };
+  }
+  const lastCol = sh.getLastColumn();
+  const headers = sh.getRange(1, 1, 1, lastCol).getValues()[0];
+  const want = ["Behind-the-Scenes Help", "Behind-the-Scenes Note"];
+  const missing = want.filter(function (w) { return headers.indexOf(w) < 0; });
+  if (missing.length === 0) return { ok: true, message: "Columns already present." };
+  sh.getRange(1, lastCol + 1, 1, missing.length).setValues([missing]);
+  sh.getRange(1, lastCol + 1, 1, missing.length).setFontWeight("bold");
+  return { ok: true, added: missing, atColumn: lastCol + 1 };
 }
 
 /** Pretend-submit to exercise sheet + emails. Run from editor, or rely on a
