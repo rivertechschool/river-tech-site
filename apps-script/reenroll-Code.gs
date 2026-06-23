@@ -215,7 +215,7 @@ function writeToSheet_(registrationId, p) {
     pk(1).name || "", pk(1).relationship || "", pk(1).phone || "",
     pk(2).name || "", pk(2).relationship || "", pk(2).phone || "",
     children.length,
-    p.householdFee || HOUSEHOLD_FEE_USD,
+    (typeof p.householdFee === "number" ? p.householdFee : HOUSEHOLD_FEE_USD),
     p.signature || "",
     p.signatureDate || "",
     p.releaseAgreed ? "Yes" : "No"
