@@ -121,17 +121,25 @@ function handleReenrollment(p) {
   const registrationId = "RE-" + Utilities.formatDate(new Date(), "America/Los_Angeles", "yyyyMMdd-HHmmss")
     + "-" + Math.floor(Math.random() * 1000).toString().padStart(3, "0");
 
+  // A submission is "fee-waived" when it comes from the assisted/special-
+  // situations form (feeWaived flag) or carries a $0 household fee. These
+  // skip Stripe entirely; everything else behaves exactly as before.
+  const feeWaived = (p.feeWaived === true) || (Number(p.householdFee) === 0);
+
   // 1. Write to Sheet
   writeToSheet_(registrationId, p);
 
-  // 2. Create Stripe Checkout session
-  const checkoutUrl = createStripeSession_(registrationId, p);
+  // 2. Create Stripe Checkout session (only when a fee is actually due)
+  let checkoutUrl = null;
+  if (!feeWaived) {
+    checkoutUrl = createStripeSession_(registrationId, p);
+  }
 
   // 3. Emails
-  sendParentEmail_(registrationId, p);
-  sendNotificationEmail_(registrationId, p);
+  sendParentEmail_(registrationId, p, feeWaived);
+  sendNotificationEmail_(registrationId, p, feeWaived);
 
-  return { ok: true, registrationId: registrationId, checkoutUrl: checkoutUrl };
+  return { ok: true, registrationId: registrationId, checkoutUrl: checkoutUrl, feeWaived: feeWaived };
 }
 
 // ---- Sheet write --------------------------------------------------------
@@ -294,7 +302,7 @@ function createStripeSession_(registrationId, p) {
 }
 
 // ---- Emails -------------------------------------------------------------
-function sendParentEmail_(registrationId, p) {
+function sendParentEmail_(registrationId, p, feeWaived) {
   const kidNames = (p.children || [])
     .map(function (c) { return (c.preferredName || c.firstName || "").trim(); })
     .filter(String);
@@ -305,6 +313,13 @@ function sendParentEmail_(registrationId, p) {
 
   const fee = p.householdFee || HOUSEHOLD_FEE_USD;
 
+  const feeLine = feeWaived
+    ? "Enrollment fee: $0 — waived for your family this year."
+    : "Household Re-Enrollment Fee: $" + fee;
+  const lockedLine = feeWaived
+    ? "• Your re-enrollment is logged and locked in — there is no fee to pay on this form."
+    : "• Once your Stripe payment is complete, your re-enrollment is logged and locked in.";
+
   const subject = "River Tech — we received your 2026-27 re-enrollment";
   const body = [
     "Hi " + (p.parent.firstName || "") + ",",
@@ -312,10 +327,10 @@ function sendParentEmail_(registrationId, p) {
     "Welcome back. Thanks for re-enrolling " + kidsStr + " at River Tech for the 2026-27 school year.",
     "",
     "Your confirmation reference: " + registrationId,
-    "Household Re-Enrollment Fee: $" + fee,
+    feeLine,
     "",
     "What happens next:",
-    "• Once your Stripe payment is complete, your re-enrollment is logged and locked in.",
+    lockedLine,
     "• We already have your intake information on file — no orientation call needed.",
     "• We'll follow up before the school year starts (Tuesday, September 1, 2026) with schedule confirmations, supply lists, and logistics.",
     "• Tuition is billed separately based on the schedule you chose.",
@@ -342,10 +357,11 @@ function sendParentEmail_(registrationId, p) {
   }
 }
 
-function sendNotificationEmail_(registrationId, p) {
-  const fee = p.householdFee || HOUSEHOLD_FEE_USD;
+function sendNotificationEmail_(registrationId, p, feeWaived) {
+  const fee = feeWaived ? 0 : (p.householdFee || HOUSEHOLD_FEE_USD);
+  const feeLabel = feeWaived ? "$0 (fee waived — assisted)" : "$" + fee;
   const subject = "[Re-Enrollment 26-27] " + (p.parent.firstName || "") + " " + (p.parent.lastName || "") +
-    " — " + p.children.length + " child" + (p.children.length === 1 ? "" : "ren") + " — $" + fee;
+    " — " + p.children.length + " child" + (p.children.length === 1 ? "" : "ren") + " — " + feeLabel;
 
   const childSummary = (p.children || []).map(function (c, i) {
     const lines = [
@@ -384,7 +400,7 @@ function sendNotificationEmail_(registrationId, p) {
     "",
     "Reference: " + registrationId,
     "Submitted: " + (p.submittedAt || new Date().toISOString()),
-    "Household Re-Enrollment Fee: $" + fee,
+    "Household Re-Enrollment Fee: " + feeLabel,
     "",
     "Parent 1: " + (p.parent.firstName || "") + " " + (p.parent.lastName || ""),
     "  Email: " + (p.parent.email || "") + " · Phone: " + (p.parent.phone || ""),
@@ -410,7 +426,9 @@ function sendNotificationEmail_(registrationId, p) {
     "Signature: " + (p.signature || "") + " · Date: " + (p.signatureDate || ""),
     "Release agreed: " + (p.releaseAgreed ? "Yes" : "No"),
     "",
-    "Row appended to Re-Enrollments sheet. Payment status will remain 'Submitted (awaiting payment)' until the Stripe session completes."
+    feeWaived
+      ? "Row appended to Re-Enrollments sheet. Fee WAIVED (assisted form) — no payment due; row stays at 'Inbox' for you to advance manually."
+      : "Row appended to Re-Enrollments sheet. Payment status will remain 'Submitted (awaiting payment)' until the Stripe session completes."
   ].join("\n");
 
   try {
