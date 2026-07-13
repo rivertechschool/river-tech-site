@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>River Tech Class Planner — 2026–27</title>
+  <style>
+    :root{
+      color-scheme: light;
+      --bg:#f7f5f2; --panel:#fff; --ink:#272443; --ink-soft:#6b6883;
+      --line:rgba(39,36,67,0.12);
+      --rt-red:#d63232; --rt-red-soft:#fbe6e3;
+      --ft-blue:#2257a0; --ft-blue-soft:#e6efff;
+      --hs-green:#2f7d3a; --hs-green-soft:#e0f3e3;
+      --amber:#b07b00; --amber-soft:#fff4d6;
+      --ok:#2f7d3a; --ok-soft:#e0f3e3;
+      --bad:#c22525; --bad-soft:#fae3e3;
+      --shadow:0 1px 3px rgba(0,0,0,0.05),0 4px 12px rgba(0,0,0,0.04);
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI",system-ui,sans-serif;font-size:14px;line-height:1.4;}
+
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap;gap:8px;}
+    .topbar h1{margin:0;font-size:18px;font-weight:700;}
+    .topbar .meta{font-size:12px;color:var(--ink-soft);display:flex;align-items:center;gap:12px;}
+    .refresh-btn{background:var(--rt-red);color:#fff;border:none;border-radius:4px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;}
+    .refresh-btn:disabled{opacity:.5;cursor:wait;}
+
+    .banner{margin:12px 16px 0;border:1px solid #e8d9a0;background:var(--amber-soft);border-radius:6px;font-size:13px;}
+    .banner-head{padding:9px 14px;cursor:pointer;font-weight:700;color:var(--amber);display:flex;justify-content:space-between;align-items:center;}
+    .banner-body{display:none;padding:0 14px 10px;color:var(--ink);}
+    .banner.open .banner-body{display:block;}
+    .banner-body li{margin:3px 0;}
+
+    .controls{display:flex;gap:14px;align-items:center;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap;font-size:13px;margin-top:12px;}
+    .controls label{color:var(--ink-soft);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+    .ctrl-num{width:56px;padding:4px 6px;border:1px solid var(--line);border-radius:4px;font-size:13px;}
+    .chip{font-size:12px;padding:4px 10px;border-radius:14px;background:rgba(0,0,0,.06);color:var(--ink);border:1px solid transparent;cursor:pointer;font-weight:600;}
+    .chip.active{background:var(--ink);color:#fff;}
+    .legend{display:inline-flex;gap:12px;align-items:center;font-size:12px;color:var(--ink-soft);margin-left:auto;}
+    .legend .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle;}
+
+    .day-tabs{display:flex;gap:6px;padding:12px 16px 0;flex-wrap:wrap;}
+    .day-tab{background:var(--panel);border:1px solid var(--line);border-radius:6px 6px 0 0;border-bottom:none;padding:9px 18px;font-size:14px;font-weight:700;color:var(--ink-soft);cursor:pointer;}
+    .day-tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+    .day-tab .cnt{font-size:11px;font-weight:700;background:rgba(0,0,0,.10);border-radius:10px;padding:1px 7px;margin-left:6px;}
+    .day-tab.active .cnt{background:rgba(255,255,255,.2);}
+
+    .board{background:var(--panel);border:1px solid var(--line);border-radius:0 6px 6px 6px;margin:0 16px;box-shadow:var(--shadow);}
+    .preset-row{display:flex;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap;font-size:13px;}
+    .pbtn{font-size:12px;font-weight:600;padding:6px 12px;border-radius:4px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);}
+    .pbtn:hover{background:var(--rt-red-soft);border-color:var(--rt-red);color:var(--rt-red);}
+    .pbtn.util{border-style:dashed;}
+    .preset-note{font-size:12px;color:var(--ink-soft);}
+    .scope-wrap{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-soft);margin-left:auto;}
+    .day-note{padding:6px 14px;font-size:12px;color:var(--ink-soft);font-style:italic;border-bottom:1px solid var(--line);}
+
+    .axis-outer{padding:14px 26px 6px;position:relative;}
+    .axis{position:relative;height:230px;user-select:none;touch-action:none;}
+    .axis .region{position:absolute;top:36px;bottom:26px;border-radius:4px;}
+    .axis .region.tintA{background:rgba(39,36,67,.035);}
+    .axis .region.tintB{background:rgba(39,36,67,.075);}
+    .axis .region-label{position:absolute;top:0;font-size:11px;font-weight:800;text-align:center;white-space:nowrap;transform:translateX(-50%);padding:2px 8px;border-radius:10px;}
+    .axis .region-label.ok{background:var(--ok-soft);color:var(--ok);}
+    .axis .region-label.under{background:var(--amber-soft);color:var(--amber);}
+    .axis .region-label.over{background:var(--bad-soft);color:var(--bad);}
+    .dot{position:absolute;width:13px;height:13px;border-radius:50%;transform:translate(-50%,50%);cursor:default;}
+    .dot.ft{background:var(--ft-blue);} .dot.hs{background:var(--hs-green);}
+    .dot.flagged{box-shadow:0 0 0 2px var(--rt-red);}
+    .dot:hover{outline:2px solid var(--ink);z-index:5;}
+    .wall{position:absolute;top:34px;bottom:14px;width:0;border-left:3px solid var(--rt-red);cursor:ew-resize;z-index:10;}
+    .wall .grip{position:absolute;top:-14px;left:-11px;width:20px;height:20px;border-radius:50%;background:var(--rt-red);color:#fff;font-size:11px;font-weight:800;text-align:center;line-height:20px;cursor:ew-resize;box-shadow:var(--shadow);}
+    .wall .kill{position:absolute;bottom:-16px;left:-8px;width:15px;height:15px;border-radius:50%;background:#fff;border:1px solid var(--line);color:var(--ink-soft);font-size:10px;line-height:13px;text-align:center;cursor:pointer;}
+    .wall .kill:hover{background:var(--bad);color:#fff;border-color:var(--bad);}
+    .wall .agepop{position:absolute;top:-34px;left:-24px;background:var(--ink);color:#fff;font-size:11px;padding:2px 7px;border-radius:4px;white-space:nowrap;display:none;}
+    .wall.dragging .agepop{display:block;}
+    .ticks{position:relative;height:22px;margin:0 0 4px;}
+    .tick{position:absolute;transform:translateX(-50%);font-size:11px;color:var(--ink-soft);}
+    .tick::before{content:"";position:absolute;left:50%;top:-6px;height:5px;border-left:1px solid var(--line);}
+    .axis-hint{font-size:11px;color:var(--ink-soft);text-align:center;padding:2px 0 10px;}
+
+    .cards{display:flex;gap:10px;padding:4px 14px 14px;flex-wrap:wrap;}
+    .ccard{flex:1;min-width:150px;background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--ok);border-radius:6px;padding:10px 12px;cursor:pointer;box-shadow:var(--shadow);}
+    .ccard.under{border-top-color:var(--amber);} .ccard.over{border-top-color:var(--bad);}
+    .ccard.sel{outline:2px solid var(--ink);}
+    .ccard h3{margin:0 0 2px;font-size:13px;}
+    .ccard .big{font-size:24px;font-weight:800;}
+    .ccard .big .stat{font-size:11px;font-weight:700;padding:1px 7px;border-radius:8px;vertical-align:middle;margin-left:6px;}
+    .ccard .stat.ok{background:var(--ok-soft);color:var(--ok);} .ccard .stat.under{background:var(--amber-soft);color:var(--amber);} .ccard .stat.over{background:var(--bad-soft);color:var(--bad);}
+    .ccard .sub{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+
+    .roster{margin:0 14px 14px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 14px;display:none;}
+    .roster.open{display:block;}
+    .roster h3{margin:0 0 8px;font-size:13px;}
+    .rkid{display:flex;gap:8px;align-items:baseline;padding:3px 4px;font-size:13px;border-bottom:1px dashed var(--line);flex-wrap:wrap;}
+    .rkid:last-child{border-bottom:none;}
+    .rkid .nm{font-weight:700;min-width:130px;}
+    .rkid .full{color:var(--ink-soft);font-size:11px;}
+    .rkid .meta{color:var(--ink-soft);font-size:12px;margin-left:auto;}
+    .srcpill{font-size:10px;font-weight:800;padding:1px 6px;border-radius:8px;}
+    .srcpill.ft{background:var(--ft-blue-soft);color:var(--ft-blue);} .srcpill.hs{background:var(--hs-green-soft);color:var(--hs-green);}
+    .flagdot{color:var(--rt-red);font-weight:800;}
+
+    .section{margin:16px;background:var(--panel);border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow);}
+    .section h2{margin:0;padding:12px 16px;font-size:14px;border-bottom:1px solid var(--line);}
+    .section .body{padding:12px 16px;font-size:13px;}
+    table.tbl{border-collapse:collapse;width:100%;font-size:13px;}
+    table.tbl th,table.tbl td{padding:7px 9px;text-align:left;border-bottom:1px solid var(--line);}
+    table.tbl th{background:var(--ink);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
+    table.tbl td.num,table.tbl th.num{text-align:right;font-variant-numeric:tabular-nums;}
+    tr.total-row td{font-weight:800;background:var(--bg);border-top:2px solid var(--ink);}
+    .sizestr .b{display:inline-block;min-width:24px;text-align:center;border-radius:4px;padding:1px 5px;margin-right:3px;font-weight:700;font-size:12px;}
+    .sizestr .b.ok{background:var(--ok-soft);color:var(--ok);} .sizestr .b.under{background:var(--amber-soft);color:var(--amber);} .sizestr .b.over{background:var(--bad-soft);color:var(--bad);}
+    .xrow{padding:6px 4px;border-bottom:1px dashed var(--line);font-size:13px;}
+    .xrow:last-child{border-bottom:none;}
+    .xrow .nm{font-weight:700;}
+    .xrow .path{color:var(--ink-soft);font-size:12px;}
+    .okline{color:var(--ok);font-weight:700;}
+    .note{font-size:12px;color:var(--ink-soft);}
+    .export-row{display:flex;gap:10px;padding:0 16px 20px;}
+    .btn{font-size:13px;font-weight:600;padding:8px 14px;border-radius:4px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);}
+    .btn:hover{background:var(--rt-red-soft);border-color:var(--rt-red);color:var(--rt-red);}
+    .loader{padding:60px;text-align:center;color:var(--ink-soft);}
+    .spinner{display:inline-block;width:20px;height:20px;border:3px solid var(--line);border-top-color:var(--rt-red);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:10px;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .error-banner{background:#fae9e9;border-left:3px solid #a73838;color:#a73838;padding:10px 14px;margin:14px;font-size:13px;}
+
+    #print-root{display:none;}
+    @media print{
+      body>*{display:none!important;}
+      #print-root{display:block!important;background:#fff;}
+      #print-root h1{font-size:18px;} #print-root h2{font-size:15px;border-bottom:2px solid #000;padding-bottom:3px;page-break-after:avoid;}
+      #print-root h3{font-size:13px;margin:10px 0 4px;page-break-after:avoid;}
+      #print-root table{border-collapse:collapse;width:100%;font-size:11px;}
+      #print-root th,#print-root td{border:1px solid #999;padding:3px 6px;text-align:left;}
+      #print-root .pday{page-break-after:always;}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>Class Planner <span style="font-weight:400;color:var(--ink-soft);font-size:14px;">— 2026–27 · one class = one teacher · ideal 15</span></h1>
+    <div class="meta"><span id="meta-line">Loading…</span>
+      <button class="refresh-btn" id="refresh-btn" onclick="loadData()">Refresh</button></div>
+  </div>
+
+  <div class="banner" id="warn-banner" style="display:none;">
+    <div class="banner-head" onclick="this.parentElement.classList.toggle('open')"><span id="warn-title">Data corrections</span><span>▾</span></div>
+    <div class="banner-body" id="warn-body"></div>
+  </div>
+
+  <div id="app" style="display:none;">
+    <div class="controls">
+      <label>Ideal size</label><input class="ctrl-num" id="cfg-target" type="number" min="5" max="30" value="15">
+      <label>Range</label><input class="ctrl-num" id="cfg-min" type="number" min="1" max="30" value="12"> – <input class="ctrl-num" id="cfg-max" type="number" min="1" max="40" value="18">
+      <label style="margin-left:8px;">Count</label>
+      <button class="chip active" data-stage="all" onclick="setStageFilter('all')">Everyone enrolled</button>
+      <button class="chip" data-stage="sure" onclick="setStageFilter('sure')">Paid / accepted only</button>
+      <span class="legend"><span><span class="sw" style="background:var(--ft-blue);"></span>Full-time</span><span><span class="sw" style="background:var(--hs-green);"></span>Homeschool</span><span><span class="sw" style="background:#fff;box-shadow:0 0 0 2px var(--rt-red);"></span>support flag</span></span>
+    </div>
+
+    <div class="day-tabs" id="day-tabs"></div>
+    <div class="board">
+      <div class="preset-row">
+        <span class="preset-note" style="font-weight:700;color:var(--ink);">Presets:</span>
+        <button class="pbtn" onclick="applyPreset('size')" title="Every class as close to the ideal size as possible; age bands fall where they fall">① Size-first</button>
+        <button class="pbtn" onclick="applyPreset('dev')" title="Conventional cuts at ages 8, 11 and 14 — honest about which classes bust the size rule">② Age bands (8 / 11 / 14)</button>
+        <button class="pbtn" onclick="applyPreset('best')" title="Tightest age bands that still keep every class inside the size range">③ Best compromise</button>
+        <button class="pbtn" onclick="applyPreset('grade')" title="Roughly elementary / middle / high. Grade data is too dirty to use directly, so this cuts at ages 11.7 and 14.7">④ Grade-ish (elem/mid/high)</button>
+        <span class="scope-wrap"><input type="checkbox" id="scope-all" checked><label for="scope-all" style="text-transform:none;font-weight:600;cursor:pointer;">apply to all days</label></span>
+        <button class="pbtn util" onclick="addWall()">＋ Add a wall</button>
+        <button class="pbtn util" onclick="copyWallsToAllDays()">Copy these walls → all days</button>
+      </div>
+      <div class="day-note" id="day-note"></div>
+      <div class="axis-outer">
+        <div class="axis" id="axis"></div>
+        <div class="ticks" id="ticks"></div>
+        <div class="axis-hint">Every dot is a child, placed at their exact age on Sept 1, 2026 (hover for the name). Drag the red walls to move a class boundary; ✕ under a wall removes it. Click a class card below to see every name in it.</div>
+      </div>
+      <div class="cards" id="cards"></div>
+      <div class="roster" id="roster"></div>
+    </div>
+
+    <div class="section">
+      <h2>Cross-day check — children who sit in a different band depending on the day</h2>
+      <div class="body" id="crossday"></div>
+    </div>
+
+    <div class="section">
+      <h2>The week at a glance — teachers &amp; rough cost</h2>
+      <div class="body" id="summary"></div>
+    </div>
+
+    <div class="export-row">
+      <button class="btn" onclick="downloadCsv()">⬇ Download class lists (CSV)</button>
+      <button class="btn" onclick="printRosters()">🖨 Print class lists</button>
+    </div>
+  </div>
+  <div class="loader" id="loader"><span class="spinner"></span>Loading enrollment from the three sheets…</div>
+  <div id="print-root"></div>
+
+<script>
+  // ===== Config (same posture as the Enrollment Hub) ====================
+  const PIPELINE_TOKEN = "8ff4851af82ed79c4a3b75ff454b12172c67fac5fbdfffb9";
+  const BACKENDS = {
+    "full-time":     "https://script.google.com/macros/s/AKfycbwggeLDK4kzV0HOXXhfqW7aX2ow5zUZwuOpET8RmXuZCOhmiWSGP-OSPrrH9ouqkZxC/exec",
+    "homeschool":    "https://script.google.com/macros/s/AKfycbxbZ8U_EhvQTJLrXLLo1EsS45grDHTtCRnOJbU_Di_o16Rc4bJSSV0Kf3yTOQk9dbEUDQ/exec",
+    "re-enrollment": "https://script.google.com/macros/s/AKfycbz7duCV6kqLV8brjz0ujhgsoqY7LOMW7501hjUg_oX42xykAZ-6NSY8I_kBzx93fcO1/exec"
+  };
+  const MAJOR_DAYS = {"performing-arts":["Mon","Tue","Wed","Thu"],"technology":["Tue","Wed","Thu","Fri"],"double-major":["Mon","Tue","Wed","Thu","Fri"]};
+  const MAJOR_SHORT = {"performing-arts":"Perf Arts","technology":"Technology","double-major":"Double"};
+  const DAYS_ORDER = ["Mon","Tue","Wed","Thu","Fri"];
+  const DAY_LABEL = {"Mon":"Monday","Tue":"Tuesday","Wed":"Wednesday","Thu":"Thursday","Fri":"Friday"};
+  const SEP1 = new Date("2026-09-01T00:00:00");
+  const PT_RATE_LO=25, PT_RATE_HI=35, PT_HOURS=4;
+
+  // Hand-verified corrections (the sheets have NOT been fixed yet — Dan approved these 2026-07-13):
+  const OVERRIDES = [
+    {reg:"HS-20260513-182159-688", child:/^benjamin/i, days:["Tue"], dob:"2011-12-02",
+     note:"Benjamin Marshall: Tuesday only (mother's request; sheet still says Tue+Thu) and birthdate assumed Dec 2, 2011 (sheet has a typo — year “102011”)."},
+    {reg:"HS-20260513-182159-688", child:/^evelyn/i, days:["Tue"],
+     note:"Evelyn Marshall: Tuesday only (mother's request; sheet still says Tue+Thu)."}
+  ];
+  // Which sheet wins when the same child appears twice (higher = kept)
+  const SRC_RANK = {"re-enrollment":3,"full-time":2,"homeschool":1};
+
+  const RE_LDB = /(autis|autistic|asperger|spectrum|\basd\b|adhd|\badd\b(?!ress|ition|ed)|dyslex|dysgraph|dyscalc|dysprax|apraxia|\biep\b|\b504\b|learning (disab|differ|challeng)|special (need|ed)|auditory processing|processing (delay|disorder)|sensory|nonverbal|non-verbal|developmental delay|pda profile|oppositional|\bodd\b|tourette|selective mut|speech (delay|therap)|occupational therap)/i;
+  const RE_MED = /(epilep|seizure|diabet|insulin|asthma|inhaler|epi-?pen|anaphyla|allergic to|severe allerg|gluten|peanut|tree nut|bee sting|wasp|hornet|migraine|\bg-tube\b|wheelchair|type one|type 1)/i;
+
+  // ===== State ==========================================================
+  let DATA={}, ROSTER=[], NEEDS_DATA=[], NOTES=[], DUPS=[];
+  let currentDay="Mon", stageFilter="all", selectedClass=null;
+  let walls={}; // per day: sorted array of age positions
+  let domainLo=5, domainHi=18.5;
+  const LS_WALLS="rts.classes.walls.v1", LS_CFG="rts.classes.cfg.v1";
+  let cfg={target:15,min:12,max:18,ftStaff:5};
+
+  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);}
+  function ageOn(dob,ref){ if(!dob)return null; const b=new Date(dob); if(isNaN(b))return null; let a=ref.getFullYear()-b.getFullYear(); if(ref.getMonth()<b.getMonth()||(ref.getMonth()===b.getMonth()&&ref.getDate()<b.getDate()))a--; return a; }
+  function exactAge(dob){ const b=new Date(dob); return isNaN(b)?null:(SEP1-b)/86400000/365.25; }
+  function ageYM(x){ if(x==null)return "?"; let y=Math.floor(x), m=Math.round((x-y)*12); if(m===12){y++;m=0;} return m?`${y}y ${m}m`:`${y}y`; }
+  function getCol(row,headers,name){const i=headers.indexOf(name);return i>=0?row[i]:"";}
+  function normalizeMajor(s){ if(!s)return null; const t=String(s).toLowerCase(); if(t.includes("double"))return "double-major"; if(t.includes("perform"))return "performing-arts"; if(t.includes("tech"))return "technology"; return null; }
+  function parseHomeschoolDays(s){ if(!s)return []; const l=String(s).toLowerCase(); const d=[]; if(/\bmonday\b/.test(l))d.push("Mon"); if(/\btuesday\b/.test(l))d.push("Tue"); if(/\bthursday\b/.test(l))d.push("Thu"); if(/\bfriday\b/.test(l))d.push("Fri"); return d; }
+  function displayName(name,preferred){ if(preferred&&String(preferred).trim()){const p=String(preferred).trim();const m=p.match(/^([A-Za-z]+(?:[\-' ]?[A-Za-z]+)*)/);return m?m[1]:p;} if(!name)return "(unnamed)"; return String(name).split(/\s+/)[0]; }
+  function hasFlag(c){ const blob=[c.health,c.notes,c.attitude].filter(Boolean).join("  "); return RE_LDB.test(blob)||RE_MED.test(blob); }
+
+  // ===== Load & parse ===================================================
+  async function loadData(){
+    const rb=document.getElementById("refresh-btn"); if(rb)rb.disabled=true;
+    const meta=document.getElementById("meta-line"); meta.textContent="Refreshing…";
+    try{
+      const results=await Promise.all(Object.entries(BACKENDS).map(async([source,url])=>{
+        const res=await fetch(`${url}?action=list&token=${encodeURIComponent(PIPELINE_TOKEN)}`);
+        if(!res.ok)throw new Error(`${source}: HTTP ${res.status}`);
+        const j=await res.json();
+        if(!j.ok)throw new Error(`${source}: ${j.error||"unknown error"}`);
+        return [source,j];
+      }));
+      DATA={}; for(const [s,j] of results)DATA[s]={headers:j.headers,rows:j.rows};
+      buildRoster();
+      restoreState();
+      document.getElementById("loader").style.display="none";
+      document.getElementById("app").style.display="block";
+      const now=new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+      meta.textContent=`${ROSTER.length+NEEDS_DATA.length+DUPS.length} on the sheets → ${ROSTER.length} planned · refreshed ${now}`;
+      renderAll();
+    }catch(err){
+      meta.textContent="Error";
+      document.getElementById("loader").innerHTML=`<div class="error-banner">Failed to load: ${esc(err.message)}</div>`;
+      console.error(err);
+    }finally{ if(rb)rb.disabled=false; }
+  }
+
+  function parseFamily(source,headers,row){
+    const get=n=>getCol(row,headers,n);
+    const children=[];
+    for(let i=1;i<=6;i++){
+      const name=get(`Child ${i} Name`); if(!name)continue;
+      const c={name:String(name).trim(),preferred:get(`Child ${i} Preferred Name`),dob:get(`Child ${i} DOB`),
+        gender:get(`Child ${i} Gender`),grade:get(`Child ${i} Grade`),
+        health:get(`Child ${i} Health`),notes:get(`Child ${i} Notes`)||get(`Child ${i} Notes for New Year`),attitude:get(`Child ${i} Attitude`)};
+      if(source==="homeschool")c.programs=get(`Child ${i} Programs`); else c.schedule=get(`Child ${i} Schedule`);
+      children.push(c);
+    }
+    const rawStage=get("Pipeline Stage")||"Inbox";
+    return {source,regId:String(get("Registration ID")||""),submittedAt:get("Submitted (UTC)"),
+      stage:rawStage==="Paid"?"Inbox":rawStage,paid:rawStage==="Paid",
+      lastName:get("Parent 1 Last"),children};
+  }
+
+  function buildRoster(){
+    NOTES=[];DUPS=[];NEEDS_DATA=[];
+    const all=[];
+    for(const src of Object.keys(BACKENDS)){
+      const b=DATA[src]; if(!b||!b.rows)continue;
+      for(const row of b.rows){
+        if(!row[0])continue;
+        const fam=parseFamily(src,b.headers,row);
+        if(fam.stage==="Declined")continue;
+        for(const c of fam.children){
+          let days, major=null, dob=c.dob;
+          if(src==="homeschool")days=parseHomeschoolDays(c.programs);
+          else {major=normalizeMajor(c.schedule);days=(MAJOR_DAYS[major]||[]).slice();}
+          for(const ov of OVERRIDES){
+            if(fam.regId===ov.reg&&ov.child.test(c.name)){
+              if(ov.days)days=ov.days.slice();
+              if(ov.dob)dob=ov.dob;
+              NOTES.push(ov.note);
+            }
+          }
+          const ax=exactAge(dob);
+          all.push({name:c.name,display:displayName(c.name,c.preferred),fam:fam.lastName,reg:fam.regId,src,
+            type:src==="homeschool"?"hs":"ft",major,days,dob,ax,age:ageOn(dob,SEP1),
+            stage:fam.stage,paid:fam.paid,sure:fam.paid||["Decided","Confirmed","Committed"].includes(fam.stage),
+            submittedAt:fam.submittedAt,flag:hasFlag(c)});
+        }
+      }
+    }
+    // Dedupe: same family last name + same birthdate + same first-3-letters of child name = same child twice.
+    const byKey={};
+    for(const k of all){
+      const dobKey=(String(k.dob).match(/^\d{4}-\d{2}-\d{2}/)||[""])[0];
+      const key=(k.fam||"").toLowerCase().trim()+"|"+dobKey+"|"+k.name.toLowerCase().slice(0,3);
+      if(!byKey[key])byKey[key]=[];
+      byKey[key].push(k);
+    }
+    ROSTER=[];
+    for(const key in byKey){
+      const g=byKey[key];
+      if(g.length===1){ROSTER.push(g[0]);continue;}
+      g.sort((a,b)=>(SRC_RANK[b.src]-SRC_RANK[a.src])||(Date.parse(a.submittedAt)||0)-(Date.parse(b.submittedAt)||0));
+      ROSTER.push(g[0]);
+      for(const d of g.slice(1)){DUPS.push(d);
+        NOTES.push(`Duplicate registration merged: ${d.name} appears in both “${g[0].src}” (kept) and “${d.src}” (ignored). Counted once.`);}
+    }
+    // Needs-data bucket: missing or absurd ages
+    ROSTER=ROSTER.filter(k=>{
+      if(k.ax==null||k.ax<3||k.ax>19.5){NEEDS_DATA.push(k);
+        NOTES.push(`Needs data: ${k.name} has a missing or unreadable birthdate — left out of the classes until the sheet is fixed.`);
+        return false;}
+      return true;
+    });
+    // Position jitter so same-birthday children still get their own dot
+    ROSTER.sort((a,b)=>a.ax-b.ax||a.display.localeCompare(b.display));
+    let prev=-1;
+    for(const k of ROSTER){k.pos=k.ax; if(k.pos<=prev)k.pos=prev+0.004; prev=k.pos;}
+    domainLo=Math.floor(Math.min(...ROSTER.map(k=>k.pos)))-0.4;
+    domainHi=Math.ceil(Math.max(...ROSTER.map(k=>k.pos)))+0.4;
+    renderWarnings();
+  }
+
+  function renderWarnings(){
+    const b=document.getElementById("warn-banner");
+    if(!NOTES.length){b.style.display="none";return;}
+    b.style.display="block";
+    document.getElementById("warn-title").textContent=`Data corrections applied (${NOTES.length}) — click to read`;
+    document.getElementById("warn-body").innerHTML="<ul>"+[...new Set(NOTES)].map(n=>`<li>${esc(n)}</li>`).join("")+"</ul>"+
+      `<div class="note">These fixes live in this page only — the sheets themselves still need correcting. Nothing here ever writes to a sheet.</div>`;
+  }
+
+  // ===== Roster access ==================================================
+  function kidsFor(day){ return ROSTER.filter(k=>k.days.includes(day)&&(stageFilter==="all"||k.sure)); }
+  function classesFor(day){
+    const kids=kidsFor(day).sort((a,b)=>a.pos-b.pos);
+    const ws=(walls[day]||[]).slice().sort((a,b)=>a-b);
+    const cls=Array.from({length:ws.length+1},()=>[]);
+    for(const k of kids){let i=0;while(i<ws.length&&k.pos>=ws[i])i++;cls[i].push(k);}
+    return {kids,ws,cls};
+  }
+  function statusOf(n){ return n<cfg.min?"under":n>cfg.max?"over":"ok"; }
+
+  // ===== Presets ========================================================
+  function wallsSizeFirst(kids){
+    const n=kids.length; if(n<2)return[];
+    const k=Math.max(1,Math.round(n/cfg.target)); if(k<2)return[];
+    const base=Math.floor(n/k), rem=n%k, ws=[]; let idx=0;
+    for(let c=0;c<k-1;c++){ idx+=base+(c<rem?1:0); ws.push((kids[idx-1].pos+kids[idx].pos)/2); }
+    return ws;
+  }
+  function wallsBestCompromise(kids){
+    const n=kids.length; if(n<2)return{ws:[],feasible:n>=cfg.min&&n<=cfg.max};
+    const xs=kids.map(k=>k.pos), P=1e6;
+    function segCost(i,j){const s=j-i;const spread=xs[j-1]-xs[i];
+      let c=spread*spread+0.05*(s-cfg.target)*(s-cfg.target);
+      if(s<cfg.min)c+=P*(cfg.min-s); if(s>cfg.max)c+=P*(s-cfg.max); return c;}
+    let best=null;
+    const kMaxTry=Math.min(12,n);
+    for(let k=1;k<=kMaxTry;k++){
+      const dp=Array.from({length:k+1},()=>new Array(n+1).fill(Infinity));
+      const cut=Array.from({length:k+1},()=>new Array(n+1).fill(-1));
+      dp[0][0]=0;
+      for(let c=1;c<=k;c++)for(let j=c;j<=n;j++)for(let i=c-1;i<j;i++){
+        const v=dp[c-1][i]+segCost(i,j);
+        if(v<dp[c][j]){dp[c][j]=v;cut[c][j]=i;}
+      }
+      if(dp[k][n]<(best?best.cost:Infinity)){
+        const bounds=[];let j=n;for(let c=k;c>=1;c--){const i=cut[c][j];bounds.unshift(i);j=i;}
+        best={cost:dp[k][n],bounds};
+      }
+    }
+    const ws=best.bounds.slice(1).map(i=>(xs[i-1]+xs[i])/2);
+    return {ws,feasible:best.cost<P};
+  }
+  function applyPreset(kind){
+    const days=document.getElementById("scope-all").checked?DAYS_ORDER:[currentDay];
+    let infeasibleDays=[];
+    for(const d of days){
+      const kids=kidsFor(d).sort((a,b)=>a.pos-b.pos);
+      if(kind==="size")walls[d]=wallsSizeFirst(kids);
+      else if(kind==="dev")walls[d]=[8,11,14];
+      else if(kind==="grade")walls[d]=[11.7,14.7];
+      else if(kind==="best"){const r=wallsBestCompromise(kids);walls[d]=r.ws;if(!r.feasible)infeasibleDays.push(DAY_LABEL[d]);}
+    }
+    saveState();renderAll();
+    const note=document.getElementById("day-note");
+    if(kind==="best"&&infeasibleDays.length)
+      note.innerHTML=`<span style="color:var(--bad);font-weight:700;">Honest warning:</span> on ${infeasibleDays.join(", ")} there is NO way to cut classes that keeps every class between ${cfg.min} and ${cfg.max}. Showing the closest miss.`;
+  }
+  function addWall(){
+    const {ws,cls}=classesFor(currentDay);
+    let bi=0;for(let i=1;i<cls.length;i++)if(cls[i].length>cls[bi].length)bi=i;
+    const g=cls[bi];
+    let pos;
+    if(g.length>=2){const m=Math.floor(g.length/2);pos=(g[m-1].pos+g[m].pos)/2;if(g[m-1].pos===g[m].pos)pos+=0.002;}
+    else pos=(domainLo+domainHi)/2;
+    walls[currentDay]=[...ws,pos].sort((a,b)=>a-b);
+    saveState();renderAll();
+  }
+  function removeWall(i){ walls[currentDay].splice(i,1); saveState(); renderAll(); }
+  function copyWallsToAllDays(){ for(const d of DAYS_ORDER)walls[d]=(walls[currentDay]||[]).slice(); saveState(); renderAll(); }
+
+  // ===== Rendering ======================================================
+  function renderAll(){ renderDayTabs(); renderDayNote(); renderAxis(); renderCards(); renderRoster(); renderCrossDay(); renderSummary(); }
+
+  function renderDayTabs(){
+    const el=document.getElementById("day-tabs"); el.innerHTML="";
+    for(const d of DAYS_ORDER){
+      const b=document.createElement("button");
+      b.className="day-tab"+(d===currentDay?" active":"");
+      b.innerHTML=`${DAY_LABEL[d]}<span class="cnt">${kidsFor(d).length}</span>`;
+      b.onclick=()=>{currentDay=d;selectedClass=null;renderAll();};
+      el.appendChild(b);
+    }
+  }
+  function renderDayNote(){
+    const el=document.getElementById("day-note");
+    el.textContent = currentDay==="Wed"
+      ? "Wednesday is full-time only (no à-la-carte homeschool day) — and part-time teachers aren’t hired for Wednesdays, so these classes fall to your full-time staff."
+      : `${DAY_LABEL[currentDay]} mixes full-time and homeschool à-la-carte students from 10:30 on — the block part-time teachers are hired for (10:30–2:30).`;
+  }
+
+  function X(age,w){ return (age-domainLo)/(domainHi-domainLo)*w; }
+  function ageAt(x,w){ return domainLo+(x/w)*(domainHi-domainLo); }
+
+  function renderAxis(){
+    const axis=document.getElementById("axis"); axis.innerHTML="";
+    const w=axis.clientWidth;
+    const {ws,cls}=classesFor(currentDay);
+    // regions
+    const edges=[domainLo,...ws,domainHi];
+    for(let i=0;i<cls.length;i++){
+      const x0=X(edges[i],w),x1=X(edges[i+1],w);
+      const r=document.createElement("div");
+      r.className="region "+(i%2?"tintB":"tintA");
+      r.style.left=x0+"px";r.style.width=Math.max(0,x1-x0)+"px";
+      axis.appendChild(r);
+      const lbl=document.createElement("div");
+      const st=statusOf(cls[i].length);
+      lbl.className="region-label "+st;
+      lbl.style.left=((x0+x1)/2)+"px";
+      lbl.style.top=(i%2?17:0)+"px";
+      const rng=cls[i].length?`${Math.floor(cls[i][0].ax)}–${Math.floor(cls[i][cls[i].length-1].ax)}`:"—";
+      lbl.textContent=`Class ${i+1} · ${cls[i].length} kids · ages ${rng}`;
+      lbl.title="Click the matching card below for names";
+      axis.appendChild(lbl);
+    }
+    // dots (stacked per 0.12-year bin)
+    const binH={},BIN=0.12;
+    const kids=kidsFor(currentDay);
+    for(const k of kids){
+      const bin=Math.round(k.pos/BIN);
+      binH[bin]=(binH[bin]||0);
+      const d=document.createElement("div");
+      d.className="dot "+k.type+(k.flag?" flagged":"");
+      d.style.left=X(k.pos,w)+"px";
+      d.style.bottom=(34+binH[bin]*15)+"px";
+      d.title=`${k.name} — ${ageYM(k.ax)} · ${k.type==="hs"?"Homeschool":(MAJOR_SHORT[k.major]||"Full-time")} · ${k.days.join("/")}${k.flag?" · support flag":""}`;
+      axis.appendChild(d);
+      binH[bin]++;
+    }
+    // walls
+    ws.forEach((wp,i)=>{
+      const el=document.createElement("div");
+      el.className="wall"; el.style.left=X(wp,w)+"px";
+      el.innerHTML=`<div class="grip">⋮</div><div class="agepop"></div><div class="kill" title="Remove this wall">✕</div>`;
+      el.querySelector(".kill").onclick=(e)=>{e.stopPropagation();removeWall(i);};
+      attachDrag(el,i,w);
+      axis.appendChild(el);
+    });
+    // ticks
+    const ticks=document.getElementById("ticks"); ticks.innerHTML="";
+    for(let a=Math.ceil(domainLo);a<=Math.floor(domainHi);a++){
+      const t=document.createElement("div");
+      t.className="tick"; t.style.left=X(a,w)+"px"; t.textContent=a;
+      ticks.appendChild(t);
+    }
+  }
+
+  function attachDrag(el,i,w){
+    const onDown=(ev)=>{
+      ev.preventDefault(); el.classList.add("dragging");
+      el.setPointerCapture&&el.setPointerCapture(ev.pointerId);
+      const axis=document.getElementById("axis");
+      const rect=axis.getBoundingClientRect();
+      const ws=walls[currentDay];
+      const lo=(i>0?ws[i-1]+0.03:domainLo+0.05), hi=(i<ws.length-1?ws[i+1]-0.03:domainHi-0.05);
+      const pop=el.querySelector(".agepop");
+      const onMove=(mv)=>{
+        let age=ageAt(mv.clientX-rect.left,w);
+        age=Math.max(lo,Math.min(hi,age));
+        ws[i]=age;
+        el.style.left=X(age,w)+"px";
+        pop.textContent="wall at "+ageYM(age);
+        renderCards(); // live readout while dragging
+      };
+      const onUp=()=>{
+        el.classList.remove("dragging");
+        document.removeEventListener("pointermove",onMove);
+        document.removeEventListener("pointerup",onUp);
+        saveState(); renderAll();
+      };
+      document.addEventListener("pointermove",onMove);
+      document.addEventListener("pointerup",onUp);
+    };
+    el.addEventListener("pointerdown",onDown);
+  }
+
+  function renderCards(){
+    const el=document.getElementById("cards"); el.innerHTML="";
+    const {cls}=classesFor(currentDay);
+    cls.forEach((g,i)=>{
+      const st=statusOf(g.length);
+      const c=document.createElement("div");
+      c.className="ccard "+st+(selectedClass===i?" sel":"");
+      const rng=g.length?`${ageYM(g[0].ax)} – ${ageYM(g[g.length-1].ax)}`:"empty";
+      const ft=g.filter(k=>k.type==="ft").length, hs=g.length-ft;
+      const flags=g.filter(k=>k.flag).length;
+      c.innerHTML=`<h3>Class ${i+1}</h3>
+        <div class="big">${g.length}<span class="stat ${st}">${st==="ok"?"ideal":st==="under"?"under "+cfg.min:"over "+cfg.max}</span></div>
+        <div class="sub">${rng}</div>
+        <div class="sub">${ft} full-time · ${hs} homeschool${flags?` · <span class="flagdot">●</span> ${flags} flagged`:""}</div>
+        <div class="sub">1 teacher</div>`;
+      c.onclick=()=>{selectedClass=(selectedClass===i?null:i);renderCards();renderRoster();};
+      el.appendChild(c);
+    });
+  }
+
+  function renderRoster(){
+    const el=document.getElementById("roster");
+    if(selectedClass==null){el.classList.remove("open");el.innerHTML="";return;}
+    const {cls}=classesFor(currentDay);
+    const g=cls[selectedClass]||[];
+    el.classList.add("open");
+    el.innerHTML=`<h3>Class ${selectedClass+1} on ${DAY_LABEL[currentDay]} — every name (${g.length})</h3>`+
+      (g.length?g.map(k=>`<div class="rkid"><span class="nm">${esc(k.display)}${k.flag?' <span class="flagdot" title="support flag">●</span>':""}</span><span class="full">${esc(k.name)} · ${esc(k.fam)} family</span><span class="srcpill ${k.type}">${k.type==="hs"?"HS":"FT"}</span><span class="meta">${ageYM(k.ax)} · ${k.days.join("/")}</span></div>`).join("")
+      :'<div class="note">No children in this class on this day.</div>');
+  }
+
+  // ===== Cross-day check ================================================
+  // A child is "torn" when the class they sit in on one day covers a clearly
+  // different age-neighborhood than on another day — different classmates.
+  function renderCrossDay(){
+    const el=document.getElementById("crossday");
+    const perDay={};
+    for(const d of DAYS_ORDER){const {cls,ws}=classesFor(d);perDay[d]={cls,ws};}
+    const rows=[];let checked=0;
+    for(const k of ROSTER){
+      if(!(stageFilter==="all"||k.sure))continue;
+      if(k.days.length<2)continue;
+      checked++;
+      const bands=k.days.map(d=>{
+        const {cls,ws}=perDay[d];let i=0;while(i<ws.length&&k.pos>=ws[i])i++;
+        const g=cls[i];
+        return {d,band:i,total:ws.length+1,lo:g.length?g[0].ax:k.ax,hi:g.length?g[g.length-1].ax:k.ax};
+      });
+      // worst overlap between any two of the child's days
+      let worst=null;
+      for(let a=0;a<bands.length;a++)for(let b=a+1;b<bands.length;b++){
+        const A=bands[a],B=bands[b];
+        const lenA=Math.max(0.5,A.hi-A.lo), lenB=Math.max(0.5,B.hi-B.lo);
+        const ov=Math.max(0,Math.min(A.hi,B.hi)-Math.max(A.lo,B.lo));
+        const ratio=ov/Math.min(lenA,lenB);
+        if(!worst||ratio<worst.ratio)worst={ratio,A,B};
+      }
+      if(worst&&worst.ratio<0.35){
+        rows.push(`<div class="xrow"><span class="nm">${esc(k.display)} ${esc(k.fam)}</span> (${ageYM(k.ax)}) — <span class="path">${bands.map(b=>`${b.d}: Class ${b.band+1} (ages ${Math.floor(b.lo)}–${Math.ceil(b.hi)})`).join(" · ")}</span></div>`);
+      }
+    }
+    el.innerHTML = rows.length
+      ? `<p class="note">These children sit with a clearly different age-group depending on the day — different classmates, likely a different teacher. That may be fine, but you should choose it, not stumble into it. (${rows.length} of ${checked} multi-day children.)</p>`+rows.join("")
+      : `<div class="okline">✓ With the current walls, every multi-day child stays in the same age-neighborhood on all of their days. (${checked} multi-day children checked.)</div>`;
+  }
+
+  // ===== Week summary ===================================================
+  function renderSummary(){
+    const el=document.getElementById("summary");
+    let rows="",totClasses=0,totPt=0,wedOver=false;
+    for(const d of DAYS_ORDER){
+      const {cls}=classesFor(d);
+      const nonEmpty=cls.length; // one teacher per class, even a small one
+      const sizes=cls.map(g=>g.length);
+      totClasses+=nonEmpty;
+      const pt=d==="Wed"?0:Math.max(0,nonEmpty-cfg.ftStaff);
+      if(d==="Wed"&&nonEmpty>cfg.ftStaff)wedOver=true;
+      if(d!=="Wed")totPt+=pt;
+      const sizeStr=sizes.map(s=>`<span class="b ${statusOf(s)}">${s}</span>`).join("");
+      rows+=`<tr><td><strong>${DAY_LABEL[d]}</strong></td><td class="num">${kidsFor(d).length}</td><td class="sizestr">${sizeStr}</td><td class="num">${nonEmpty}</td><td class="num">${d==="Wed"?"—":pt}</td></tr>`;
+    }
+    const costLo=totPt*PT_HOURS*PT_RATE_LO, costHi=totPt*PT_HOURS*PT_RATE_HI;
+    el.innerHTML=`
+      <div style="margin-bottom:10px;">
+        <label style="font-size:12px;color:var(--ink-soft);font-weight:700;">FULL-TIME STAFF WHO CAN EACH LEAD A CLASS PER DAY&nbsp;</label>
+        <input class="ctrl-num" type="number" min="0" max="20" value="${cfg.ftStaff}" oninput="cfg.ftStaff=Math.max(0,parseInt(this.value)||0);saveState();renderSummary();">
+      </div>
+      <table class="tbl">
+        <thead><tr><th>Day</th><th class="num">Students</th><th>Class sizes</th><th class="num">Classes = teachers</th><th class="num">Part-timers to hire</th></tr></thead>
+        <tbody>${rows}
+        <tr class="total-row"><td>Week</td><td></td><td></td><td class="num">${totClasses} teacher-days</td><td class="num">${totPt} PT days</td></tr></tbody>
+      </table>
+      ${wedOver?`<p class="note" style="color:var(--bad);font-weight:700;">⚠ Wednesday needs more classes than you have full-time staff — and part-timers aren’t hired Wednesdays. Fewer, larger Wednesday classes, or another full-time hand.</p>`:""}
+      <p class="note" style="margin-top:8px;"><strong>Rough part-time cost:</strong> ${totPt} teacher-day${totPt===1?"":"s"}/week × ${PT_HOURS} hrs × $${PT_RATE_LO}–$${PT_RATE_HI} = <strong>$${costLo.toLocaleString()}–$${costHi.toLocaleString()} per week</strong> (≈ $${(costLo*36).toLocaleString()}–$${(costHi*36).toLocaleString()} over a 36-week year). Assumes ${cfg.ftStaff} full-time staff each lead a class every day; adjust above if some don’t teach.</p>`;
+  }
+
+  // ===== Export =========================================================
+  function downloadCsv(){
+    const rows=[["Day","Class","Age range","Student","Full name","Family","Age Sep 1","Program","Days","Support flag"]];
+    for(const d of DAYS_ORDER){
+      const {cls}=classesFor(d);
+      cls.forEach((g,i)=>{
+        const rng=g.length?`${ageYM(g[0].ax)} - ${ageYM(g[g.length-1].ax)}`:"";
+        for(const k of g)rows.push([DAY_LABEL[d],`Class ${i+1}`,rng,k.display,k.name,k.fam,ageYM(k.ax),k.type==="hs"?"Homeschool":(MAJOR_SHORT[k.major]||"Full-time"),k.days.join("/"),k.flag?"yes":""]);
+      });
+    }
+    const csv=rows.map(r=>r.map(c=>`"${String(c==null?"":c).replace(/"/g,'""')}"`).join(",")).join("\n");
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob(["﻿"+csv],{type:"text/csv"}));
+    a.download="river-tech-class-plan.csv"; a.click();
+  }
+  function printRosters(){
+    const root=document.getElementById("print-root");
+    let html=`<h1>River Tech class plan — 2026–27 (ages as of Sept 1, 2026)</h1>`;
+    for(const d of DAYS_ORDER){
+      const {cls}=classesFor(d);
+      html+=`<div class="pday"><h2>${DAY_LABEL[d]} — ${kidsFor(d).length} students · ${cls.length} classes</h2>`;
+      cls.forEach((g,i)=>{
+        const rng=g.length?`${ageYM(g[0].ax)} – ${ageYM(g[g.length-1].ax)}`:"empty";
+        html+=`<h3>Class ${i+1} — ${g.length} students · ${rng}</h3>
+          <table><tr><th>Student</th><th>Family</th><th>Age</th><th>Program</th><th>Days</th></tr>`+
+          g.map(k=>`<tr><td>${esc(k.display)} ${k.flag?"●":""}</td><td>${esc(k.fam)}</td><td>${ageYM(k.ax)}</td><td>${k.type==="hs"?"Homeschool":(MAJOR_SHORT[k.major]||"Full-time")}</td><td>${k.days.join("/")}</td></tr>`).join("")+`</table>`;
+      });
+      html+=`</div>`;
+    }
+    root.innerHTML=html;
+    window.print();
+  }
+
+  // ===== State persistence =============================================
+  function saveState(){
+    try{localStorage.setItem(LS_WALLS,JSON.stringify(walls));localStorage.setItem(LS_CFG,JSON.stringify(cfg));}catch{}
+  }
+  function restoreState(){
+    let saved=null;
+    try{saved=JSON.parse(localStorage.getItem(LS_WALLS)||"null");cfg={...cfg,...(JSON.parse(localStorage.getItem(LS_CFG)||"{}"))};}catch{}
+    document.getElementById("cfg-target").value=cfg.target;
+    document.getElementById("cfg-min").value=cfg.min;
+    document.getElementById("cfg-max").value=cfg.max;
+    if(saved&&DAYS_ORDER.every(d=>Array.isArray(saved[d]))){walls=saved;return;}
+    for(const d of DAYS_ORDER){const kids=kidsFor(d).sort((a,b)=>a.pos-b.pos);walls[d]=wallsBestCompromise(kids).ws;}
+    saveState();
+  }
+  function setStageFilter(v){
+    stageFilter=v;selectedClass=null;
+    document.querySelectorAll(".chip[data-stage]").forEach(c=>c.classList.toggle("active",c.dataset.stage===v));
+    renderAll();
+  }
+  for(const id of ["cfg-target","cfg-min","cfg-max"]){
+    document.getElementById(id).addEventListener("input",()=>{
+      cfg.target=Math.max(2,parseInt(document.getElementById("cfg-target").value)||15);
+      cfg.min=Math.max(1,parseInt(document.getElementById("cfg-min").value)||12);
+      cfg.max=Math.max(cfg.min,parseInt(document.getElementById("cfg-max").value)||18);
+      saveState();renderAll();
+    });
+  }
+  window.addEventListener("resize",()=>{if(ROSTER.length)renderAxis();});
+  loadData();
+</script>
+</body>
+</html>
