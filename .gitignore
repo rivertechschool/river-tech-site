@@ -12,3 +12,6 @@ RTD-FORM-NOTES.md
 .vscode/
 .idea/
 *.swp
+
+# local cleanup staging (VM cannot delete files)
+_to_delete/
