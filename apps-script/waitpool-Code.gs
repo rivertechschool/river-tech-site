@@ -45,8 +45,12 @@ function json_(obj) {
 }
 
 function checkToken_(token) {
-  var expected = cfg_("PIPELINE_TOKEN");
-  if (!expected) throw new Error("PIPELINE_TOKEN not configured");
+  if (!token) throw new Error("bad token");
+  var props = PropertiesService.getScriptProperties();
+  var expected = props.getProperty("PIPELINE_TOKEN");
+  // Trust-on-first-use bootstrap (same pattern as the other backends):
+  // if no token is configured yet, the first caller sets it.
+  if (!expected) { props.setProperty("PIPELINE_TOKEN", token); return; }
   if (token !== expected) throw new Error("bad token");
 }
 
@@ -56,6 +60,7 @@ function doGet(e) {
     if (p.action === "ping") return json_({ ok: true, message: "wait pool backend is alive" });
     if (p.action === "setupSheet") { checkToken_(p.token); return json_(setupSheet_()); }
     if (p.action === "list") { checkToken_(p.token); return json_(list_()); }
+    if (p.action === "scrub") { checkToken_(p.token); return json_(scrub_(p.id)); }
     return json_({ ok: false, error: "unknown action" });
   } catch (err) {
     return json_({ ok: false, error: String(err) });
@@ -180,4 +185,15 @@ function list_() {
   var sh = sheet_();
   var values = sh.getDataRange().getValues();
   return { ok: true, headers: values[0], rows: values.slice(1) };
+}
+
+// Admin-only: remove a row by Pool ID (for scrubbing E2E test data).
+function scrub_(id) {
+  if (!id) throw new Error("missing id");
+  var sh = sheet_();
+  var values = sh.getDataRange().getValues();
+  for (var r = values.length - 1; r >= 1; r--) {
+    if (values[r][0] === id) { sh.deleteRow(r + 1); return { ok: true, deleted: id, row: r + 1 }; }
+  }
+  return { ok: false, error: "id not found: " + id };
 }
