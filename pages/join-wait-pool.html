@@ -231,7 +231,7 @@
 
       <div class="wp-info">
         <p><strong>Thank you for your interest in River Tech.</strong> Our school is at full capacity, and this form is where new families begin. It takes about five minutes, it is free, and it commits you to nothing.</p>
-        <p>We ask a handful of real questions because when a seat opens, we want to offer it thoughtfully. All we ask of you is honesty. And if anything on this page raises a question, write to us at <a href="mailto:learn@rivertech.me?subject=Wait Pool question">learn@rivertech.me</a> &mdash; a person reads it, and a person answers.</p>
+        <p>We ask a handful of real questions because when a seat opens, we want to offer it thoughtfully. If anything on this page raises a question, write to us at <a href="mailto:learn@rivertech.me?subject=Wait Pool question">learn@rivertech.me</a>.</p>
       </div>
 
       <div id="wp-success" class="wp-success" role="status"></div>
@@ -287,6 +287,7 @@
           <label class="wp-label">Which program are you hoping for?<span class="req">*</span></label>
           <label class="wp-radio"><input type="radio" name="program" value="Full-Time" required><span>Full-Time &mdash; four or five days a week, the complete River Tech experience.</span></label>
           <label class="wp-radio"><input type="radio" name="program" value="A La Carte"><span>&Agrave; La Carte &mdash; one to four days a week, alongside your homeschool.</span></label>
+          <label class="wp-radio"><input type="radio" name="program" value="Either"><span>Either one &mdash; we are open to both programs; we simply hope to join.</span></label>
           <div id="wp-alc-days" style="display:none; margin-top: 10px;">
             <label class="wp-label">Which days interest you?</label>
             <label class="wp-check"><input type="checkbox" name="alcDay" value="Monday"><span>Monday &mdash; Performing Arts</span></label>
@@ -305,9 +306,7 @@
           <div class="wp-section-title">Our culture</div>
           <p class="wp-section-sub">River Tech has a distinct culture, and it matters more than anything else on this form. Please take a few minutes to read <a href="our-culture.html" target="_blank" rel="noopener" style="color: var(--color-red); font-weight: 600;">Our Culture</a> &mdash; it is a plain and honest description of who we are.</p>
           <label class="wp-check"><input type="checkbox" id="cultureRead" required><span>We have read Our Culture, and it describes a school we want for our family.<span class="req">*</span></span></label>
-          <label class="wp-label" style="margin-top: 18px;">Our school day begins with worship, prayer, and a short devotional, and everything we teach reflects a Christian worldview. Is your family comfortable with, and supportive of, your child being taught in that environment?<span class="req">*</span></label>
-          <label class="wp-radio"><input type="radio" name="worldview" value="Yes" required><span>Yes, gladly.</span></label>
-          <label class="wp-radio"><input type="radio" name="worldview" value="Questions"><span>We have some questions we would like to talk through first.</span></label>
+          <label class="wp-check" style="margin-top: 18px;"><input type="checkbox" id="worldviewAffirm" required><span>Our school day begins with worship, prayer, and a short devotional, and everything we teach reflects a Christian worldview. Our family is comfortable with this, and we support it.<span class="req">*</span></span></label>
         </div>
 
         <!-- Tuition -->
@@ -321,7 +320,6 @@
           <label class="wp-radio"><input type="radio" name="scholarship" value="No" required><span>No &mdash; we can carry tuition ourselves.</span></label>
           <label class="wp-radio"><input type="radio" name="scholarship" value="Partially"><span>Partially &mdash; some help would make the difference.</span></label>
           <label class="wp-radio"><input type="radio" name="scholarship" value="Yes"><span>Yes &mdash; we would need a scholarship to enroll.</span></label>
-          <span class="wp-help">Please answer honestly. It does not remove you from the pool &mdash; it simply helps us plan truthfully.</span>
           <label class="wp-check" style="margin-top: 18px;"><input type="checkbox" id="tuitionAffirm" required><span>We have reviewed the tuition above, and our family can meet the payments on time for the full school year.<span class="req">*</span></span></label>
         </div>
 
@@ -365,12 +363,13 @@
         <input class="wp-input" type="date" data-f="birthdate" required>
       </div>
       <div>
-        <label class="wp-label">Grade entering<span class="req">*</span></label>
+        <label class="wp-label">Grade in 2026&ndash;27<span class="req">*</span></label>
         <select class="wp-select" data-f="grade" required>
           <option value="">Choose a grade&hellip;</option>
           <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option><option>6th</option>
           <option>7th</option><option>8th</option><option>9th</option><option>10th</option><option>11th</option><option>12th</option>
         </select>
+        <span class="wp-help">Tell us their grade for this school year. If you are hoping to start next fall, we will do the math.</span>
       </div>
     </div>
     <label class="wp-label">Where does your child go to school today?<span class="req">*</span></label>
@@ -384,25 +383,33 @@
     <label class="wp-label">Is your child drawn to technology?<span class="req">*</span></label>
     <select class="wp-select" data-f="techInterest" required>
       <option value="">Choose one&hellip;</option>
-      <option>Yes &mdash; it is one of their loves.</option>
-      <option>Not yet, but they are curious.</option>
+      <option>Yes &mdash; they love it.</option>
+      <option>Somewhat &mdash; they are curious.</option>
+      <option>Not yet.</option>
     </select>
-    <label class="wp-label">If technology is their thing, what is their favorite?</label>
-    <select class="wp-select" data-f="techFavorite">
-      <option value="">They have not found a favorite yet.</option>
-      <option>Coding</option><option>Robotics</option><option>Filmmaking</option><option>3D modeling</option><option>Game design</option><option>Something else</option>
-    </select>
+    <label class="wp-label">Which technologies are their favorites? Please choose up to three.</label>
+    <div class="wp-grid-2">
+      <label class="wp-check"><input type="checkbox" data-favgroup="techFavorite" value="Coding"><span>Coding</span></label>
+      <label class="wp-check"><input type="checkbox" data-favgroup="techFavorite" value="Robotics"><span>Robotics</span></label>
+      <label class="wp-check"><input type="checkbox" data-favgroup="techFavorite" value="Filmmaking"><span>Filmmaking</span></label>
+      <label class="wp-check"><input type="checkbox" data-favgroup="techFavorite" value="3D modeling"><span>3D modeling</span></label>
+      <label class="wp-check"><input type="checkbox" data-favgroup="techFavorite" value="Game design"><span>Game design</span></label>
+      <label class="wp-check"><input type="checkbox" data-favgroup="techFavorite" value="Something else"><span>Something else</span></label>
+    </div>
     <label class="wp-label">Is your child drawn to the performing arts?<span class="req">*</span></label>
     <select class="wp-select" data-f="artsInterest" required>
       <option value="">Choose one&hellip;</option>
-      <option>Yes &mdash; it is one of their loves.</option>
-      <option>Not yet, but they are curious.</option>
+      <option>Yes &mdash; they love it.</option>
+      <option>Somewhat &mdash; they are curious.</option>
+      <option>Not yet.</option>
     </select>
-    <label class="wp-label">Which arts class would they choose first?</label>
-    <select class="wp-select" data-f="artsFavorite">
-      <option value="">They have not found a favorite yet.</option>
-      <option>Musical theater</option><option>Choir and singing</option><option>Acting</option><option>Dance</option>
-    </select>
+    <label class="wp-label">Which arts are their favorites? Please choose up to three.</label>
+    <div class="wp-grid-2">
+      <label class="wp-check"><input type="checkbox" data-favgroup="artsFavorite" value="Musical theater"><span>Musical theater</span></label>
+      <label class="wp-check"><input type="checkbox" data-favgroup="artsFavorite" value="Choir and singing"><span>Choir and singing</span></label>
+      <label class="wp-check"><input type="checkbox" data-favgroup="artsFavorite" value="Acting"><span>Acting</span></label>
+      <label class="wp-check"><input type="checkbox" data-favgroup="artsFavorite" value="Dance"><span>Dance</span></label>
+    </div>
     <label class="wp-label">How does your child feel about performing on stage?<span class="req">*</span></label>
     <select class="wp-select" data-f="stage" required>
       <option value="">Choose one&hellip;</option>
@@ -449,6 +456,16 @@
     addBtn.style.display = blocks.length >= MAX_CHILDREN ? "none" : "";
   }
 
+  childrenWrap.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.matches && t.matches('input[data-favgroup]') && t.checked) {
+      var block = t.closest(".wp-child");
+      var group = t.getAttribute("data-favgroup");
+      var checked = block.querySelectorAll('input[data-favgroup="' + group + '"]:checked');
+      if (checked.length > 3) t.checked = false;
+    }
+  });
+
   function addChild() {
     var node = tpl.content.cloneNode(true);
     node.querySelector(".wp-remove-child").addEventListener("click", function (e) {
@@ -490,6 +507,12 @@
     childrenWrap.querySelectorAll(".wp-child").forEach(function (b) {
       var c = {};
       b.querySelectorAll("[data-f]").forEach(function (el) { c[el.getAttribute("data-f")] = el.value.trim(); });
+      ["techFavorite", "artsFavorite"].forEach(function (g) {
+        c[g] = Array.prototype.map.call(
+          b.querySelectorAll('input[data-favgroup="' + g + '"]:checked'),
+          function (x) { return x.value; }
+        ).join(", ");
+      });
       children.push(c);
     });
 
@@ -506,7 +529,7 @@
       alcDays: Array.prototype.map.call(document.querySelectorAll('input[name="alcDay"]:checked'), function (x) { return x.value; }).join(", "),
       desiredStart: radioVal("start"),
       cultureRead: document.getElementById("cultureRead").checked,
-      worldview: radioVal("worldview"),
+      worldviewAffirm: document.getElementById("worldviewAffirm").checked,
       payPlan: radioVal("payPlan"),
       scholarship: radioVal("scholarship"),
       tuitionAffirm: document.getElementById("tuitionAffirm").checked,

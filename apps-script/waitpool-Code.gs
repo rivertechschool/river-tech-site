@@ -103,10 +103,11 @@ function poolId_() {
 function submit_(b) {
   // Required family-level fields.
   ["parentFirstName", "parentLastName", "parentEmail", "parentPhone", "parentCity",
-   "program", "desiredStart", "worldview", "payPlan", "scholarship"].forEach(function (k) {
+   "program", "desiredStart", "payPlan", "scholarship"].forEach(function (k) {
     if (!b[k]) throw new Error("missing field: " + k);
   });
   if (b.cultureRead !== true) throw new Error("culture acknowledgment required");
+  if (b.worldviewAffirm !== true) throw new Error("worldview acknowledgment required");
   if (b.tuitionAffirm !== true) throw new Error("tuition acknowledgment required");
   var children = (b.children || []).slice(0, MAX_CHILDREN);
   if (!children.length) throw new Error("at least one child required");
@@ -120,7 +121,7 @@ function submit_(b) {
     id, new Date().toISOString(), "New",
     b.parentFirstName, b.parentLastName, b.parentEmail, b.parentPhone, b.parentCity,
     b.referredBy || "", b.program, b.alcDays || "", b.desiredStart,
-    "Yes", b.worldview, b.payPlan, b.scholarship, "Yes",
+    "Yes", "Yes", b.payPlan, b.scholarship, "Yes",
     b.notes || "", children.length
   ];
   children.forEach(function (c) {
@@ -165,7 +166,7 @@ function submit_(b) {
 "Parent: " + b.parentFirstName + " " + b.parentLastName + " — " + b.parentEmail + " — " + b.parentPhone + " — " + b.parentCity + "\n" +
 "Referred by: " + (b.referredBy || "—") + "\n" +
 "Program: " + b.program + (b.alcDays ? " (" + b.alcDays + ")" : "") + " · Start: " + b.desiredStart + "\n" +
-"Worldview: " + b.worldview + " · Plan: " + b.payPlan + " · Scholarship-dependent: " + b.scholarship + "\n" +
+"Worldview affirmed: Yes · Plan: " + b.payPlan + " · Scholarship-dependent: " + b.scholarship + "\n" +
 "Children:\n" + kidLines + "\n" +
 (b.notes ? "\nNotes: " + b.notes + "\n" : "") +
 "\nFull details in the RTS Wait Pool sheet."
