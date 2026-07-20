@@ -1,18 +1,18 @@
 /**
- * River Tech — Wait Pool backend (waitpool-v1)
+ * River Tech - Wait Pool backend (waitpool-v1)
  *
  * Deploy on learn@rivertech.me as a Web App: Execute as Me, Anyone has access.
  * Script Properties used:
- *   PIPELINE_TOKEN     — shared admin token (same value as the other backends)
- *   WAITPOOL_SHEET_ID  — set automatically by ?action=setupSheet
+ *   PIPELINE_TOKEN     - shared admin token (same value as the other backends)
+ *   WAITPOOL_SHEET_ID  - set automatically by ?action=setupSheet
  *
  * Endpoints:
- *   POST (no action)                     — public form submission (JSON body)
- *   GET  ?action=ping                    — health check
- *   GET  ?action=setupSheet&token=…      — creates the sheet AS learn@ (lesson 20) and stores its ID
- *   GET  ?action=list&token=…            — returns {headers, rows} for admin/reporting
+ *   POST (no action)                     - public form submission (JSON body)
+ *   GET  ?action=ping                    - health check
+ *   GET  ?action=setupSheet&token=...      - creates the sheet AS learn@ (lesson 20) and stores its ID
+ *   GET  ?action=list&token=...            - returns {headers, rows} for admin/reporting
  *
- * No Stripe. No uploads. Simplest backend in the family — keep it that way.
+ * No Stripe. No uploads. Simplest backend in the family - keep it that way.
  */
 
 var NOTIFY_EMAIL = "learn@rivertech.me";
@@ -93,7 +93,7 @@ function setupSheet_() {
 
 function sheet_() {
   var id = cfg_("WAITPOOL_SHEET_ID");
-  if (!id) throw new Error("WAITPOOL_SHEET_ID not set — run ?action=setupSheet first");
+  if (!id) throw new Error("WAITPOOL_SHEET_ID not set - run ?action=setupSheet first");
   return SpreadsheetApp.openById(id).getSheetByName("Pool");
 }
 
@@ -140,20 +140,20 @@ function submit_(b) {
 
   sheet_().appendRow(row);
 
-  // Confirmation to the family — same voice as the site.
+  // Confirmation to the family - same voice as the site.
   try {
     MailApp.sendEmail({
       to: b.parentEmail,
-      subject: "You're in the pool — River Tech School",
+      subject: "You're in the pool - River Tech School",
       name: "River Tech School",
       replyTo: NOTIFY_EMAIL,
       body:
 "Dear " + b.parentFirstName + ",\n\n" +
-"Thank you — your family is in the River Tech wait pool. Joining is free and commits you to nothing.\n\n" +
-"Here is what happens next. When a seat opens in your child's grade, we reach out directly. Seats open most often in September and after Christmas break, but they can open at any time of year. We will not pretend to know when that will be — what we promise is honesty: you will hear from us when things change.\n\n" +
-"In the meantime, you are warmly invited to River Tech Days, our concerts, and our productions. Keep an eye on the calendar at rivertechschool.com — waiting is easier when you can watch.\n\n" +
+"Thank you - your family is in the River Tech wait pool. Joining is free and commits you to nothing.\n\n" +
+"Here is what happens next. When a seat opens in your child's grade, we reach out directly. Seats open most often in September and after Christmas break, but they can open at any time of year. We will not pretend to know when that will be - what we promise is honesty: you will hear from us when things change.\n\n" +
+"In the meantime, you are warmly invited to River Tech Days, our concerts, and our productions. Keep an eye on the calendar at rivertechschool.com - waiting is easier when you can watch.\n\n" +
 "If your plans change, simply reply to this email and tell us. We would rather know than guess.\n\n" +
-"Warmly,\nRiver Tech School of Performing Arts & Technology\nThe Heart — 927 E Polston Ave, Post Falls, ID\nlearn@rivertech.me — (425) 444-2081\n\nLife is a Stage. Love is our Script."
+"Warmly,\nRiver Tech School of Performing Arts & Technology\nThe Heart - 927 E Polston Ave, Post Falls, ID\nlearn@rivertech.me - (425) 444-2081\n\nLife is a Stage. Love is our Script."
     });
   } catch (mailErr) { /* the row is saved; email failure must not fail the submission */ }
 
@@ -164,14 +164,14 @@ function submit_(b) {
     }).join("\n");
     MailApp.sendEmail({
       to: NOTIFY_EMAIL,
-      subject: "Wait pool: " + b.parentLastName + " family (" + children.length + " child" + (children.length > 1 ? "ren" : "") + ") — " + id,
+      subject: "Wait pool: " + b.parentLastName + " family (" + children.length + " child" + (children.length > 1 ? "ren" : "") + ") - " + id,
       name: "Wait Pool Form",
       body:
 "New wait pool submission " + id + "\n\n" +
-"Parent: " + b.parentFirstName + " " + b.parentLastName + " — " + b.parentEmail + " — " + b.parentPhone + " — " + b.parentCity + "\n" +
-"Referred by: " + (b.referredBy || "—") + "\n" +
-"Program: " + b.program + (b.alcDays ? " (" + b.alcDays + ")" : "") + " · Start: " + b.desiredStart + "\n" +
-"Worldview affirmed: Yes · Plan: " + b.payPlan + " · Scholarship-dependent: " + b.scholarship + "\n" +
+"Parent: " + b.parentFirstName + " " + b.parentLastName + " - " + b.parentEmail + " - " + b.parentPhone + " - " + b.parentCity + "\n" +
+"Referred by: " + (b.referredBy || "-") + "\n" +
+"Program: " + b.program + (b.alcDays ? " (" + b.alcDays + ")" : "") + " - Start: " + b.desiredStart + "\n" +
+"Worldview affirmed: Yes - Plan: " + b.payPlan + " - Scholarship-dependent: " + b.scholarship + "\n" +
 "Children:\n" + kidLines + "\n" +
 (b.notes ? "\nNotes: " + b.notes + "\n" : "") +
 "\nFull details in the RTS Wait Pool sheet."
