@@ -142,6 +142,11 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
+    <loc>https://www.rivertechschool.com/pages/teach-ea.html</loc>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
     <loc>https://www.rivertechschool.com/pages/teach.html</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>

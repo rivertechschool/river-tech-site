@@ -86,6 +86,7 @@ function doGet(e) {
   if (params.action === "setupSheet") return json_(setupSheet_());
   if (params.action === "list") return json_(adminList_(params));
   if (params.action === "scrubTest") return json_(scrubTest_(params));
+  if (params.action === "resetHeader") return json_(resetHeader_(params));
   return json_({ ok: true, message: "Full-Time Teacher backend is alive.", version: BACKEND_VERSION });
 }
 
@@ -202,7 +203,7 @@ function headerRow_() {
     "Experience Highlight",
     "Culture Agreed", "Faith", "Why River Tech",
     "Subjects", "Suggested Subjects", "Strengths",
-    "Track", "Start Timing", "Resume Link",
+    "Track", "Start Timing", "Combo Interest", "Combo Skills", "Resume Link",
     "Background Check OK", "References",
     "Signature", "Signature Date", "Consent Agreed",
     "Dan Adjustment", "Dan Notes"
@@ -259,6 +260,8 @@ function writeToSheet_(applicationId, p, transcriptUrls) {
     p.subjectsStrength || "",
     label_(TRACK_LABELS, p.track),
     label_(START_LABELS, p.startTiming),
+    p.comboInterest ? "Yes" : "",
+    p.comboSkills || "",
     p.resumeLink || "",
     p.backgroundConsent ? "Yes" : "No",
     p.references || "",
@@ -333,6 +336,7 @@ function sendNotificationEmail_(applicationId, p, transcriptUrls) {
     ((p.subjects || []).length > 3 ? "…" : "") +
     (degrees.length ? " — " + degrees.join("/") : "") +
     " — " + label_(START_LABELS, p.startTiming) +
+    (p.comboInterest ? " — ★COMBO" : "") +
     (transcriptUrls && transcriptUrls.length ? " — 📎" + transcriptUrls.length : "");
 
   function degreeLine(label, d) {
@@ -387,6 +391,7 @@ function sendNotificationEmail_(applicationId, p, transcriptUrls) {
     "Strengths: " + (p.subjectsStrength || "—"),
     "Track: " + label_(TRACK_LABELS, p.track),
     "Start: " + label_(START_LABELS, p.startTiming),
+    (p.comboInterest ? "★ TEACHER + EA COMBO INTEREST — office/AI skills: " + (p.comboSkills || "(not described)") : "Combo interest: —"),
     "Résumé link: " + (p.resumeLink || "—"),
     "",
     "Background check OK: " + (p.backgroundConsent ? "Yes" : "No"),
@@ -507,6 +512,18 @@ function scrubTest_(params) {
   }
 
   return result;
+}
+
+// ---- Header reset (token-protected; only when sheet has no data rows) ---
+// GET ?action=resetHeader&token=...  — clears the header row so the next
+// submission regenerates it with the current schema. Refuses if data exists.
+function resetHeader_(params) {
+  const tokenErr = checkToken_(params);
+  if (tokenErr) return { ok: false, error: tokenErr };
+  const sh = getSheet_();
+  if (sh.getLastRow() > 1) return { ok: false, error: "Sheet has data rows; refusing to reset header." };
+  sh.clear();
+  return { ok: true, message: "Header cleared; next submission regenerates it with the current schema." };
 }
 
 // ---- Setup (curl-triggerable, no editor run-picker needed) -------------

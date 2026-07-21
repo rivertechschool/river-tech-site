@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png">
+  <title>Teacher + Executive Assistant | Teach at River Tech | River Tech School</title>
+  <meta name="description" content="A combined role at River Tech School in Post Falls, Idaho: teach in the classroom and run the founder&rsquo;s office. For a teacher&rsquo;s heart with an operator&rsquo;s hands &mdash; AI-fluent, organized, grounded in faith.">
+
+  <meta property="og:title" content="Teacher + Executive Assistant | River Tech School">
+  <meta property="og:description" content="Our rarest opening: form students in the classroom and keep a growing school running behind the scenes. Post Falls, Idaho.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.rivertechschool.com/pages/teach-ea.html">
+  <meta property="og:image" content="https://www.rivertechschool.com/assets/images/og-image.png">
+
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/style.css?v=27">
+
+  <link rel="canonical" href="https://www.rivertechschool.com/pages/teach-ea.html">
+
+  <style>
+    /* --- Teacher + EA combo: scoped styles (inherits the register-form design language) --- */
+    .reg-wrap { max-width: 760px; margin: 0 auto; padding: 20px 0 120px; }
+
+    .reg-hero { text-align: center; padding: 34px 0 22px; position: relative; }
+    .reg-hero::after {
+      content: ""; display: block; width: 72px; height: 4px; margin: 18px auto 0;
+      border-radius: 4px; background: linear-gradient(90deg, var(--color-red), var(--color-enroll-bg));
+    }
+    .reg-pill {
+      display: inline-block; font-family: var(--font-nav); font-size: 13px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; color: var(--color-red);
+      background: var(--color-pink-btn); padding: 6px 14px; border-radius: 999px; margin-bottom: 14px;
+    }
+    .reg-hero h1 {
+      font-family: var(--font-display); font-size: clamp(30px, 5vw, 46px); font-weight: 700;
+      margin-bottom: 8px; color: var(--color-text); line-height: 1.1;
+    }
+    .reg-hero .reg-subtitle {
+      font-family: var(--font-display); font-size: clamp(18px, 2.4vw, 24px); font-weight: 600;
+      color: var(--color-text); opacity: 0.85; margin-bottom: 4px;
+    }
+
+    .teach-lead { font-size: 19px; line-height: 1.7; margin: 8px 0 28px; text-align: center; }
+
+    .teach-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+    @media (max-width: 560px) { .teach-cards { grid-template-columns: 1fr; } }
+    .teach-card {
+      background: var(--color-white); border: 1px solid rgba(39, 36, 67, 0.12); border-radius: 8px;
+      padding: 20px 22px; box-shadow: 0 1px 3px rgba(39, 36, 67, 0.05);
+    }
+    .teach-card .tc-emoji { font-size: 26px; display: block; margin-bottom: 8px; }
+    .teach-card h3 { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--color-text); margin-bottom: 6px; }
+    .teach-card p { font-size: 15px; line-height: 1.55; opacity: 0.85; margin: 0; }
+
+    .teach-eligible {
+      background: var(--color-white); border: 1px solid rgba(39, 36, 67, 0.12); border-radius: 8px;
+      padding: 22px 26px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(39, 36, 67, 0.05);
+    }
+    .teach-eligible h3 { font-family: var(--font-display); font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    .teach-eligible > p { font-size: 16px; line-height: 1.6; margin-bottom: 12px; }
+    .who-list li {
+      position: relative; padding-left: 22px; font-size: 16px; line-height: 1.55; margin-bottom: 12px;
+    }
+    .who-list li:last-child { margin-bottom: 0; }
+    .who-list li::before { content: "✓"; position: absolute; left: 0; color: var(--color-red); font-weight: 700; }
+    .who-list strong { color: var(--color-text); }
+    .who-invite { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(39, 36, 67, 0.10); font-size: 15px; line-height: 1.6; }
+    .who-invite strong { color: var(--color-text); }
+
+    .teach-pay {
+      background: var(--color-pink-btn); border-left: 4px solid var(--color-red); border-radius: 0 6px 6px 0;
+      padding: 20px 24px; margin: 16px 0 28px;
+    }
+    .teach-pay h3 { font-family: var(--font-display); font-size: 19px; font-weight: 700; margin-bottom: 8px; color: var(--color-text); }
+    .teach-pay p { font-size: 16px; line-height: 1.6; margin-bottom: 8px; }
+    .teach-pay p:last-child { margin-bottom: 0; }
+
+    .teach-how { margin-bottom: 34px; }
+    .teach-how h3 { font-family: var(--font-display); font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 16px; }
+    .teach-how-steps { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    @media (max-width: 560px) { .teach-how-steps { grid-template-columns: 1fr; } }
+    .teach-how-step { text-align: center; padding: 14px 10px; }
+    .teach-how-step .ths-num {
+      width: 34px; height: 34px; border-radius: 50%; background: var(--color-enroll-bg); color: var(--color-white);
+      font-family: var(--font-nav); font-weight: 700; font-size: 16px; display: flex; align-items: center;
+      justify-content: center; margin: 0 auto 10px;
+    }
+    .teach-how-step p { font-size: 15px; line-height: 1.5; margin: 0; }
+    .teach-how-note { font-size: 14px; line-height: 1.6; text-align: center; opacity: 0.75; margin-top: 14px; }
+
+    .teach-start-btn {
+      display: block; width: 100%; max-width: 420px; margin: 0 auto 18px; padding: 16px; text-align: center;
+      background: var(--color-enroll-bg); color: var(--color-white) !important; font-family: var(--font-nav);
+      font-size: 17px; font-weight: 700; letter-spacing: 0.5px; border-radius: 6px; text-decoration: none !important;
+      transition: opacity 0.2s;
+    }
+    .teach-start-btn:hover { opacity: 0.92; }
+
+    .teach-signoff { text-align: center; font-size: 15px; line-height: 1.6; opacity: 0.8; margin-bottom: 40px; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+    <a href="../index.html">River Tech School</a>
+    <div class="sidebar-submenu">
+      <a href="../index.html">About River Tech</a>
+      <a href="elementary-school.html">Elementary School</a>
+      <a href="middle-school.html">Middle School</a>
+      <a href="high-school.html">High School</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="a-la-carte.html">River Tech À La Carte</a>
+    <div class="sidebar-submenu">
+      <a href="a-la-carte.html">Homeschooling</a>
+      <a href="monday-performing-arts.html">Monday: Performing Arts</a>
+      <a href="tuesday-science.html">Tuesday: Science &amp; Social Studies</a>
+      <a href="thursday-life-skills.html">Thursday: Life Skills</a>
+      <a href="friday-technology.html">Friday: Technology</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="why-river-tech.html">Why River Tech?</a>
+    <div class="sidebar-submenu">
+      <a href="our-culture.html">Our Culture</a>
+      <a href="reviews.html">References &amp; Reviews</a>
+      <a href="technology.html">Technology</a>
+      <a href="performing-arts.html">Performing Arts</a>
+      <a href="sports-fitness.html">Sports &amp; Fitness</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="enrollment.html">Enrollment</a>
+    <div class="sidebar-submenu">
+      <a href="enrollment.html">How to Enroll</a>
+      <a href="tuition.html">Tuition</a>
+      <a href="faq.html">FAQs</a>
+      <a href="tax-credit.html">Tax Credit</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="school-resources.html">School Resources</a>
+    <div class="sidebar-submenu">
+      <a href="calendar.html">Schedule &amp; Calendar</a>
+      <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+      <a href="scholarships.html">Scholarships</a>
+      <a href="volunteer.html">Volunteer</a>
+      <a href="our-needs.html">Our Needs</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="teach-full-time.html">Teach at River Tech</a>
+    <div class="sidebar-submenu">
+      <a href="teach-full-time.html">Teach Full-Time</a>
+      <a href="ea.html">Executive Assistant</a>
+      <a href="teach.html">Teach Part-Time</a>
+    </div>
+    </div>
+    <div class="nav-group">
+    <a href="../pages/gallery.html">Media</a>
+    <div class="sidebar-submenu">
+      <a href="../pages/gallery.html">Photo Gallery</a>
+      <a href="../pages/vlog.html">Video Globe</a>
+      <a href="../pages/fieldtrips.html">Field Trips</a>
+    </div>
+    </div>
+  </nav>
+</div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <a href="enrollment.html" class="enroll-btn">School starts Sept 1</a>
+  <div class="social-icons">
+    <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" fill="#c0392b"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.13C5.12 19.56 12 19.56 12 19.56s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon fill="white" points="9.75,15.02 15.5,11.75 9.75,8.48"/></svg>
+    </a>
+    <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" fill="#3b5998"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- Mobile Header -->
+<div class="mobile-header">
+  <a href="../index.html" class="mobile-logo">River Tech</a>
+  <button class="hamburger" aria-label="Open menu">☰</button>
+</div>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav-overlay">
+  <button class="close-btn" aria-label="Close menu">✕</button>
+  <a href="../index.html">River Tech School</a>
+        <div class="mobile-submenu">
+    <a href="../index.html">About River Tech</a>
+    <a href="elementary-school.html">Elementary School</a>
+    <a href="middle-school.html">Middle School</a>
+    <a href="high-school.html">High School</a>
+  </div>
+  <a href="a-la-carte.html">River Tech À La Carte</a>
+        <div class="mobile-submenu">
+    <a href="a-la-carte.html">Homeschooling</a>
+    <a href="monday-performing-arts.html">Monday: Performing Arts</a>
+    <a href="tuesday-science.html">Tuesday: Science &amp; Social Studies</a>
+    <a href="thursday-life-skills.html">Thursday: Life Skills</a>
+    <a href="friday-technology.html">Friday: Technology</a>
+  </div>
+  <a href="why-river-tech.html">Why River Tech?</a>
+        <div class="mobile-submenu">
+    <a href="our-culture.html">Our Culture</a>
+    <a href="reviews.html">References &amp; Reviews</a>
+    <a href="technology.html">Technology</a>
+    <a href="performing-arts.html">Performing Arts</a>
+    <a href="sports-fitness.html">Sports &amp; Fitness</a>
+  </div>
+  <a href="enrollment.html">Enrollment</a>
+        <div class="mobile-submenu">
+    <a href="enrollment.html">How to Enroll</a>
+    <a href="tuition.html">Tuition</a>
+    <a href="faq.html">FAQs</a>
+    <a href="tax-credit.html">Tax Credit</a>
+  </div>
+  <a href="school-resources.html">School Resources</a>
+        <div class="mobile-submenu">
+    <a href="calendar.html">Schedule &amp; Calendar</a>
+    <a href="nonprofit.html">Nonprofit (Faithful Five)</a>
+    <a href="scholarships.html">Scholarships</a>
+    <a href="volunteer.html">Volunteer</a>
+    <a href="our-needs.html">Our Needs</a>
+  </div>
+  <a href="teach-full-time.html">Teach at River Tech</a>
+        <div class="mobile-submenu">
+    <a href="teach-full-time.html">Teach Full-Time</a>
+    <a href="ea.html">Executive Assistant</a>
+    <a href="teach.html">Teach Part-Time</a>
+  </div>
+  <a href="../pages/gallery.html">Media</a>
+        <div class="mobile-submenu">
+    <a href="../pages/gallery.html">Photo Gallery</a>
+    <a href="../pages/vlog.html">Video Globe</a>
+    <a href="../pages/fieldtrips.html">Field Trips</a>
+  </div>
+  <a href="enrollment.html" style="color: var(--color-red); font-weight: 700; border-bottom: none;">School starts Sept 1</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="content-area">
+
+    <div class="reg-wrap">
+
+      <!-- ===================== LANDING ===================== -->
+
+      <div class="reg-hero">
+        <span class="reg-pill">Now Hiring &middot; Combined Role &middot; 2026&ndash;27</span>
+        <h1>Teacher + Executive Assistant</h1>
+        <p class="reg-subtitle">One person, two callings &mdash; the classroom and the founder&rsquo;s office.</p>
+      </div>
+
+      <p class="teach-lead">This is our rarest opening, and it exists for a particular kind of person: someone who can form students in the classroom <em>and</em> keep a growing school running behind the scenes. We serve about 130 students in grades 1&ndash;12 &mdash; and this role touches all of it.</p>
+
+      <p style="text-align:center; font-size:15px; line-height:1.6; opacity:0.85; margin:-8px 0 26px;">Prefer one calling at a time? See the <a href="teach-full-time.html" style="color: var(--color-red);">full-time teacher</a>, <a href="teach.html" style="color: var(--color-red);">part-time teaching</a>, and <a href="ea.html" style="color: var(--color-red);">Executive Assistant</a> roles on their own.</p>
+
+      <div class="teach-cards">
+        <div class="teach-card">
+          <span class="tc-emoji">🎓</span>
+          <h3>You Teach</h3>
+          <p>Real classes, real students &mdash; the subjects you love, in classes of about fifteen, on a Christian foundation. Everything in the <a href="teach-full-time.html" style="color: var(--color-red);">full-time teacher posting</a> applies here.</p>
+        </div>
+        <div class="teach-card">
+          <span class="tc-emoji">🧠</span>
+          <h3>You Run the Office</h3>
+          <p>AI agents, writing, inbox, calendar &mdash; the craft of the <a href="ea.html" style="color: var(--color-red);">Executive Assistant role</a>, giving the founder his hours back.</p>
+        </div>
+        <div class="teach-card">
+          <span class="tc-emoji">🗓️</span>
+          <h3>One Week, Two Rhythms</h3>
+          <p>Teaching hours in the classroom; office hours around them. The exact blend is shaped person-by-person &mdash; with you, not for you.</p>
+        </div>
+        <div class="teach-card">
+          <span class="tc-emoji">🚀</span>
+          <h3>Grow With Us</h3>
+          <p>A young school, still being built. The person who holds both the classroom and the office grows with everything we become.</p>
+        </div>
+      </div>
+
+      <div class="teach-eligible">
+        <h3>Who We&rsquo;re Looking For</h3>
+        <p>Everything the teaching role asks &mdash; a bachelor&rsquo;s degree, real experience teaching a class of children, and a grounding in Christian faith &mdash; plus the operator&rsquo;s gifts:</p>
+        <ul class="who-list">
+          <li><strong>A teacher&rsquo;s heart with an operator&rsquo;s hands</strong> &mdash; you love forming students, and you also love it when things run.</li>
+          <li><strong>AI-fluent</strong> &mdash; you direct AI agents to do real work, and check that work like a professional.</li>
+          <li><strong>A strong writer</strong> &mdash; emails, parent notes, and documents that sound right the first time.</li>
+          <li><strong>Calm, discreet, fast, and precise</strong> &mdash; trusted with confidential work in a busy school.</li>
+        </ul>
+        <p class="who-invite"><strong>Both postings describe you?</strong> Then this page is yours. Read the <a href="teach-full-time.html" style="color: var(--color-red);">full-time teacher</a> and <a href="ea.html" style="color: var(--color-red);">Executive Assistant</a> pages in full &mdash; this role is simply both, held by one person.</p>
+      </div>
+
+      <div class="teach-pay">
+        <h3>Compensation</h3>
+        <p>Built person-by-person, because this role is. Your qualifications set the conversation &mdash; and the stronger they are, the stronger the offer. We&rsquo;d rather meet you than quote you.</p>
+      </div>
+
+      <div class="teach-how">
+        <h3>How to Apply</h3>
+        <div class="teach-how-steps">
+          <div class="teach-how-step">
+            <div class="ths-num">1</div>
+            <p><strong>Read both postings</strong> &mdash; the <a href="teach-full-time.html" style="color: var(--color-red);">teacher</a> and the <a href="ea.html" style="color: var(--color-red);">Executive Assistant</a> &mdash; and our <a href="our-culture.html" style="color: var(--color-red);">culture</a>.</p>
+          </div>
+          <div class="teach-how-step">
+            <div class="ths-num">2</div>
+            <p><strong>Apply once</strong> &mdash; through the full-time teacher application. Check the <em>&ldquo;teacher + Executive Assistant&rdquo;</em> box and tell us about your office and AI skills.</p>
+          </div>
+          <div class="teach-how-step">
+            <div class="ths-num">3</div>
+            <p><strong>We shape it together</strong> &mdash; a conversation, a visit, and a blend of hours built around your gifts.</p>
+          </div>
+        </div>
+        <p class="teach-how-note">Can you see yourself here &mdash; in both rooms? If something in you leaned forward, we would love to hear from you.</p>
+      </div>
+
+      <a class="teach-start-btn" href="teach-full-time.html#apply">Apply via the Full-Time Teacher Form</a>
+
+      <p class="teach-signoff">Warmly,<br><strong>Dan Hegelund</strong> &middot; Principal, River Tech School<br><a href="mailto:learn@rivertech.me" style="color: var(--color-red);">learn@rivertech.me</a> &middot; 425-444-2081</p>
+
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <a href="../index.html" class="footer-logo">rivertechschool.com</a>
+    <div class="footer-tagline">Life is a Stage. <span class="love">Love</span> is our Script.</div>
+  </div>
+
+  <div class="footer-columns">
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:learn@rivertech.me">learn@rivertech.me</a>
+      <span>Tel: 425-444-2081</span>
+      <span>The Heart</span>
+      <span>927 E Polston Ave</span>
+      <span>Post Falls, ID 83854</span>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="why-river-tech.html">Why River Tech?</a>
+      <a href="enrollment.html">Enrollment</a>
+      <a href="school-resources.html">School Resources</a>
+      <a href="teach-full-time.html">Teach at River Tech</a>
+    </div>
+    <div class="footer-col">
+      <h4>Social</h4>
+      <a href="https://www.youtube.com/@PostFalls" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/rivertechschool/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/rivertechschool" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 by Faithful Five Inc. (d.b.a. River Tech and Post Falls Art). <em>Life is a Stage. <span class="love">Love</span> is our Script.</em></p>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js?v=4" defer></script>
+
+<button class="scroll-to-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+(function(){
+  var btn=document.querySelector('.scroll-to-top');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible',window.scrollY>400);
+  });
+})();
+</script>
+</body>
+</html>

@@ -458,6 +458,8 @@
       subjectsStrength: val("subjectsStrength"),
       track:            getRadio("track"),
       startTiming:      form.startTiming.value,
+      comboInterest:    isChecked("comboInterest"),
+      comboSkills:      val("comboSkills"),
       resumeLink:       val("resumeLink"),
       references:       val("references"),
       backgroundConsent: true,
@@ -533,7 +535,7 @@
     });
 
     // Checkbox visuals for the standalone consent boxes
-    ["cultureAgree", "backgroundConsent", "consentAgree"].forEach(function (id) {
+    ["cultureAgree", "backgroundConsent", "consentAgree", "comboInterest"].forEach(function (id) {
       const el = document.getElementById(id);
       el.addEventListener("change", function () {
         const lbl = el.closest(".reg-check");
