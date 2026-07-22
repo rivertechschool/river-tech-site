@@ -48,47 +48,83 @@
     .day-tab.active .cnt{background:rgba(255,255,255,.2);}
 
     .board{background:var(--panel);border:1px solid var(--line);border-radius:0 6px 6px 6px;margin:0 16px;box-shadow:var(--shadow);}
+    .block-tabs{display:flex;gap:6px;padding:10px 14px 0;border-bottom:1px solid var(--line);}
+    .block-tab{background:var(--bg);border:1px solid var(--line);border-bottom:none;border-radius:6px 6px 0 0;padding:8px 16px;font-size:13px;font-weight:700;color:var(--ink-soft);cursor:pointer;}
+    .block-tab.active{background:#fff;color:var(--ink);border-color:var(--ink);border-bottom:2px solid #fff;margin-bottom:-1px;}
+    .block-tab .cnt{font-size:11px;font-weight:700;background:rgba(0,0,0,.08);border-radius:10px;padding:1px 7px;margin-left:6px;}
+
     .preset-row{display:flex;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap;font-size:13px;}
     .pbtn{font-size:12px;font-weight:600;padding:6px 12px;border-radius:4px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);}
     .pbtn:hover{background:var(--rt-red-soft);border-color:var(--rt-red);color:var(--rt-red);}
     .pbtn.util{border-style:dashed;}
-    .preset-note{font-size:12px;color:var(--ink-soft);}
+    .stepper{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:4px;padding:3px 8px;background:#fff;}
+    .stepper b{font-size:15px;min-width:18px;text-align:center;color:var(--rt-red);}
+    .stepper button{width:24px;height:24px;border-radius:4px;border:1px solid var(--line);background:var(--bg);font-size:15px;font-weight:800;cursor:pointer;line-height:1;color:var(--ink);}
+    .stepper button:hover{background:var(--rt-red-soft);border-color:var(--rt-red);color:var(--rt-red);}
+    .stepper .lab{font-size:11px;color:var(--ink-soft);font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
     .scope-wrap{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-soft);margin-left:auto;}
     .day-note{padding:6px 14px;font-size:12px;color:var(--ink-soft);font-style:italic;border-bottom:1px solid var(--line);}
 
     .axis-outer{padding:14px 26px 6px;position:relative;}
-    .axis{position:relative;height:230px;user-select:none;touch-action:none;}
+    .axis{position:relative;height:250px;user-select:none;touch-action:none;}
     .axis .region{position:absolute;top:36px;bottom:26px;border-radius:4px;}
     .axis .region.tintA{background:rgba(39,36,67,.035);}
     .axis .region.tintB{background:rgba(39,36,67,.075);}
-    .axis .region-label{position:absolute;top:0;font-size:11px;font-weight:800;text-align:center;white-space:nowrap;transform:translateX(-50%);padding:2px 8px;border-radius:10px;}
+    .axis .region-label{position:absolute;font-size:11px;font-weight:800;text-align:center;white-space:nowrap;transform:translateX(-50%);padding:2px 8px;border-radius:10px;cursor:pointer;}
     .axis .region-label.ok{background:var(--ok-soft);color:var(--ok);}
     .axis .region-label.under{background:var(--amber-soft);color:var(--amber);}
     .axis .region-label.over{background:var(--bad-soft);color:var(--bad);}
+    .axis .region-label.mixed2{background:rgba(39,36,67,.08);color:var(--ink);}
+    .lane-line{position:absolute;border-top:1px dashed rgba(39,36,67,.25);}
+    .lane-line.split-strong{border-top:3px double var(--rt-red);}
+    .lane-tag{position:absolute;left:2px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;}
+    .lane-tag.ft{color:var(--ft-blue);} .lane-tag.hs{color:var(--hs-green);}
     .dot{position:absolute;width:13px;height:13px;border-radius:50%;transform:translate(-50%,50%);cursor:default;}
     .dot.ft{background:var(--ft-blue);} .dot.hs{background:var(--hs-green);}
     .dot.flagged{box-shadow:0 0 0 2px var(--rt-red);}
+    .dot.manual{border:2px dashed rgba(39,36,67,.75);}
+    .srcpill.manual{background:#eceaf2;color:#555;}
     .dot:hover{outline:2px solid var(--ink);z-index:5;}
     .wall{position:absolute;top:34px;bottom:14px;width:0;border-left:3px solid var(--rt-red);cursor:ew-resize;z-index:10;}
-    .wall .grip{position:absolute;top:-14px;left:-11px;width:20px;height:20px;border-radius:50%;background:var(--rt-red);color:#fff;font-size:11px;font-weight:800;text-align:center;line-height:20px;cursor:ew-resize;box-shadow:var(--shadow);}
+    .wall .grip{position:absolute;top:-16px;left:-11px;width:20px;height:20px;border-radius:50%;background:var(--rt-red);color:#fff;font-size:11px;font-weight:800;text-align:center;line-height:20px;cursor:ew-resize;box-shadow:var(--shadow);}
     .wall .kill{position:absolute;bottom:-16px;left:-8px;width:15px;height:15px;border-radius:50%;background:#fff;border:1px solid var(--line);color:var(--ink-soft);font-size:10px;line-height:13px;text-align:center;cursor:pointer;}
     .wall .kill:hover{background:var(--bad);color:#fff;border-color:var(--bad);}
     .wall .agepop{position:absolute;top:-34px;left:-24px;background:var(--ink);color:#fff;font-size:11px;padding:2px 7px;border-radius:4px;white-space:nowrap;display:none;}
     .wall.dragging .agepop{display:block;}
+    .wall.locked{cursor:default;}
+    .wall.locked .lockcap{position:absolute;top:-19px;left:-8px;font-size:12px;}
+    .lwall{position:absolute;width:0;cursor:ew-resize;z-index:9;}
+    .lwall.ft{border-left:3px dashed var(--ft-blue);}
+    .lwall.hs{border-left:3px dashed var(--hs-green);}
+    .lwall .grip{position:absolute;left:-9px;width:16px;height:16px;border-radius:4px;color:#fff;font-size:10px;font-weight:800;text-align:center;line-height:16px;cursor:ew-resize;box-shadow:var(--shadow);}
+    .lwall.ft .grip{top:-8px;background:var(--ft-blue);}
+    .lwall.hs .grip{bottom:-8px;background:var(--hs-green);}
+    .lwall .kill{position:absolute;left:-7px;width:14px;height:14px;border-radius:50%;background:#fff;border:1px solid var(--line);color:var(--ink-soft);font-size:9px;line-height:12px;text-align:center;cursor:pointer;}
+    .lwall.ft .kill{bottom:-7px;} .lwall.hs .kill{top:-7px;}
+    .lwall .kill:hover{background:var(--bad);color:#fff;border-color:var(--bad);}
+    .lwall .agepop{position:absolute;top:-30px;left:-24px;background:var(--ink);color:#fff;font-size:11px;padding:2px 7px;border-radius:4px;white-space:nowrap;display:none;}
+    .lwall.dragging .agepop{display:block;}
     .ticks{position:relative;height:22px;margin:0 0 4px;}
     .tick{position:absolute;transform:translateX(-50%);font-size:11px;color:var(--ink-soft);}
     .tick::before{content:"";position:absolute;left:50%;top:-6px;height:5px;border-left:1px solid var(--line);}
     .axis-hint{font-size:11px;color:var(--ink-soft);text-align:center;padding:2px 0 10px;}
 
     .cards{display:flex;gap:10px;padding:4px 14px 14px;flex-wrap:wrap;}
-    .ccard{flex:1;min-width:150px;background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--ok);border-radius:6px;padding:10px 12px;cursor:pointer;box-shadow:var(--shadow);}
+    .ccard{flex:1;min-width:160px;background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--ok);border-radius:6px;padding:10px 12px;cursor:pointer;box-shadow:var(--shadow);}
     .ccard.under{border-top-color:var(--amber);} .ccard.over{border-top-color:var(--bad);}
+    .ccard.empty{border-top-color:var(--line);opacity:.7;}
     .ccard.sel{outline:2px solid var(--ink);}
-    .ccard h3{margin:0 0 2px;font-size:13px;}
+    .ccard h3{margin:0 0 2px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:6px;}
+    .ccard h3 .comp{font-size:10px;font-weight:800;padding:1px 7px;border-radius:8px;}
+    .ccard h3 .comp.ft{background:var(--ft-blue-soft);color:var(--ft-blue);}
+    .ccard h3 .comp.hs{background:var(--hs-green-soft);color:var(--hs-green);}
+    .ccard h3 .comp.mix{background:rgba(39,36,67,.08);color:var(--ink);}
     .ccard .big{font-size:24px;font-weight:800;}
     .ccard .big .stat{font-size:11px;font-weight:700;padding:1px 7px;border-radius:8px;vertical-align:middle;margin-left:6px;}
     .ccard .stat.ok{background:var(--ok-soft);color:var(--ok);} .ccard .stat.under{background:var(--amber-soft);color:var(--amber);} .ccard .stat.over{background:var(--bad-soft);color:var(--bad);}
     .ccard .sub{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+    .splitbtn{margin-top:7px;margin-right:5px;font-size:11px;font-weight:700;padding:4px 9px;border-radius:4px;border:1px dashed var(--line);background:var(--bg);color:var(--ink-soft);cursor:pointer;}
+    .splitbtn:hover{border-color:var(--rt-red);color:var(--rt-red);background:var(--rt-red-soft);}
 
     .roster{margin:0 14px 14px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 14px;display:none;}
     .roster.open{display:block;}
@@ -112,6 +148,7 @@
     tr.total-row td{font-weight:800;background:var(--bg);border-top:2px solid var(--ink);}
     .sizestr .b{display:inline-block;min-width:24px;text-align:center;border-radius:4px;padding:1px 5px;margin-right:3px;font-weight:700;font-size:12px;}
     .sizestr .b.ok{background:var(--ok-soft);color:var(--ok);} .sizestr .b.under{background:var(--amber-soft);color:var(--amber);} .sizestr .b.over{background:var(--bad-soft);color:var(--bad);}
+    .sizestr .b.ftb{box-shadow:inset 0 -2px 0 var(--ft-blue);} .sizestr .b.hsb{box-shadow:inset 0 -2px 0 var(--hs-green);}
     .xrow{padding:6px 4px;border-bottom:1px dashed var(--line);font-size:13px;}
     .xrow:last-child{border-bottom:none;}
     .xrow .nm{font-weight:700;}
@@ -140,7 +177,7 @@
 </head>
 <body>
   <div class="topbar">
-    <h1>Class Planner <span style="font-weight:400;color:var(--ink-soft);font-size:14px;">— 2026–27 · one class = one teacher · ideal 15</span></h1>
+    <h1>Class Planner <span style="font-weight:400;color:var(--ink-soft);font-size:14px;">— 2026–27 · one class = one teacher · ideal 15 · <b style="color:var(--rt-red);">round 4.1</b></span></h1>
     <div class="meta"><span id="meta-line">Loading…</span>
       <button class="refresh-btn" id="refresh-btn" onclick="loadData()">Refresh</button></div>
   </div>
@@ -162,34 +199,88 @@
 
     <div class="day-tabs" id="day-tabs"></div>
     <div class="board">
-      <div class="preset-row">
-        <span class="preset-note" style="font-weight:700;color:var(--ink);">Presets:</span>
+      <div class="block-tabs" id="block-tabs"></div>
+      <div class="preset-row" id="preset-row">
+        <span class="stepper" title="Red walls cut EVERYONE into age bands"><span class="lab">Red walls</span><button onclick="stepClasses(-1)">−</button><b id="class-count">3</b><button onclick="stepClasses(1)">＋</button></span>
+        <span class="stepper" id="stp-ft" title="Blue walls cut ONLY full-timers (inside separated bands). ＋ cuts the biggest FT class in half; − removes the least-needed blue wall."><span class="lab" style="color:var(--ft-blue);">Blue (FT)</span><button onclick="stepLane('ft',-1)">−</button><b id="ft-count" style="color:var(--ft-blue);">0</b><button onclick="stepLane('ft',1)">＋</button></span>
+        <span class="stepper" id="stp-hs" title="Green walls cut ONLY homeschoolers (inside separated bands). ＋ cuts the biggest HS class in half; − removes the least-needed green wall."><span class="lab" style="color:var(--hs-green);">Green (HS)</span><button onclick="stepLane('hs',-1)">−</button><b id="hs-count" style="color:var(--hs-green);">0</b><button onclick="stepLane('hs',1)">＋</button></span>
+        <span style="font-weight:700;color:var(--ink);font-size:12px;margin-left:6px;">Presets:</span>
+        <button class="chip active" id="cm-mix" onclick="setCutMode('mix')" title="Presets put full-timers and homeschoolers in the same classes">Together</button>
+        <button class="chip" id="cm-sep" onclick="setCutMode('sep')" title="Presets give full-timers and homeschoolers their own separate classes (homeschoolers: at least two groups)">FT &amp; HS apart</button>
         <button class="pbtn" onclick="applyPreset('size')" title="Every class as close to the ideal size as possible; age bands fall where they fall">① Size-first</button>
-        <button class="pbtn" onclick="applyPreset('dev')" title="Conventional cuts at ages 8, 11 and 14 — honest about which classes bust the size rule">② Age bands (8 / 11 / 14)</button>
+        <button class="pbtn" onclick="applyPreset('dev')" title="Conventional cuts at ages 8, 11 and 14 — honest about which classes bust the size rule">② Age bands</button>
         <button class="pbtn" onclick="applyPreset('best')" title="Tightest age bands that still keep every class inside the size range">③ Best compromise</button>
-        <button class="pbtn" onclick="applyPreset('grade')" title="Roughly elementary / middle / high. Grade data is too dirty to use directly, so this cuts at ages 11.7 and 14.7">④ Grade-ish (elem/mid/high)</button>
-        <span class="scope-wrap"><input type="checkbox" id="scope-all" checked><label for="scope-all" style="text-transform:none;font-weight:600;cursor:pointer;">apply to all days</label></span>
-        <button class="pbtn util" onclick="addWall()">＋ Add a wall</button>
-        <button class="pbtn util" onclick="copyWallsToAllDays()">Copy these walls → all days</button>
+        <button class="pbtn" onclick="applyPreset('grade')" title="Roughly elementary / middle / high (cuts at ages 11.7 and 14.7 — grade data too dirty to use directly)">④ Grade-ish</button>
+        <button class="pbtn util" id="indep-btn" onclick="independentAll()" title="Throw away the shared red walls: full-timers and homeschoolers each get their own best cuts, completely independent">⑤ Fully independent FT &amp; HS</button>
+        <button class="pbtn util" id="split-all-btn" onclick="splitAll(true)" title="Keep the red age bands, but separate FT and HS inside every band">Separate in every band</button>
+        <button class="pbtn util" id="mix-all-btn" onclick="splitAll(false)">Mix everyone</button>
+        <span class="stepper" title="Type exact ages for the red walls — e.g. 8, 10, 12, 14 gives bands 6–7, 8–9, 10–11, 12–13, 14+"><span class="lab">Cut at ages</span><input id="cut-ages" style="width:108px;padding:3px 6px;border:1px solid var(--line);border-radius:4px;font-size:12px;" placeholder="8, 10, 12, 14" onkeydown="if(event.key==='Enter')applyCutAges()"><button onclick="applyCutAges()" style="width:auto;padding:0 9px;">Set</button></span>
+        <span class="scope-wrap"><input type="checkbox" id="scope-all" checked><label for="scope-all" style="text-transform:none;font-weight:600;cursor:pointer;">presets apply to all days</label></span>
       </div>
       <div class="day-note" id="day-note"></div>
       <div class="axis-outer">
         <div class="axis" id="axis"></div>
         <div class="ticks" id="ticks"></div>
-        <div class="axis-hint">Every dot is a child, placed at their exact age on Sept 1, 2026 (hover for the name). Drag the red walls to move a class boundary; ✕ under a wall removes it. Click a class card below to see every name in it.</div>
+        <div class="axis-hint" id="axis-hint"></div>
       </div>
       <div class="cards" id="cards"></div>
       <div class="roster" id="roster"></div>
     </div>
 
     <div class="section">
-      <h2>Cross-day check — children who sit in a different band depending on the day</h2>
+      <h2>Mornings at a glance</h2>
+      <div class="body" id="mornings"></div>
+    </div>
+
+    <div class="section">
+      <h2 id="mroster-title">Morning rosters</h2>
+      <div class="body" id="mrosters"></div>
+    </div>
+
+    <div class="section">
+      <h2>Children added by hand — kids who haven't filled out an enrollment form</h2>
+      <div class="body">
+        <p class="note">They join every count, class, and list exactly like enrolled students — marked “ADDED” and drawn as dashed dots — but they exist only in this page, never on the enrollment sheets. If one of them later enrolls for real, the sheet copy wins automatically and the hand-added copy steps aside. (They're saved in this browser; ask Henry to bake them permanently into the tool.)</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0;">
+          <input id="mc-name" placeholder="Full name" style="padding:5px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;width:180px;">
+          <input id="mc-dob" type="date" style="padding:4px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;">
+          <select id="mc-sched" style="padding:5px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;" onchange="document.getElementById('mc-days').style.display=this.value==='hs'?'':'none'">
+            <option value="double-major">All five days (Mon–Fri)</option>
+            <option value="performing-arts">Mon–Thu (Performing Arts)</option>
+            <option value="technology">Tue–Fri (Technology)</option>
+            <option value="hs">Homeschool — pick days →</option>
+          </select>
+          <span id="mc-days" style="display:none;font-size:12.5px;">
+            <label style="margin-right:6px;cursor:pointer;"><input type="checkbox" value="Mon" class="mc-day"> Mon</label>
+            <label style="margin-right:6px;cursor:pointer;"><input type="checkbox" value="Tue" class="mc-day"> Tue</label>
+            <label style="margin-right:6px;cursor:pointer;"><input type="checkbox" value="Thu" class="mc-day"> Thu</label>
+            <label style="margin-right:6px;cursor:pointer;"><input type="checkbox" value="Fri" class="mc-day"> Fri</label>
+          </span>
+          <select id="mc-gender" style="padding:5px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;">
+            <option value="">Girl / Boy?</option>
+            <option value="f">Girl</option>
+            <option value="m">Boy</option>
+          </select>
+          <input id="mc-place" type="number" step="0.5" min="4" max="19" placeholder="Place as age (optional)" title="Only if the child belongs outside their birth-age band — e.g. ahead for their age. Their real birthday stays true; this decides which class they sit in." style="padding:5px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;width:150px;">
+          <button class="btn" onclick="addManualChild()">＋ Add child</button>
+        </div>
+        <div id="manual-list"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Cross-day check — children who sit with a different age-group depending on the day (main-day classes)</h2>
       <div class="body" id="crossday"></div>
     </div>
 
     <div class="section">
       <h2>The week at a glance — teachers &amp; rough cost</h2>
       <div class="body" id="summary"></div>
+    </div>
+
+    <div class="section">
+      <h2>Tuition estimate — from the students on this page, at the 2026–27 quarterly prices</h2>
+      <div class="body" id="tuition-body"></div>
     </div>
 
     <div class="export-row">
@@ -212,6 +303,20 @@
   const MAJOR_SHORT = {"performing-arts":"Perf Arts","technology":"Technology","double-major":"Double"};
   const DAYS_ORDER = ["Mon","Tue","Wed","Thu","Fri"];
   const DAY_LABEL = {"Mon":"Monday","Tue":"Tuesday","Wed":"Wednesday","Thu":"Thursday","Fri":"Friday"};
+  const DAY_BLOCKS = d => d==="Wed"
+    ? [{id:"all",label:"All day",sub:"8:30–2:30 · full-timers only",ftOnly:true}]
+    : [{id:"am",label:"Morning",sub:"8:30–10:30 · full-timers only",ftOnly:true},
+       {id:"pm",label:"Main day",sub:"10:30–2:30 · everyone",ftOnly:false}];
+  const MAIN_BLOCK = d => d==="Wed"?"all":"pm";
+  // ══ MORNING LOCK — decided by Dan, July 14, 2026 ══
+  // Mornings (and Wednesday's all-day block) are FIXED. No drag, no presets, no steppers.
+  // Mid-week: 6–7 / 8–9 / 10–11 / 12–13 / 14+.  Mon & Fri: 6–9 / 10–11 / 12–13 / 14+ (littles merged).
+  // To change this, Dan asks Henry; it cannot be changed in the page.
+  const MORNING_LOCK={Mon:[10,12,14],Tue:[8,10,12,14],Wed:[8,10,12,14],Thu:[8,10,12,14],Fri:[10,12,14]};
+  function enforceMorningLock(){
+    for(const d of DAYS_ORDER){ if(!walls[d])walls[d]={};
+      for(const b of DAY_BLOCKS(d))if(b.ftOnly)walls[d][b.id]=MORNING_LOCK[d].slice(); }
+  }
   const SEP1 = new Date("2026-09-01T00:00:00");
   const PT_RATE_LO=25, PT_RATE_HI=35, PT_HOURS=4;
 
@@ -220,21 +325,52 @@
     {reg:"HS-20260513-182159-688", child:/^benjamin/i, days:["Tue"], dob:"2011-12-02",
      note:"Benjamin Marshall: Tuesday only (mother's request; sheet still says Tue+Thu) and birthdate assumed Dec 2, 2011 (sheet has a typo — year “102011”)."},
     {reg:"HS-20260513-182159-688", child:/^evelyn/i, days:["Tue"],
-     note:"Evelyn Marshall: Tuesday only (mother's request; sheet still says Tue+Thu)."}
+     note:"Evelyn Marshall: Tuesday only (mother's request; sheet still says Tue+Thu)."},
+    {reg:"RE-20260430-072848-879", child:/^everest/i, gender:"m",
+     note:"Everest Mayall: boy (Dan confirmed — the form left gender blank)."},
+    {reg:"HS-20260604-231658-168", child:/^wyatt/i, gender:"m",
+     note:"Wyatt Rogers: boy (Dan confirmed — the form left gender blank)."},
+    // ── PLACEMENTS (Dan, July 14, 2026) — mature for their age; real birthdays untouched.
+    {reg:"RE-COG-20260305-132100-004", child:/^ethan/i, placeAs:8.5,
+     note:"Ethan Knowles: placed with the 8–9s (Dan — mature for his age; he is really 7y 3m)."},
+    {reg:"RE-COG-20260217-194200-003", child:/^evan/i, placeAs:10.5,
+     note:"Evan Fay: placed with the 10–11s (Dan — mature for his age; he is really 9y 10m)."},
+    {reg:"RE-COG-20260413-161900-008", child:/^layla/i, placeAs:8.5,
+     note:"Layla Kuisti: placed with the 8–9s (Dan — mature for her age; she is really 7y 11m)."},
+    {reg:"RE-20260422-140058-040", child:/^malakai/i, placeAs:10.5,
+     note:"Malakai Kaufman: placed with the 10–11s (Dan — mature for his age; he is really 9y 3m)."},
+    {reg:"RE-20260430-093123-603", child:/^kaden/i, placeAs:12.5,
+     note:"Kaden Bianche: placed with the 12–13s (Dan — mature for his age; he is really 11y 7m)."},
+    {reg:"RE-COG-20260407-173700-007", child:/^grayson/i, placeAs:14.5,
+     note:"Grayson Tebow: placed with the high-schoolers, 14+ (Dan — mature for his age; he is really 13y 1m)."}
   ];
-  // Which sheet wins when the same child appears twice (higher = kept)
-  const SRC_RANK = {"re-enrollment":3,"full-time":2,"homeschool":1};
+  const SRC_RANK = {"re-enrollment":3,"full-time":2,"homeschool":1,"manual":0};
+  // Dan's children — baked in permanently by Henry (2026-07-14). Not on any enrollment sheet.
+  // Real birthdays stay real; "placeAs" is the age they're PLACED at (Dan's judgment), which
+  // decides their dot and their band. If either ever enrolls for real, the sheet copy wins.
+  const BAKED_KIDS=[
+    // Daeny is ahead for her age: real birthday Nov 4, 2016 (9 now), PLACED in the 10–11 band by Dan.
+    {name:"Daenerys Hegelund",dob:"2016-11-04",placeAs:10.5,type:"ft",major:"double-major",gender:"f"},
+    // Evelyn: real birthday Mar 31, 2012 — naturally 14+, no placement needed.
+    {name:"Evelyn Hegelund",dob:"2012-03-31",type:"ft",major:"double-major",gender:"f"}
+  ];
+  const LS_MANUAL="rts.classes.manual.v1";
+  function getManual(){ try{const a=JSON.parse(localStorage.getItem(LS_MANUAL)||"[]");return Array.isArray(a)?a:[];}catch{return[];} }
+  function saveManual(a){ try{localStorage.setItem(LS_MANUAL,JSON.stringify(a));}catch{} }
 
   const RE_LDB = /(autis|autistic|asperger|spectrum|\basd\b|adhd|\badd\b(?!ress|ition|ed)|dyslex|dysgraph|dyscalc|dysprax|apraxia|\biep\b|\b504\b|learning (disab|differ|challeng)|special (need|ed)|auditory processing|processing (delay|disorder)|sensory|nonverbal|non-verbal|developmental delay|pda profile|oppositional|\bodd\b|tourette|selective mut|speech (delay|therap)|occupational therap)/i;
   const RE_MED = /(epilep|seizure|diabet|insulin|asthma|inhaler|epi-?pen|anaphyla|allergic to|severe allerg|gluten|peanut|tree nut|bee sting|wasp|hornet|migraine|\bg-tube\b|wheelchair|type one|type 1)/i;
 
   // ===== State ==========================================================
   let DATA={}, ROSTER=[], NEEDS_DATA=[], NOTES=[], DUPS=[];
-  let currentDay="Mon", stageFilter="all", selectedClass=null;
-  let walls={}; // per day: sorted array of age positions
+  let currentDay="Mon", currentBlock="pm", stageFilter="all", selectedClass=null;
+  // walls[day][block]        = red walls (cut everyone), sorted ages
+  // splits[day][block]       = per-region 0/1 — separate FT & HS inside that red band
+  // laneWalls[day][block]    = {ft:[ages], hs:[ages]} — cuts that apply to ONE lane, only inside split bands
+  let walls={}, splits={}, laneWalls={};
   let domainLo=5, domainHi=18.5;
-  const LS_WALLS="rts.classes.walls.v1", LS_CFG="rts.classes.cfg.v1";
-  let cfg={target:15,min:12,max:18,ftStaff:5};
+  const LS_KEY="rts.classes.v3";
+  let cfg={target:15,min:12,max:18,ftStaff:5,cutMode:"mix",morningsMode:"own",collect:90};
 
   function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);}
   function ageOn(dob,ref){ if(!dob)return null; const b=new Date(dob); if(isNaN(b))return null; let a=ref.getFullYear()-b.getFullYear(); if(ref.getMonth()<b.getMonth()||(ref.getMonth()===b.getMonth()&&ref.getDate()<b.getDate()))a--; return a; }
@@ -245,6 +381,7 @@
   function parseHomeschoolDays(s){ if(!s)return []; const l=String(s).toLowerCase(); const d=[]; if(/\bmonday\b/.test(l))d.push("Mon"); if(/\btuesday\b/.test(l))d.push("Tue"); if(/\bthursday\b/.test(l))d.push("Thu"); if(/\bfriday\b/.test(l))d.push("Fri"); return d; }
   function displayName(name,preferred){ if(preferred&&String(preferred).trim()){const p=String(preferred).trim();const m=p.match(/^([A-Za-z]+(?:[\-' ]?[A-Za-z]+)*)/);return m?m[1]:p;} if(!name)return "(unnamed)"; return String(name).split(/\s+/)[0]; }
   function hasFlag(c){ const blob=[c.health,c.notes,c.attitude].filter(Boolean).join("  "); return RE_LDB.test(blob)||RE_MED.test(blob); }
+  function normGender(s){ s=String(s||"").trim().toLowerCase(); if(s.startsWith("m")||s.startsWith("b"))return "m"; if(s.startsWith("f")||s.startsWith("g"))return "f"; return ""; }
 
   // ===== Load & parse ===================================================
   async function loadData(){
@@ -263,8 +400,8 @@
       restoreState();
       document.getElementById("loader").style.display="none";
       document.getElementById("app").style.display="block";
-      const now=new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
-      meta.textContent=`${ROSTER.length+NEEDS_DATA.length+DUPS.length} on the sheets → ${ROSTER.length} planned · refreshed ${now}`;
+      lastRefreshed=new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+      updateMeta();
       renderAll();
     }catch(err){
       meta.textContent="Error";
@@ -300,25 +437,43 @@
         const fam=parseFamily(src,b.headers,row);
         if(fam.stage==="Declined")continue;
         for(const c of fam.children){
-          let days, major=null, dob=c.dob;
+          let days, major=null, dob=c.dob, gnd=normGender(c.gender), placeAs=null;
           if(src==="homeschool")days=parseHomeschoolDays(c.programs);
           else {major=normalizeMajor(c.schedule);days=(MAJOR_DAYS[major]||[]).slice();}
           for(const ov of OVERRIDES){
             if(fam.regId===ov.reg&&ov.child.test(c.name)){
               if(ov.days)days=ov.days.slice();
               if(ov.dob)dob=ov.dob;
+              if(ov.gender)gnd=ov.gender;
+              if(ov.placeAs!=null)placeAs=ov.placeAs;
               NOTES.push(ov.note);
             }
           }
-          const ax=exactAge(dob);
+          const realAx=exactAge(dob);
+          const ax=placeAs!=null?placeAs:realAx; // where the child SITS
           all.push({name:c.name,display:displayName(c.name,c.preferred),fam:fam.lastName,reg:fam.regId,src,
+            gender:gnd,placeAs,
             type:src==="homeschool"?"hs":"ft",major,days,dob,ax,age:ageOn(dob,SEP1),
             stage:fam.stage,paid:fam.paid,sure:fam.paid||["Decided","Confirmed","Committed"].includes(fam.stage),
             submittedAt:fam.submittedAt,flag:hasFlag(c)});
         }
       }
     }
-    // Dedupe: same family last name + same birthdate + same first-3-letters of child name = same child twice.
+    // Children added by hand or baked in (planning only — never written to any sheet).
+    for(const m of [...BAKED_KIDS.map(b=>({...b,baked:true})),...getManual()]){
+      const days=m.type==="hs"?(m.days||[]).slice():(MAJOR_DAYS[m.major]||[]).slice();
+      const realAx=m.dob?exactAge(m.dob):null;
+      const pax=(m.placeAs!=null)?m.placeAs:realAx; // planning age: where they SIT
+      all.push({name:String(m.name).trim(),display:displayName(m.name,""),
+        fam:(String(m.name).trim().split(/\s+/).slice(-1)[0]||"(added)"),reg:m.baked?"BAKED":"MANUAL",src:"manual",
+        gender:normGender(m.gender),
+        type:m.type==="hs"?"hs":"ft",major:m.type==="hs"?null:m.major,days,dob:m.dob,ax:pax,age:pax!=null?Math.floor(pax):null,
+        placeAs:m.placeAs!=null?m.placeAs:null,pendingDob:!!m.pendingDob,
+        stage:m.baked?"Baked in":"Hand-added",paid:false,sure:true,submittedAt:"",flag:false,manual:true,baked:!!m.baked});
+      NOTES.push(m.baked
+        ?`Baked in permanently: ${m.name} (Dan's child)${m.placeAs!=null?` — placed at age ${m.placeAs} by Dan's judgment`:""}${m.pendingDob?" — real birthdate still needed":""}.`
+        :`Added by hand: ${m.name} — not on any enrollment sheet (planning only)${m.placeAs!=null?`, placed at age ${m.placeAs}`:""}.`);
+    }
     const byKey={};
     for(const k of all){
       const dobKey=(String(k.dob).match(/^\d{4}-\d{2}-\d{2}/)||[""])[0];
@@ -333,16 +488,16 @@
       g.sort((a,b)=>(SRC_RANK[b.src]-SRC_RANK[a.src])||(Date.parse(a.submittedAt)||0)-(Date.parse(b.submittedAt)||0));
       ROSTER.push(g[0]);
       for(const d of g.slice(1)){DUPS.push(d);
-        NOTES.push(`Duplicate registration merged: ${d.name} appears in both “${g[0].src}” (kept) and “${d.src}” (ignored). Counted once.`);}
+        NOTES.push(d.src==="manual"
+          ?`${d.name} is now on a real enrollment (“${g[0].src}”) — the hand-added copy steps aside automatically.`
+          :`Duplicate registration merged: ${d.name} appears in both “${g[0].src}” (kept) and “${d.src}” (ignored). Counted once.`);}
     }
-    // Needs-data bucket: missing or absurd ages
     ROSTER=ROSTER.filter(k=>{
       if(k.ax==null||k.ax<3||k.ax>19.5){NEEDS_DATA.push(k);
         NOTES.push(`Needs data: ${k.name} has a missing or unreadable birthdate — left out of the classes until the sheet is fixed.`);
         return false;}
       return true;
     });
-    // Position jitter so same-birthday children still get their own dot
     ROSTER.sort((a,b)=>a.ax-b.ax||a.display.localeCompare(b.display));
     let prev=-1;
     for(const k of ROSTER){k.pos=k.ax; if(k.pos<=prev)k.pos=prev+0.004; prev=k.pos;}
@@ -361,33 +516,87 @@
   }
 
   // ===== Roster access ==================================================
-  function kidsFor(day){ return ROSTER.filter(k=>k.days.includes(day)&&(stageFilter==="all"||k.sure)); }
-  function classesFor(day){
-    const kids=kidsFor(day).sort((a,b)=>a.pos-b.pos);
-    const ws=(walls[day]||[]).slice().sort((a,b)=>a-b);
-    const cls=Array.from({length:ws.length+1},()=>[]);
-    for(const k of kids){let i=0;while(i<ws.length&&k.pos>=ws[i])i++;cls[i].push(k);}
-    return {kids,ws,cls};
+  function blockDef(day,block){ return DAY_BLOCKS(day).find(b=>b.id===block)||DAY_BLOCKS(day)[0]; }
+  function kidsFor(day,block){
+    const bd=blockDef(day,block);
+    return ROSTER.filter(k=>k.days.includes(day)&&(!bd.ftOnly||k.type==="ft")&&(stageFilter==="all"||k.sure));
+  }
+  function wallsOf(day,block){ if(!walls[day])walls[day]={}; if(!walls[day][block])walls[day][block]=[]; return walls[day][block]; }
+  function splitsOf(day,block){
+    if(!splits[day])splits[day]={};
+    const n=wallsOf(day,block).length+1;
+    if(!Array.isArray(splits[day][block]))splits[day][block]=new Array(n).fill(0);
+    const s=splits[day][block];
+    while(s.length<n)s.push(0); if(s.length>n)s.length=n;
+    return s;
+  }
+  function laneWallsOf(day,block){
+    if(!laneWalls[day])laneWalls[day]={};
+    if(!laneWalls[day][block]||typeof laneWalls[day][block]!=="object")laneWalls[day][block]={ft:[],hs:[]};
+    const lw=laneWalls[day][block];
+    if(!Array.isArray(lw.ft))lw.ft=[]; if(!Array.isArray(lw.hs))lw.hs=[];
+    return lw;
+  }
+  // Lane walls only mean something inside a SPLIT red band; drop any that aren't.
+  function cleanupLaneWalls(day,block){
+    const ws=wallsOf(day,block), sp=splitsOf(day,block), lw=laneWallsOf(day,block);
+    const edges=[domainLo,...ws.slice().sort((a,b)=>a-b),domainHi];
+    const regionOf=x=>{let i=0;while(i<ws.length&&x>=edges[i+1])i++;return i;};
+    for(const lane of ["ft","hs"])lw[lane]=lw[lane].filter(x=>sp[regionOf(x)]);
+  }
+  function subdivide(kids,cuts){
+    const groups=Array.from({length:cuts.length+1},()=>[]);
+    for(const k of kids){let i=0;while(i<cuts.length&&k.pos>=cuts[i])i++;groups[i].push(k);}
+    return groups;
+  }
+  // Regions from red walls → classes. Split bands use their own lane cuts.
+  function classesFor(day,block){
+    const bd=blockDef(day,block);
+    const kids=kidsFor(day,block).sort((a,b)=>a.pos-b.pos);
+    const ws=wallsOf(day,block).slice().sort((a,b)=>a-b);
+    const sp=splitsOf(day,block);
+    const lw=laneWallsOf(day,block);
+    const edges=[domainLo,...ws,domainHi];
+    const regions=Array.from({length:ws.length+1},()=>[]);
+    for(const k of kids){let i=0;while(i<ws.length&&k.pos>=ws[i])i++;regions[i].push(k);}
+    const classes=[];
+    regions.forEach((g,r)=>{
+      if(!bd.ftOnly&&sp[r]){
+        for(const lane of ["ft","hs"]){
+          const cuts=lw[lane].filter(x=>x>edges[r]&&x<edges[r+1]).sort((a,b)=>a-b);
+          const laneKids=g.filter(k=>k.type===lane);
+          subdivide(laneKids,cuts).forEach((sub,i)=>classes.push({region:r,part:lane,sub:i,subCount:cuts.length+1,kids:sub}));
+        }
+      }else classes.push({region:r,part:"mix",sub:0,subCount:1,kids:g});
+    });
+    return {kids,ws,sp,lw,edges,regions,classes,bd};
   }
   function statusOf(n){ return n<cfg.min?"under":n>cfg.max?"over":"ok"; }
+  function teacherClasses(day,block){ return classesFor(day,block).classes.filter(c=>c.kids.length>0); }
+  function className(c){ const l=c.subCount>1?["-a","-b","-c","-d","-e","-f"][c.sub]||("-"+(c.sub+1)):""; return `Class ${c.region+1}${c.part==="ft"?"·FT":c.part==="hs"?"·HS":""}${l}`; }
+  function classKey(c){ return c.region+":"+c.part+":"+c.sub; }
 
-  // ===== Presets ========================================================
-  function wallsSizeFirst(kids){
+  // ===== Presets & wall management ======================================
+  function sizeK(n){ // class count whose average size lands closest to the ideal
+    const k1=Math.max(1,Math.floor(n/cfg.target)), k2=Math.ceil(n/cfg.target);
+    return (Math.abs(n/k1-cfg.target)<=Math.abs(n/k2-cfg.target))?k1:k2;
+  }
+  function wallsSizeFirst(kids,forceK){
     const n=kids.length; if(n<2)return[];
-    const k=Math.max(1,Math.round(n/cfg.target)); if(k<2)return[];
+    const k=forceK||sizeK(n); if(k<2)return[];
     const base=Math.floor(n/k), rem=n%k, ws=[]; let idx=0;
     for(let c=0;c<k-1;c++){ idx+=base+(c<rem?1:0); ws.push((kids[idx-1].pos+kids[idx].pos)/2); }
     return ws;
   }
-  function wallsBestCompromise(kids){
+  function wallsBestCompromise(kids,forceK){
     const n=kids.length; if(n<2)return{ws:[],feasible:n>=cfg.min&&n<=cfg.max};
     const xs=kids.map(k=>k.pos), P=1e6;
     function segCost(i,j){const s=j-i;const spread=xs[j-1]-xs[i];
       let c=spread*spread+0.05*(s-cfg.target)*(s-cfg.target);
       if(s<cfg.min)c+=P*(cfg.min-s); if(s>cfg.max)c+=P*(s-cfg.max); return c;}
     let best=null;
-    const kMaxTry=Math.min(12,n);
-    for(let k=1;k<=kMaxTry;k++){
+    const ks=forceK?[Math.min(forceK,n)]:Array.from({length:Math.min(12,n)},(_,i)=>i+1);
+    for(const k of ks){
       const dp=Array.from({length:k+1},()=>new Array(n+1).fill(Infinity));
       const cut=Array.from({length:k+1},()=>new Array(n+1).fill(-1));
       dp[0][0]=0;
@@ -400,55 +609,401 @@
         best={cost:dp[k][n],bounds};
       }
     }
+    if(!best)return{ws:[],feasible:false};
     const ws=best.bounds.slice(1).map(i=>(xs[i-1]+xs[i])/2);
     return {ws,feasible:best.cost<P};
   }
   function applyPreset(kind){
     const days=document.getElementById("scope-all").checked?DAYS_ORDER:[currentDay];
-    let infeasibleDays=[];
+    let infeasible=[];
     for(const d of days){
-      const kids=kidsFor(d).sort((a,b)=>a.pos-b.pos);
-      if(kind==="size")walls[d]=wallsSizeFirst(kids);
-      else if(kind==="dev")walls[d]=[8,11,14];
-      else if(kind==="grade")walls[d]=[11.7,14.7];
-      else if(kind==="best"){const r=wallsBestCompromise(kids);walls[d]=r.ws;if(!r.feasible)infeasibleDays.push(DAY_LABEL[d]);}
+      for(const b of DAY_BLOCKS(d)){
+        if(b.ftOnly)continue; // mornings are locked — presets never touch them
+        const scopeOne=!document.getElementById("scope-all").checked;
+        if(scopeOne&&b.id!==currentBlock)continue;
+        const kids=kidsFor(d,b.id).sort((x,y)=>x.pos-y.pos);
+        const lw=laneWallsOf(d,b.id);
+        const sep=cfg.cutMode==="sep"&&!b.ftOnly;
+        if(!sep){
+          // Together: everyone in shared age bands.
+          let ws=[];
+          if(kind==="size")ws=wallsSizeFirst(kids);
+          else if(kind==="dev")ws=[8,11,14];
+          else if(kind==="grade")ws=[11.7,14.7];
+          else if(kind==="best"){const r=wallsBestCompromise(kids);ws=r.ws;if(!r.feasible)infeasible.push(DAY_LABEL[d]+" "+b.label);}
+          walls[d][b.id]=ws;
+          if(splits[d])splits[d][b.id]=null; splitsOf(d,b.id);
+          lw.ft=[]; lw.hs=[];
+        }else{
+          // Apart: FT and HS each get their own classes.
+          const ft=kids.filter(k=>k.type==="ft"), hs=kids.filter(k=>k.type==="hs");
+          if(kind==="dev"||kind==="grade"){
+            // Fixed-age cuts apply to both groups; every band separated.
+            const ws=kind==="dev"?[8,11,14]:[11.7,14.7];
+            walls[d][b.id]=ws.slice();
+            splits[d][b.id]=new Array(ws.length+1).fill(1);
+            lw.ft=[]; lw.hs=[];
+          }else{
+            walls[d][b.id]=[];
+            splits[d][b.id]=[1];
+            if(kind==="size"){
+              lw.ft=wallsSizeFirst(ft);
+              // Dan's doctrine (2026-07-14): independent homeschoolers = at least two groups.
+              lw.hs=hs.length>=2?wallsSizeFirst(hs,Math.max(2,sizeK(hs.length))):[];
+            }else{ // best
+              const rf=wallsBestCompromise(ft);
+              let rh=wallsBestCompromise(hs);
+              if(hs.length>=2&&rh.ws.length<1)rh=wallsBestCompromise(hs,2);
+              lw.ft=rf.ws; lw.hs=rh.ws;
+              if(!rf.feasible||!rh.feasible)infeasible.push(DAY_LABEL[d]+" "+b.label);
+            }
+          }
+        }
+      }
     }
-    saveState();renderAll();
-    const note=document.getElementById("day-note");
-    if(kind==="best"&&infeasibleDays.length)
-      note.innerHTML=`<span style="color:var(--bad);font-weight:700;">Honest warning:</span> on ${infeasibleDays.join(", ")} there is NO way to cut classes that keeps every class between ${cfg.min} and ${cfg.max}. Showing the closest miss.`;
+    selectedClass=null; saveState(); renderAll();
+    if(kind==="best"&&infeasible.length)
+      document.getElementById("day-note").innerHTML=`<span style="color:var(--bad);font-weight:700;">Honest warning:</span> no legal cut exists for ${infeasible.join(", ")} — every arrangement busts the ${cfg.min}–${cfg.max} rule somewhere. Showing the closest miss.`;
   }
-  function addWall(){
-    const {ws,cls}=classesFor(currentDay);
-    let bi=0;for(let i=1;i<cls.length;i++)if(cls[i].length>cls[bi].length)bi=i;
-    const g=cls[bi];
-    let pos;
-    if(g.length>=2){const m=Math.floor(g.length/2);pos=(g[m-1].pos+g[m].pos)/2;if(g[m-1].pos===g[m].pos)pos+=0.002;}
-    else pos=(domainLo+domainHi)/2;
-    walls[currentDay]=[...ws,pos].sort((a,b)=>a-b);
-    saveState();renderAll();
+  function setCutMode(v){ cfg.cutMode=v; updateCutModeChips(); saveState(); }
+  function updateCutModeChips(){
+    document.getElementById("cm-mix").classList.toggle("active",cfg.cutMode!=="sep");
+    document.getElementById("cm-sep").classList.toggle("active",cfg.cutMode==="sep");
   }
-  function removeWall(i){ walls[currentDay].splice(i,1); saveState(); renderAll(); }
-  function copyWallsToAllDays(){ for(const d of DAYS_ORDER)walls[d]=(walls[currentDay]||[]).slice(); saveState(); renderAll(); }
+  // ⑤ Fully independent = "FT & HS apart" mode + Best compromise, in one press.
+  function independentAll(){ setCutMode("sep"); applyPreset("best"); }
+  function stepClasses(delta){
+    if(blockDef(currentDay,currentBlock).ftOnly)return; // mornings are locked
+    const {regions,ws}=classesFor(currentDay,currentBlock);
+    if(delta>0){
+      let bi=0;for(let i=1;i<regions.length;i++)if(regions[i].length>regions[bi].length)bi=i;
+      const g=regions[bi];let pos;
+      if(g.length>=2){const m=Math.floor(g.length/2);pos=(g[m-1].pos+g[m].pos)/2;if(g[m-1].pos===g[m].pos)pos+=0.002;}
+      else pos=(domainLo+domainHi)/2;
+      const sp=splitsOf(currentDay,currentBlock);
+      let r=0;while(r<ws.length&&pos>=ws[r])r++;
+      sp.splice(r,0,sp[r]);
+      walls[currentDay][currentBlock]=[...ws,pos].sort((a,b)=>a-b);
+    }else{
+      if(!ws.length)return;
+      let bi=0,bs=Infinity;
+      for(let i=0;i<ws.length;i++){const s=regions[i].length+regions[i+1].length;if(s<bs){bs=s;bi=i;}}
+      const sp=splitsOf(currentDay,currentBlock);
+      const merged=(sp[bi]&&sp[bi+1])?1:0;
+      sp.splice(bi,2,merged);
+      const w2=ws.slice();w2.splice(bi,1);
+      walls[currentDay][currentBlock]=w2;
+    }
+    cleanupLaneWalls(currentDay,currentBlock);
+    selectedClass=null; saveState(); renderAll();
+  }
+  function removeWall(i){
+    if(blockDef(currentDay,currentBlock).ftOnly)return; // mornings are locked
+    const ws=wallsOf(currentDay,currentBlock);
+    const sp=splitsOf(currentDay,currentBlock);
+    const merged=(sp[i]&&sp[i+1])?1:0;
+    sp.splice(i,2,merged);
+    ws.splice(i,1);
+    cleanupLaneWalls(currentDay,currentBlock);
+    selectedClass=null; saveState(); renderAll();
+  }
+  function toggleSplit(r){
+    const sp=splitsOf(currentDay,currentBlock);
+    sp[r]=sp[r]?0:1;
+    cleanupLaneWalls(currentDay,currentBlock);
+    selectedClass=null; saveState(); renderAll();
+  }
+  function splitAll(on){
+    const bd=blockDef(currentDay,currentBlock);
+    if(bd.ftOnly)return;
+    const sp=splitsOf(currentDay,currentBlock);
+    for(let i=0;i<sp.length;i++)sp[i]=on?1:0;
+    cleanupLaneWalls(currentDay,currentBlock);
+    selectedClass=null; saveState(); renderAll();
+  }
+  // "Cut this class by age" — adds a lane wall at the class's median.
+  function addLaneCut(key){
+    const {classes}=classesFor(currentDay,currentBlock);
+    const c=classes.find(x=>classKey(x)===key);
+    if(!c||c.part==="mix")return;
+    const g=c.kids;
+    if(g.length<2)return;
+    const m=Math.floor(g.length/2);
+    let pos=(g[m-1].pos+g[m].pos)/2;
+    if(g[m-1].pos===g[m].pos)pos+=0.002;
+    laneWallsOf(currentDay,currentBlock)[c.part].push(pos);
+    laneWallsOf(currentDay,currentBlock)[c.part].sort((a,b)=>a-b);
+    selectedClass=null; saveState(); renderAll();
+  }
+  function removeLaneWall(lane,i){
+    laneWallsOf(currentDay,currentBlock)[lane].splice(i,1);
+    selectedClass=null; saveState(); renderAll();
+  }
 
   // ===== Rendering ======================================================
-  function renderAll(){ renderDayTabs(); renderDayNote(); renderAxis(); renderCards(); renderRoster(); renderCrossDay(); renderSummary(); }
+  let lastRefreshed="";
+  function updateMeta(){
+    const man=ROSTER.filter(k=>k.manual).length;
+    const sheets=ROSTER.length+NEEDS_DATA.length+DUPS.length-getManual().length-BAKED_KIDS.length;
+    document.getElementById("meta-line").textContent=`${sheets} on the sheets → ${ROSTER.length} planned${man?` (incl. ${man} added by hand)`:""} · refreshed ${lastRefreshed}`;
+  }
+  function renderAll(){ updateMeta(); renderDayTabs(); renderBlockTabs(); renderDayNote(); renderAxis(); renderCards(); renderRoster(); renderMornings(); renderMorningRosters(); renderManualList(); renderCrossDay(); renderSummary(); renderTuition(); }
+
+  // ===== Tuition estimate (2026–27 quarterly plan prices, from tuition.html) =====
+  const TUITION_PRICE={ft5:1950,ft4:1679,hs4:1199,hs3:960,hs2:690,hs1:365};
+  const SIBLING_DISC={ft5:150,ft4:120,hs4:80,hs3:60,hs2:40,hs1:20};
+  const TIER_LABEL={ft5:"5-Day School (full-time)",ft4:"4-Day School (full-time)",hs4:"4-Day Homeschool",hs3:"3-Day Homeschool",hs2:"2-Day Homeschool",hs1:"1-Day Homeschool"};
+  function tierOf(k){ return k.type==="ft"?(k.major==="double-major"?"ft5":"ft4"):("hs"+Math.min(4,Math.max(1,k.days.length))); }
+  function renderTuition(){
+    const el=document.getElementById("tuition-body"); if(!el)return;
+    const kids=ROSTER.filter(k=>!k.manual&&(stageFilter==="all"||k.sure));
+    const counts={};let gross=0;
+    for(const k of kids){const t=tierOf(k);counts[t]=(counts[t]||0)+1;gross+=TUITION_PRICE[t];}
+    const fams={};for(const k of kids){(fams[k.reg]=fams[k.reg]||[]).push(k);}
+    let disc=0,discKids=0,multiFams=0;
+    for(const r in fams){const g=fams[r];if(g.length>=2){multiFams++;for(const k of g){disc+=SIBLING_DISC[tierOf(k)];discKids++;}}}
+    const net=gross-disc;
+    const fmt=n=>"$"+Math.round(n).toLocaleString();
+    const rate=Math.max(10,Math.min(100,cfg.collect||90))/100;
+    const rows=["ft5","ft4","hs4","hs3","hs2","hs1"].filter(t=>counts[t]).map(t=>
+      `<tr><td>${TIER_LABEL[t]}</td><td class="num">${counts[t]}</td><td class="num">${fmt(TUITION_PRICE[t])}</td><td class="num">${fmt(counts[t]*TUITION_PRICE[t])}</td></tr>`).join("");
+    const trio=(mult,color)=>`<div style="display:flex;gap:28px;flex-wrap:wrap;margin-top:6px;">
+      <div><div class="note" style="font-weight:700;">PER QUARTER</div><b style="font-size:22px;${color?`color:${color};`:""}">${fmt(net*mult)}</b></div>
+      <div><div class="note" style="font-weight:700;">≈ PER MONTH (spread over 12)</div><b style="font-size:22px;${color?`color:${color};`:""}">${fmt(net*mult*4/12)}</b></div>
+      <div><div class="note" style="font-weight:700;">PER YEAR (4 quarters)</div><b style="font-size:22px;${color?`color:${color};`:""}">${fmt(net*mult*4)}</b></div></div>`;
+    el.innerHTML=`
+    <table class="tbl"><thead><tr><th>Program</th><th class="num">Students</th><th class="num">Price / quarter</th><th class="num">Subtotal / quarter</th></tr></thead>
+    <tbody>${rows}
+    <tr><td>Sibling discount — ${discKids} children across ${multiFams} multi-child families</td><td class="num"></td><td class="num"></td><td class="num" style="color:var(--bad);">−${fmt(disc).slice(1)}</td></tr>
+    <tr class="total-row"><td>Net tuition billed</td><td class="num">${kids.length}</td><td></td><td class="num">${fmt(net)} / quarter</td></tr></tbody></table>
+    <div style="margin-top:12px;"><div class="note" style="font-weight:800;letter-spacing:.04em;">IF EVERY DOLLAR COMES IN (100%)</div>${trio(1)}</div>
+    <div style="margin-top:14px;">
+      <span class="note" style="font-weight:800;letter-spacing:.04em;">IF ONLY&nbsp;</span>
+      <input class="ctrl-num" type="number" min="10" max="100" value="${Math.round(rate*100)}" oninput="cfg.collect=Math.max(10,Math.min(100,parseInt(this.value)||90));saveState();renderTuition();">
+      <span class="note" style="font-weight:800;letter-spacing:.04em;">&nbsp;% ACTUALLY ARRIVES (scholarships, withdrawals, non-payment)</span>
+      ${trio(rate,"var(--hs-green)")}
+    </div>
+    <p class="note" style="margin-top:12px;">Honest boundaries of this estimate: it follows the Count filter up top (currently <b>${stageFilter==="all"?"everyone enrolled":"paid / accepted only"}</b>); your own baked-in/hand-added children are excluded (no tuition); one-time enrollment fees ($250–$300 per household) are NOT included; homeschool pricing uses each child's actual days per week (Marshall correction applied); sibling discounts are matched within each registration form, so a family split across two different forms may earn slightly more discount than shown. Prices are the quarterly plan, 2026–27.</p>`;
+  }
+
+  // ===== Children added by hand ========================================
+  function renderManualList(){
+    const el=document.getElementById("manual-list"); if(!el)return;
+    const schedStr=m=>m.type==="hs"?("Homeschool · "+(m.days||[]).join("/")):({"double-major":"All five days","technology":"Tue–Fri","performing-arts":"Mon–Thu"}[m.major]||"?");
+    const baked=BAKED_KIDS.map(m=>{
+      const an=m.dob?ageTodayExact(m.dob):null;
+      return `<div class="rkid"><span class="nm">🔒 ${esc(m.name)}</span><span class="full">${m.dob?"born "+esc(String(m.dob)):"birthdate not on file yet"}</span><span class="meta">${an!=null?ageYM(an)+" today · ":""}${m.placeAs!=null?`placed as ${ageYM(m.placeAs)} · `:""}${esc(schedStr(m))} · baked in — ask Henry to change</span></div>`;
+    }).join("");
+    const list=getManual();
+    const handRows=list.map((m,i)=>{
+      const an=ageTodayExact(m.dob);
+      return `<div class="rkid"><span class="nm">${esc(m.name)}</span><span class="full">born ${esc(String(m.dob))}</span><span class="meta">${an!=null?ageYM(an)+" today":""}${m.placeAs!=null?` · placed as ${ageYM(m.placeAs)}`:""} · ${esc(schedStr(m))}</span><button class="btn" style="padding:2px 9px;font-size:11px;" onclick="removeManualChild(${i})">✕ remove</button></div>`;
+    }).join("");
+    el.innerHTML=baked+(handRows||'<div class="note">No hand-added children beyond the baked-in ones.</div>');
+  }
+  function addManualChild(){
+    const name=document.getElementById("mc-name").value.trim();
+    const dob=document.getElementById("mc-dob").value;
+    const sched=document.getElementById("mc-sched").value;
+    if(!name||!dob){alert("Need a name and a birthdate.");return;}
+    if(isNaN(new Date(dob))){alert("That birthdate doesn't read as a date.");return;}
+    let entry;
+    if(sched==="hs"){
+      const days=[...document.querySelectorAll(".mc-day:checked")].map(c=>c.value);
+      if(!days.length){alert("Pick at least one homeschool day.");return;}
+      entry={name,dob,type:"hs",days};
+    }else entry={name,dob,type:"ft",major:sched};
+    const pl=parseFloat(document.getElementById("mc-place").value);
+    if(!isNaN(pl))entry.placeAs=pl;
+    document.getElementById("mc-place").value="";
+    entry.gender=document.getElementById("mc-gender").value;
+    document.getElementById("mc-gender").value="";
+    const list=getManual(); list.push(entry); saveManual(list);
+    document.getElementById("mc-name").value="";document.getElementById("mc-dob").value="";
+    document.querySelectorAll(".mc-day:checked").forEach(c=>c.checked=false);
+    buildRoster(); renderAll();
+  }
+  function removeManualChild(i){
+    const list=getManual(); list.splice(i,1); saveManual(list);
+    buildRoster(); renderAll();
+  }
+
+  // Name colors by weekly schedule: red = all five days, blue = Tue–Fri, orange = Mon–Thu.
+  const MAJOR_COLOR={"double-major":"var(--rt-red)","technology":"var(--ft-blue)","performing-arts":"#cc6a00"};
+  function nameColor(k){ return k.type==="ft"&&MAJOR_COLOR[k.major]?MAJOR_COLOR[k.major]:"var(--ink)"; }
+  // Parse a birthdate as a LOCAL calendar date (date-only strings would otherwise
+  // land on the previous day in Pacific time), and treat empty as unknown.
+  function parseDobLocal(dob){
+    if(!dob)return null;
+    const m=String(dob).match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if(m)return new Date(+m[1],+m[2]-1,+m[3]);
+    const b=new Date(dob); return isNaN(b)?null:b;
+  }
+  function nextBirthday(dob){
+    const b=parseDobLocal(dob); if(!b)return null;
+    const now=new Date();
+    let nb=new Date(now.getFullYear(),b.getMonth(),b.getDate());
+    if(nb<=now)nb=new Date(now.getFullYear()+1,b.getMonth(),b.getDate());
+    return nb;
+  }
+  function ageTodayExact(dob){ const b=parseDobLocal(dob); return b?(new Date()-b)/86400000/365.25:null; }
+  function renderMorningRosters(){
+    const el=document.getElementById("mrosters"); if(!el)return;
+    const bid=DAY_BLOCKS(currentDay).find(b=>b.ftOnly).id;
+    const ws=wallsOf(currentDay,bid).slice().sort((a,b)=>a-b);
+    const {classes}=classesFor(currentDay,bid);
+    document.getElementById("mroster-title").textContent=`Morning rosters — ${DAY_LABEL[currentDay]} (locked plan) — every name, age today, next birthday`;
+    const row=k=>{
+      const nb=nextBirthday(k.dob), an=ageTodayExact(k.dob);
+      const last=(String(k.name).trim().split(/\s+/).slice(-1)[0]||"");
+      return `<div style="padding:3px 0;font-size:13px;border-bottom:1px dashed var(--line);">
+        <b style="color:${nameColor(k)};">${esc(k.display)} ${esc(last)}</b>${k.flag?' <span class="flagdot" title="support flag">●</span>':""}${k.manual?` <span class="srcpill manual">${k.baked?"BAKED IN":"ADDED"}</span>`:""}
+        <span style="color:var(--ink-soft);font-size:12px;"> — ${an!=null?ageYM(an):"age ?"}${k.placeAs!=null?` · <b>placed as ${ageYM(k.placeAs)}</b>`:""} · ${an!=null&&nb?`turns ${Math.floor(an)+1} on ${nb.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}`:"birthday not on file"}</span></div>`;
+    };
+    const gblock=(kids,label)=>kids.length?`<div style="font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--ink-soft);text-transform:uppercase;margin:7px 0 1px;">${label} (${kids.length})</div>`+kids.slice().sort((a,b)=>a.display.localeCompare(b.display)).map(row).join(""):"";
+    const cols=classes.filter(c=>c.kids.length).map(c=>{
+      const g=c.kids;
+      const girls=g.filter(k=>k.gender==="f"), boys=g.filter(k=>k.gender==="m"), unk=g.filter(k=>!k.gender);
+      const rows=gblock(girls,"Girls")
+        +((girls.length&&(boys.length||unk.length))?`<div style="border-top:2px solid rgba(39,36,67,.25);margin:7px 0 0;"></div>`:"")
+        +gblock(boys,"Boys")
+        +gblock(unk,"gender not on the form");
+      return `<div style="flex:1;min-width:250px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;">
+        <div class="sizestr" style="font-weight:800;font-size:13px;margin-bottom:2px;">Ages ${bandLblFor(ws,c.region)} <span class="b ${statusOf(g.length)}">${g.length}</span> <span style="font-weight:600;color:var(--ink-soft);font-size:11px;">${girls.length}g · ${boys.length}b${unk.length?` · ${unk.length}?`:""}</span></div>${rows}</div>`;
+    }).join("");
+    el.innerHTML=`<p class="note">Names colored by weekly schedule: <b style="color:var(--rt-red);">red = all five days</b> · <b style="color:var(--ft-blue);">blue = Tue–Fri</b> · <b style="color:#cc6a00;">orange = Mon–Thu</b>. Ages are as of TODAY (the axis above uses Sept 1); “turns” is the next birthday. ● = support flag.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;">${cols}</div>`;
+  }
+
+  // Type exact red-wall ages. Scope: this block, or (checkbox) every block of the same kind — all mornings / all main days.
+  function applyCutAges(){
+    const raw=document.getElementById("cut-ages").value;
+    const ages=[...new Set(raw.split(/[,;\s]+/).map(s=>parseFloat(s)).filter(x=>!isNaN(x)&&x>domainLo+0.1&&x<domainHi-0.1))].sort((a,b)=>a-b);
+    if(!ages.length)return;
+    const bd=blockDef(currentDay,currentBlock);
+    if(bd.ftOnly)return; // mornings are locked
+    const targets=[];
+    if(document.getElementById("scope-all").checked){
+      for(const d of DAYS_ORDER)for(const b of DAY_BLOCKS(d))if(!b.ftOnly)targets.push([d,b.id]);
+    }else targets.push([currentDay,currentBlock]);
+    for(const [d,bid] of targets){
+      walls[d][bid]=ages.slice();
+      if(splits[d])splits[d][bid]=null; splitsOf(d,bid);
+      laneWallsOf(d,bid).ft=[]; laneWallsOf(d,bid).hs=[];
+    }
+    selectedClass=null; saveState(); renderAll();
+  }
+
+  // Mornings table. Two modes: each day's OWN walls (the actual plan, works for split plans),
+  // or the what-if that copies the current day's walls onto every day.
+  function fmtAge(x){return Math.abs(x-Math.round(x))<0.02?String(Math.round(x)):x.toFixed(1);}
+  function bandLblFor(ws,i){
+    const edges=[domainLo,...ws,domainHi];
+    const lo=i===0?null:edges[i], hi=i===ws.length?null:edges[i+1];
+    if(lo==null&&hi==null)return "everyone";
+    if(lo==null)return "under "+fmtAge(hi);
+    if(hi==null)return fmtAge(lo)+"+";
+    const loR=Math.round(lo),hiR=Math.round(hi);
+    if(Math.abs(lo-loR)<0.02&&Math.abs(hi-hiR)<0.02)return loR+"–"+(hiR-1);
+    return fmtAge(lo)+"–"+fmtAge(hi);
+  }
+  function renderMornings(){
+    const el=document.getElementById("mornings"); if(!el)return;
+    const mbid=d=>DAY_BLOCKS(d).find(b=>b.ftOnly).id;
+    const cells=DAYS_ORDER.map(d=>{
+      const ws=wallsOf(d,mbid(d)).slice().sort((a,b)=>a-b);
+      const kids=kidsFor(d,mbid(d));
+      const counts=new Array(ws.length+1).fill(0);
+      for(const k of kids){let i=0;while(i<ws.length&&k.pos>=ws[i])i++;counts[i]++;}
+      const rows=counts.map((n,i)=>{
+        const lbl=bandLblFor(ws,i);
+        return n?`<div class="sizestr" style="padding:2px 0;font-size:12.5px;">${lbl}: <span class="b ${statusOf(n)}">${n}</span></div>`
+                :`<div style="opacity:.4;font-size:12.5px;padding:2px 0;">${lbl}: —</div>`;
+      }).join("");
+      const cls=counts.filter(x=>x>0).length;
+      return `<td style="vertical-align:top;">${rows}<div style="border-top:1px solid var(--line);margin-top:6px;padding-top:4px;font-size:12px;"><b>${kids.length}</b> kids · <b${cls>cfg.ftStaff?' style="color:var(--bad)"':''}>${cls} classes</b></div></td>`;
+    }).join("");
+    el.innerHTML=`<p class="note">🔒 <b>The morning plan is locked</b> (Dan's decision, July 14, 2026): mid-week five bands (6–7 · 8–9 · 10–11 · 12–13 · 14+), Monday &amp; Friday four (littles merged into 6–9). Mornings are full-timers only, staffed by your ${cfg.ftStaff} full-time people — one floats Mon &amp; Fri. To change the lock, ask Henry. Green = ${cfg.min}–${cfg.max}, amber = under, red = over.</p>
+    <table class="tbl"><tr>${DAYS_ORDER.map(d=>`<th>${DAY_LABEL[d]}</th>`).join("")}</tr><tr>${cells}</tr></table>`;
+  }
 
   function renderDayTabs(){
     const el=document.getElementById("day-tabs"); el.innerHTML="";
     for(const d of DAYS_ORDER){
       const b=document.createElement("button");
       b.className="day-tab"+(d===currentDay?" active":"");
-      b.innerHTML=`${DAY_LABEL[d]}<span class="cnt">${kidsFor(d).length}</span>`;
-      b.onclick=()=>{currentDay=d;selectedClass=null;renderAll();};
+      b.innerHTML=`${DAY_LABEL[d]}<span class="cnt">${kidsFor(d,MAIN_BLOCK(d)).length}</span>`;
+      b.onclick=()=>{currentDay=d;currentBlock=MAIN_BLOCK(d);selectedClass=null;renderAll();};
       el.appendChild(b);
     }
   }
+  function renderBlockTabs(){
+    const el=document.getElementById("block-tabs"); el.innerHTML="";
+    const blocks=DAY_BLOCKS(currentDay);
+    if(!blocks.some(b=>b.id===currentBlock))currentBlock=MAIN_BLOCK(currentDay);
+    for(const b of blocks){
+      const t=document.createElement("button");
+      t.className="block-tab"+(b.id===currentBlock?" active":"");
+      t.innerHTML=`${b.label} <span style="font-weight:400;">${b.sub}</span><span class="cnt">${kidsFor(currentDay,b.id).length}</span>`;
+      t.onclick=()=>{currentBlock=b.id;selectedClass=null;renderAll();};
+      el.appendChild(t);
+    }
+    const bd=blockDef(currentDay,currentBlock);
+    document.getElementById("preset-row").style.display=bd.ftOnly?"none":"";
+    for(const id of ["split-all-btn","mix-all-btn","indep-btn"])document.getElementById(id).style.display=bd.ftOnly?"none":"";
+    document.getElementById("class-count").textContent=wallsOf(currentDay,currentBlock).length;
+    const anySplit=!bd.ftOnly&&splitsOf(currentDay,currentBlock).some(x=>x);
+    const lw=laneWallsOf(currentDay,currentBlock);
+    document.getElementById("stp-ft").style.display=anySplit?"":"none";
+    document.getElementById("stp-hs").style.display=anySplit?"":"none";
+    document.getElementById("ft-count").textContent=lw.ft.length;
+    document.getElementById("hs-count").textContent=lw.hs.length;
+  }
+  // ＋/− for one lane's walls: ＋ halves the biggest class of that lane; − removes the wall whose loss hurts least.
+  function stepLane(lane,delta){
+    const bd=blockDef(currentDay,currentBlock); if(bd.ftOnly)return;
+    const lw=laneWallsOf(currentDay,currentBlock)[lane];
+    if(delta>0){
+      const {classes}=classesFor(currentDay,currentBlock);
+      const cands=classes.filter(c=>c.part===lane&&c.kids.length>=2);
+      if(!cands.length)return;
+      let best=cands[0];for(const c of cands)if(c.kids.length>best.kids.length)best=c;
+      const g=best.kids,m=Math.floor(g.length/2);
+      let pos=(g[m-1].pos+g[m].pos)/2; if(g[m-1].pos===g[m].pos)pos+=0.002;
+      lw.push(pos);lw.sort((a,b)=>a-b);
+    }else{
+      if(!lw.length)return;
+      const ws=wallsOf(currentDay,currentBlock).slice().sort((a,b)=>a-b);
+      const eg=[domainLo,...ws,domainHi];
+      const kids=kidsFor(currentDay,currentBlock).filter(k=>k.type===lane);
+      let bi=0,bs=Infinity;
+      for(let i=0;i<lw.length;i++){
+        const x=lw[i];
+        let r=0;while(r<ws.length&&x>=ws[r])r++;
+        const inBand=lw.filter(v=>v>eg[r]&&v<eg[r+1]).sort((a,b)=>a-b);
+        const j=inBand.indexOf(x);
+        const lo=j>0?inBand[j-1]:eg[r], hi=j<inBand.length-1?inBand[j+1]:eg[r+1];
+        const combined=kids.filter(k=>k.pos>=lo&&k.pos<hi).length;
+        if(combined<bs){bs=combined;bi=i;}
+      }
+      lw.splice(bi,1);
+    }
+    selectedClass=null;saveState();renderAll();
+  }
   function renderDayNote(){
     const el=document.getElementById("day-note");
-    el.textContent = currentDay==="Wed"
-      ? "Wednesday is full-time only (no à-la-carte homeschool day) — and part-time teachers aren’t hired for Wednesdays, so these classes fall to your full-time staff."
-      : `${DAY_LABEL[currentDay]} mixes full-time and homeschool à-la-carte students from 10:30 on — the block part-time teachers are hired for (10:30–2:30).`;
+    const bd=blockDef(currentDay,currentBlock);
+    const lockBands=d=>{const ws=MORNING_LOCK[d];return ws.map((_,i)=>bandLblFor(ws,i)).concat([bandLblFor(ws,ws.length)]).filter((v,i,a)=>a.indexOf(v)===i).join(" · ");};
+    if(currentDay==="Wed")
+      el.innerHTML=`🔒 <b>Wednesday is locked</b> (Dan's morning plan, July 14, 2026) — full-time only, all day, bands ${lockBands("Wed")}. Staffed by full-time staff. To change the lock, ask Henry.`;
+    else if(bd.ftOnly)
+      el.innerHTML=`🔒 <b>${DAY_LABEL[currentDay]} morning is locked</b> (Dan's plan, July 14, 2026) — 8:30–10:30, full-timers only, bands ${lockBands(currentDay)}. Staffed by full-time staff. To change the lock, ask Henry.`;
+    else
+      el.textContent=`${DAY_LABEL[currentDay]} main day, 10:30–2:30 — the block part-time teachers are hired for. Red walls cut everyone. Split a band to separate FT and HS — then each side can be cut again on its own (blue cuts for FT, green cuts for HS).`;
+    document.getElementById("axis-hint").innerHTML=
+      bd.ftOnly
+      ? "🔒 This morning plan is locked — the red lines are fixed and cannot be moved. Every dot is a full-time child at their exact age on Sept 1, 2026 (hover for the name); click a card below for names."
+      : "Full-timers ride the upper lane, homeschoolers the lower. <b style='color:var(--rt-red)'>Red walls</b> cut everyone · <b style='color:var(--ft-blue)'>blue dashed walls</b> cut only full-timers · <b style='color:var(--hs-green)'>green dashed walls</b> cut only homeschoolers. All draggable; ✕ removes. Use the <b style='color:var(--ft-blue)'>Blue (FT)</b> and <b style='color:var(--hs-green)'>Green (HS)</b> − / ＋ counters above to add or remove each side's walls — zero walls simply means that whole group fits one class.";
   }
 
   function X(age,w){ return (age-domainLo)/(domainHi-domainLo)*w; }
@@ -457,46 +1012,90 @@
   function renderAxis(){
     const axis=document.getElementById("axis"); axis.innerHTML="";
     const w=axis.clientWidth;
-    const {ws,cls}=classesFor(currentDay);
-    // regions
-    const edges=[domainLo,...ws,domainHi];
-    for(let i=0;i<cls.length;i++){
+    const {ws,sp,lw,edges,regions,bd}=classesFor(currentDay,currentBlock);
+    const laneY=104;
+    regions.forEach((g,i)=>{
       const x0=X(edges[i],w),x1=X(edges[i+1],w);
       const r=document.createElement("div");
       r.className="region "+(i%2?"tintB":"tintA");
       r.style.left=x0+"px";r.style.width=Math.max(0,x1-x0)+"px";
       axis.appendChild(r);
       const lbl=document.createElement("div");
-      const st=statusOf(cls[i].length);
+      let st,txt;
+      const rng=g.length?`${Math.floor(g[0].ax)}–${Math.floor(g[g.length-1].ax)}`:"—";
+      if(!bd.ftOnly&&sp[i]){
+        const ft=g.filter(k=>k.type==="ft").length,hs=g.length-ft;
+        st="mixed2";txt=`Band ${i+1} · ${ft} FT ∥ ${hs} HS · ages ${rng}`;
+      }else{
+        st=g.length?statusOf(g.length):"under";
+        txt=`Class ${i+1} · ${g.length} · ages ${rng}`;
+      }
       lbl.className="region-label "+st;
       lbl.style.left=((x0+x1)/2)+"px";
       lbl.style.top=(i%2?17:0)+"px";
-      const rng=cls[i].length?`${Math.floor(cls[i][0].ax)}–${Math.floor(cls[i][cls[i].length-1].ax)}`:"—";
-      lbl.textContent=`Class ${i+1} · ${cls[i].length} kids · ages ${rng}`;
-      lbl.title="Click the matching card below for names";
+      lbl.textContent=txt;
+      lbl.title=bd.ftOnly?"Click the matching card below":"Click to split/merge FT & HS for this age band";
+      if(!bd.ftOnly)lbl.onclick=()=>toggleSplit(i);
       axis.appendChild(lbl);
+      if(!bd.ftOnly&&sp[i]){
+        const dv=document.createElement("div");
+        dv.className="lane-line split-strong";
+        dv.style.left=x0+"px";dv.style.width=Math.max(0,x1-x0)+"px";dv.style.bottom=laneY+"px";
+        axis.appendChild(dv);
+      }
+    });
+    if(!bd.ftOnly){
+      const base=document.createElement("div");
+      base.className="lane-line";
+      base.style.left="0px";base.style.width=w+"px";base.style.bottom=laneY+"px";
+      axis.appendChild(base);
+      const t1=document.createElement("div");t1.className="lane-tag ft";t1.style.bottom=(laneY+4)+"px";t1.textContent="Full-time ↑";axis.appendChild(t1);
+      const t2=document.createElement("div");t2.className="lane-tag hs";t2.style.bottom="18px";t2.textContent="Homeschool ↑";axis.appendChild(t2);
     }
-    // dots (stacked per 0.12-year bin)
+    // dots
     const binH={},BIN=0.12;
-    const kids=kidsFor(currentDay);
+    const kids=kidsFor(currentDay,currentBlock);
     for(const k of kids){
-      const bin=Math.round(k.pos/BIN);
+      const lane=(!bd.ftOnly&&k.type==="ft")?"ft":"base";
+      const bin=lane+":"+Math.round(k.pos/BIN);
       binH[bin]=(binH[bin]||0);
       const d=document.createElement("div");
-      d.className="dot "+k.type+(k.flag?" flagged":"");
+      d.className="dot "+k.type+(k.flag?" flagged":"")+(k.manual?" manual":"");
       d.style.left=X(k.pos,w)+"px";
-      d.style.bottom=(34+binH[bin]*15)+"px";
-      d.title=`${k.name} — ${ageYM(k.ax)} · ${k.type==="hs"?"Homeschool":(MAJOR_SHORT[k.major]||"Full-time")} · ${k.days.join("/")}${k.flag?" · support flag":""}`;
+      const baseY=(!bd.ftOnly&&k.type==="ft")?(laneY+10):34;
+      d.style.bottom=(baseY+binH[bin]*15)+"px";
+      d.title=`${k.name} — ${k.placeAs!=null?"PLACED at "+ageYM(k.placeAs)+(k.dob?" (really "+ageYM(exactAge(k.dob))+")":""):ageYM(k.ax)} · ${k.type==="hs"?"Homeschool":(MAJOR_SHORT[k.major]||"Full-time")} · ${k.days.join("/")}${k.flag?" · support flag":""}${k.baked?" · BAKED IN":k.manual?" · ADDED BY HAND":""}`;
       axis.appendChild(d);
       binH[bin]++;
     }
-    // walls
+    // lane walls (blue = FT lane, green = HS lane) — only inside split bands
+    if(!bd.ftOnly){
+      const axH=axis.clientHeight;
+      for(const lane of ["ft","hs"]){
+        lw[lane].forEach((wp,i)=>{
+          const el=document.createElement("div");
+          el.className="lwall "+lane; el.style.left=X(wp,w)+"px";
+          if(lane==="ft"){ el.style.top="36px"; el.style.bottom=(laneY+2)+"px"; }
+          else { el.style.top=(axH-laneY+2)+"px"; el.style.bottom="26px"; }
+          el.innerHTML=`<div class="grip">⋮</div><div class="agepop"></div><div class="kill" title="Remove this cut">✕</div>`;
+          el.querySelector(".kill").onclick=(e)=>{e.stopPropagation();removeLaneWall(lane,i);};
+          attachLaneDrag(el,lane,i,w);
+          axis.appendChild(el);
+        });
+      }
+    }
+    // red walls (fixed, uncloseable, ungrabbable on locked morning blocks)
     ws.forEach((wp,i)=>{
       const el=document.createElement("div");
-      el.className="wall"; el.style.left=X(wp,w)+"px";
-      el.innerHTML=`<div class="grip">⋮</div><div class="agepop"></div><div class="kill" title="Remove this wall">✕</div>`;
-      el.querySelector(".kill").onclick=(e)=>{e.stopPropagation();removeWall(i);};
-      attachDrag(el,i,w);
+      el.className="wall"+(bd.ftOnly?" locked":""); el.style.left=X(wp,w)+"px";
+      if(bd.ftOnly){
+        el.title="Locked — Dan's morning plan is fixed (ask Henry to change it)";
+        el.innerHTML=`<div class="lockcap">🔒</div>`;
+      }else{
+        el.innerHTML=`<div class="grip">⋮</div><div class="agepop"></div><div class="kill" title="Remove this wall">✕</div>`;
+        el.querySelector(".kill").onclick=(e)=>{e.stopPropagation();removeWall(i);};
+        attachDrag(el,i,w);
+      }
       axis.appendChild(el);
     });
     // ticks
@@ -514,7 +1113,7 @@
       el.setPointerCapture&&el.setPointerCapture(ev.pointerId);
       const axis=document.getElementById("axis");
       const rect=axis.getBoundingClientRect();
-      const ws=walls[currentDay];
+      const ws=wallsOf(currentDay,currentBlock);
       const lo=(i>0?ws[i-1]+0.03:domainLo+0.05), hi=(i<ws.length-1?ws[i+1]-0.03:domainHi-0.05);
       const pop=el.querySelector(".agepop");
       const onMove=(mv)=>{
@@ -523,12 +1122,48 @@
         ws[i]=age;
         el.style.left=X(age,w)+"px";
         pop.textContent="wall at "+ageYM(age);
-        renderCards(); // live readout while dragging
+        renderCards();
       };
       const onUp=()=>{
         el.classList.remove("dragging");
         document.removeEventListener("pointermove",onMove);
         document.removeEventListener("pointerup",onUp);
+        cleanupLaneWalls(currentDay,currentBlock);
+        saveState(); renderAll();
+      };
+      document.addEventListener("pointermove",onMove);
+      document.addEventListener("pointerup",onUp);
+    };
+    el.addEventListener("pointerdown",onDown);
+  }
+  function attachLaneDrag(el,lane,i,w){
+    const onDown=(ev)=>{
+      ev.preventDefault(); el.classList.add("dragging");
+      el.setPointerCapture&&el.setPointerCapture(ev.pointerId);
+      const axis=document.getElementById("axis");
+      const rect=axis.getBoundingClientRect();
+      const lw=laneWallsOf(currentDay,currentBlock)[lane];
+      const ws=wallsOf(currentDay,currentBlock).slice().sort((a,b)=>a-b);
+      const edges=[domainLo,...ws,domainHi];
+      // stay inside the red band this cut lives in, and between same-lane neighbors
+      let r=0;while(r<ws.length&&lw[i]>=ws[r])r++;
+      const bandLo=edges[r]+0.03, bandHi=edges[r+1]-0.03;
+      const lo=Math.max(bandLo,(i>0&&lw[i-1]>bandLo?lw[i-1]+0.03:bandLo));
+      const hi=Math.min(bandHi,(i<lw.length-1&&lw[i+1]<bandHi?lw[i+1]-0.03:bandHi));
+      const pop=el.querySelector(".agepop");
+      const onMove=(mv)=>{
+        let age=ageAt(mv.clientX-rect.left,w);
+        age=Math.max(lo,Math.min(hi,age));
+        lw[i]=age;
+        el.style.left=X(age,w)+"px";
+        pop.textContent=(lane==="ft"?"FT cut at ":"HS cut at ")+ageYM(age);
+        renderCards();
+      };
+      const onUp=()=>{
+        el.classList.remove("dragging");
+        document.removeEventListener("pointermove",onMove);
+        document.removeEventListener("pointerup",onUp);
+        lw.sort((a,b)=>a-b);
         saveState(); renderAll();
       };
       document.addEventListener("pointermove",onMove);
@@ -539,63 +1174,85 @@
 
   function renderCards(){
     const el=document.getElementById("cards"); el.innerHTML="";
-    const {cls}=classesFor(currentDay);
-    cls.forEach((g,i)=>{
-      const st=statusOf(g.length);
-      const c=document.createElement("div");
-      c.className="ccard "+st+(selectedClass===i?" sel":"");
+    const {classes,bd}=classesFor(currentDay,currentBlock);
+    classes.forEach(c=>{
+      const g=c.kids;
+      const st=g.length?statusOf(g.length):"empty";
+      const card=document.createElement("div");
+      card.className="ccard "+(st==="empty"?"empty":st)+(selectedClass===classKey(c)?" sel":"");
       const rng=g.length?`${ageYM(g[0].ax)} – ${ageYM(g[g.length-1].ax)}`:"empty";
       const ft=g.filter(k=>k.type==="ft").length, hs=g.length-ft;
       const flags=g.filter(k=>k.flag).length;
-      c.innerHTML=`<h3>Class ${i+1}</h3>
-        <div class="big">${g.length}<span class="stat ${st}">${st==="ok"?"ideal":st==="under"?"under "+cfg.min:"over "+cfg.max}</span></div>
+      const compLbl=c.part==="ft"?'<span class="comp ft">FT only</span>':c.part==="hs"?'<span class="comp hs">HS only</span>':(bd.ftOnly?"":'<span class="comp mix">mixed</span>');
+      const compLine=bd.ftOnly?`${g.length} full-time`:(c.part==="mix"?`${ft} full-time · ${hs} homeschool`:(c.part==="ft"?`${g.length} full-time`:`${g.length} homeschool`));
+      let btns="";
+      if(!bd.ftOnly){
+        if(c.part==="mix")btns=`<button class="splitbtn" onclick="event.stopPropagation();toggleSplit(${c.region})">⇅ Split into FT &amp; HS</button>`;
+        else{
+          if(c.sub===0)btns+=`<button class="splitbtn" onclick="event.stopPropagation();toggleSplit(${c.region})">⇵ Merge band ${c.region+1} back</button>`;
+          if(g.length>=2)btns+=`<button class="splitbtn" onclick="event.stopPropagation();addLaneCut('${classKey(c)}')">✂ Cut this class by age</button>`;
+        }
+      }
+      const gk=g.filter(k=>k.gender==="f").length, bk=g.filter(k=>k.gender==="m").length, uk=g.length-gk-bk;
+      card.innerHTML=`<h3>${className(c)} ${compLbl}</h3>
+        <div class="big">${g.length}<span class="stat ${st==="empty"?"under":st}">${st==="empty"?"empty":st==="ok"?"ideal":st==="under"?"under "+cfg.min:"over "+cfg.max}</span></div>
         <div class="sub">${rng}</div>
-        <div class="sub">${ft} full-time · ${hs} homeschool${flags?` · <span class="flagdot">●</span> ${flags} flagged`:""}</div>
-        <div class="sub">1 teacher</div>`;
-      c.onclick=()=>{selectedClass=(selectedClass===i?null:i);renderCards();renderRoster();};
-      el.appendChild(c);
+        <div class="sub">${compLine}${flags?` · <span class="flagdot">●</span> ${flags} flagged`:""}</div>
+        <div class="sub">${g.length?`${gk} girls · ${bk} boys${uk?` · ${uk}?`:""} · 1 teacher`:"no teacher needed"}</div>${btns}`;
+      card.onclick=()=>{selectedClass=(selectedClass===classKey(c)?null:classKey(c));renderCards();renderRoster();};
+      el.appendChild(card);
     });
   }
 
   function renderRoster(){
     const el=document.getElementById("roster");
     if(selectedClass==null){el.classList.remove("open");el.innerHTML="";return;}
-    const {cls}=classesFor(currentDay);
-    const g=cls[selectedClass]||[];
+    const {classes}=classesFor(currentDay,currentBlock);
+    const c=classes.find(x=>classKey(x)===selectedClass);
+    if(!c){el.classList.remove("open");return;}
+    const g=c.kids;
+    const bd=blockDef(currentDay,currentBlock);
     el.classList.add("open");
-    el.innerHTML=`<h3>Class ${selectedClass+1} on ${DAY_LABEL[currentDay]} — every name (${g.length})</h3>`+
-      (g.length?g.map(k=>`<div class="rkid"><span class="nm">${esc(k.display)}${k.flag?' <span class="flagdot" title="support flag">●</span>':""}</span><span class="full">${esc(k.name)} · ${esc(k.fam)} family</span><span class="srcpill ${k.type}">${k.type==="hs"?"HS":"FT"}</span><span class="meta">${ageYM(k.ax)} · ${k.days.join("/")}</span></div>`).join("")
-      :'<div class="note">No children in this class on this day.</div>');
+    const girls=g.filter(k=>k.gender==="f"), boys=g.filter(k=>k.gender==="m"), unk=g.filter(k=>!k.gender);
+    const title=`${className(c)}${c.part==="ft"?" · Full-time":c.part==="hs"?" · Homeschool":""} — ${DAY_LABEL[currentDay]} ${bd.label.toLowerCase()} — every name (${g.length}: ${girls.length} girls · ${boys.length} boys${unk.length?` · ${unk.length} not on form`:""})`;
+    const prow=k=>{const nb=nextBirthday(k.dob),an=ageTodayExact(k.dob);
+      return `<div class="rkid"><span class="nm" style="color:${nameColor(k)};">${esc(k.display)}${k.flag?' <span class="flagdot" title="support flag">●</span>':""}</span><span class="full">${esc(k.name)} · ${esc(k.fam)} family</span><span class="srcpill ${k.type}">${k.type==="hs"?"HS":"FT"}</span>${k.manual?`<span class="srcpill manual">${k.baked?"BAKED IN":"ADDED"}</span>`:""}<span class="meta">${an!=null?ageYM(an)+" today":"age ?"}${k.placeAs!=null?` · placed as ${ageYM(k.placeAs)}`:""} · ${an!=null&&nb?`turns ${Math.floor(an)+1} ${nb.toLocaleDateString("en-US",{month:"short",day:"numeric"})}`:"birthday not on file"} · ${k.days.join("/")}</span></div>`;};
+    const pblock=(kids,label)=>kids.length?`<div style="font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--ink-soft);text-transform:uppercase;margin:8px 0 1px;">${label} (${kids.length})</div>`+kids.slice().sort((a,b)=>a.display.localeCompare(b.display)).map(prow).join(""):"";
+    el.innerHTML=`<h3>${esc(title)}</h3>`+
+      (g.length?(pblock(girls,"Girls")
+        +((girls.length&&(boys.length||unk.length))?`<div style="border-top:2px solid rgba(39,36,67,.25);margin:8px 0 0;"></div>`:"")
+        +pblock(boys,"Boys")+pblock(unk,"gender not on the form"))
+      :'<div class="note">No children in this class.</div>');
   }
 
-  // ===== Cross-day check ================================================
-  // A child is "torn" when the class they sit in on one day covers a clearly
-  // different age-neighborhood than on another day — different classmates.
+  // ===== Cross-day check (main-day blocks) ==============================
   function renderCrossDay(){
     const el=document.getElementById("crossday");
     const perDay={};
-    for(const d of DAYS_ORDER){const {cls,ws}=classesFor(d);perDay[d]={cls,ws};}
+    for(const d of DAYS_ORDER)perDay[d]=classesFor(d,MAIN_BLOCK(d));
     const rows=[];let checked=0;
     for(const k of ROSTER){
       if(!(stageFilter==="all"||k.sure))continue;
       if(k.days.length<2)continue;
       checked++;
       const bands=k.days.map(d=>{
-        const {cls,ws}=perDay[d];let i=0;while(i<ws.length&&k.pos>=ws[i])i++;
-        const g=cls[i];
-        return {d,band:i,total:ws.length+1,lo:g.length?g[0].ax:k.ax,hi:g.length?g[g.length-1].ax:k.ax};
-      });
-      // worst overlap between any two of the child's days
+        const {classes}=perDay[d];
+        const c=classes.find(c=>c.kids.includes(k));
+        if(!c)return null;
+        const g=c.kids;
+        return {d,label:className(c),lo:g[0].ax,hi:g[g.length-1].ax};
+      }).filter(Boolean);
+      if(bands.length<2)continue;
       let worst=null;
       for(let a=0;a<bands.length;a++)for(let b=a+1;b<bands.length;b++){
         const A=bands[a],B=bands[b];
         const lenA=Math.max(0.5,A.hi-A.lo), lenB=Math.max(0.5,B.hi-B.lo);
         const ov=Math.max(0,Math.min(A.hi,B.hi)-Math.max(A.lo,B.lo));
         const ratio=ov/Math.min(lenA,lenB);
-        if(!worst||ratio<worst.ratio)worst={ratio,A,B};
+        if(!worst||ratio<worst.ratio)worst={ratio};
       }
       if(worst&&worst.ratio<0.35){
-        rows.push(`<div class="xrow"><span class="nm">${esc(k.display)} ${esc(k.fam)}</span> (${ageYM(k.ax)}) — <span class="path">${bands.map(b=>`${b.d}: Class ${b.band+1} (ages ${Math.floor(b.lo)}–${Math.ceil(b.hi)})`).join(" · ")}</span></div>`);
+        rows.push(`<div class="xrow"><span class="nm">${esc(k.display)} ${esc(k.fam)}</span> (${ageYM(k.ax)}) — <span class="path">${bands.map(b=>`${b.d}: ${b.label} (ages ${Math.floor(b.lo)}–${Math.ceil(b.hi)})`).join(" · ")}</span></div>`);
       }
     }
     el.innerHTML = rows.length
@@ -606,42 +1263,52 @@
   // ===== Week summary ===================================================
   function renderSummary(){
     const el=document.getElementById("summary");
-    let rows="",totClasses=0,totPt=0,wedOver=false;
+    let rows="",totClasses=0,totPt=0;const warns=[];
     for(const d of DAYS_ORDER){
-      const {cls}=classesFor(d);
-      const nonEmpty=cls.length; // one teacher per class, even a small one
-      const sizes=cls.map(g=>g.length);
-      totClasses+=nonEmpty;
-      const pt=d==="Wed"?0:Math.max(0,nonEmpty-cfg.ftStaff);
-      if(d==="Wed"&&nonEmpty>cfg.ftStaff)wedOver=true;
-      if(d!=="Wed")totPt+=pt;
-      const sizeStr=sizes.map(s=>`<span class="b ${statusOf(s)}">${s}</span>`).join("");
-      rows+=`<tr><td><strong>${DAY_LABEL[d]}</strong></td><td class="num">${kidsFor(d).length}</td><td class="sizestr">${sizeStr}</td><td class="num">${nonEmpty}</td><td class="num">${d==="Wed"?"—":pt}</td></tr>`;
+      const blocks=DAY_BLOCKS(d);
+      const am=blocks.find(b=>b.ftOnly), pm=blocks.find(b=>!b.ftOnly);
+      const amCls=teacherClasses(d,am.id), pmCls=pm?teacherClasses(d,pm.id):null;
+      const amN=amCls.length, pmN=pmCls?pmCls.length:0;
+      totClasses+=amN+(pmCls?pmN:0);
+      const amKids=kidsFor(d,am.id).length, pmKids=pm?kidsFor(d,pm.id).length:0;
+      if(amN>cfg.ftStaff)warns.push(`${DAY_LABEL[d]} ${pm?"morning":""} needs ${amN} classes but only ${cfg.ftStaff} full-time staff exist — part-timers can't cover ${pm?"mornings":"Wednesday"}.`);
+      const pt=pm?Math.max(0,pmN-cfg.ftStaff):0;
+      totPt+=pt;
+      const szStr=cls=>cls.map(c=>`<span class="b ${statusOf(c.kids.length)}${c.part==="ft"?" ftb":c.part==="hs"?" hsb":""}" title="${className(c)} — ${c.part==="ft"?"FT-only":c.part==="hs"?"HS-only":"mixed"}">${c.kids.length}</span>`).join("");
+      rows+=`<tr><td><strong>${DAY_LABEL[d]}</strong></td>
+        <td class="num">${amKids}</td><td class="sizestr">${szStr(amCls)}</td><td class="num"${amN>cfg.ftStaff?' style="color:var(--bad);font-weight:800;"':""}>${amN}</td>
+        <td class="num">${pm?pmKids:"—"}</td><td class="sizestr">${pm?szStr(pmCls):"—"}</td><td class="num">${pm?pmN:"—"}</td><td class="num">${pm?pt:"—"}</td></tr>`;
     }
     const costLo=totPt*PT_HOURS*PT_RATE_LO, costHi=totPt*PT_HOURS*PT_RATE_HI;
     el.innerHTML=`
       <div style="margin-bottom:10px;">
-        <label style="font-size:12px;color:var(--ink-soft);font-weight:700;">FULL-TIME STAFF WHO CAN EACH LEAD A CLASS PER DAY&nbsp;</label>
+        <label style="font-size:12px;color:var(--ink-soft);font-weight:700;">FULL-TIME STAFF WHO CAN EACH LEAD A CLASS PER BLOCK&nbsp;</label>
         <input class="ctrl-num" type="number" min="0" max="20" value="${cfg.ftStaff}" oninput="cfg.ftStaff=Math.max(0,parseInt(this.value)||0);saveState();renderSummary();">
       </div>
       <table class="tbl">
-        <thead><tr><th>Day</th><th class="num">Students</th><th>Class sizes</th><th class="num">Classes = teachers</th><th class="num">Part-timers to hire</th></tr></thead>
+        <thead><tr><th>Day</th><th class="num">AM kids</th><th>AM class sizes</th><th class="num">AM classes<br>(FT staff only)</th><th class="num">Main-day kids</th><th>Main-day class sizes</th><th class="num">Classes = teachers</th><th class="num">Part-timers to hire</th></tr></thead>
         <tbody>${rows}
-        <tr class="total-row"><td>Week</td><td></td><td></td><td class="num">${totClasses} teacher-days</td><td class="num">${totPt} PT days</td></tr></tbody>
+        <tr class="total-row"><td>Week</td><td></td><td></td><td></td><td></td><td></td><td class="num">${totClasses} teacher-blocks</td><td class="num">${totPt} PT days</td></tr></tbody>
       </table>
-      ${wedOver?`<p class="note" style="color:var(--bad);font-weight:700;">⚠ Wednesday needs more classes than you have full-time staff — and part-timers aren’t hired Wednesdays. Fewer, larger Wednesday classes, or another full-time hand.</p>`:""}
-      <p class="note" style="margin-top:8px;"><strong>Rough part-time cost:</strong> ${totPt} teacher-day${totPt===1?"":"s"}/week × ${PT_HOURS} hrs × $${PT_RATE_LO}–$${PT_RATE_HI} = <strong>$${costLo.toLocaleString()}–$${costHi.toLocaleString()} per week</strong> (≈ $${(costLo*36).toLocaleString()}–$${(costHi*36).toLocaleString()} over a 36-week year). Assumes ${cfg.ftStaff} full-time staff each lead a class every day; adjust above if some don’t teach.</p>`;
+      ${warns.map(w=>`<p class="note" style="color:var(--bad);font-weight:700;">⚠ ${esc(w)}</p>`).join("")}
+      <p class="note" style="margin-top:8px;">Blue-underlined sizes = FT-only classes, green-underlined = HS-only, plain = mixed. Wednesday's single all-day block is shown in the AM columns.</p>
+      <p class="note"><strong>Rough part-time cost:</strong> ${totPt} teacher-day${totPt===1?"":"s"}/week × ${PT_HOURS} hrs × $${PT_RATE_LO}–$${PT_RATE_HI} = <strong>$${costLo.toLocaleString()}–$${costHi.toLocaleString()} per week</strong> (≈ $${(costLo*36).toLocaleString()}–$${(costHi*36).toLocaleString()} over a 36-week year). Part-timers work the 10:30–2:30 block only; mornings and Wednesdays must come out of your ${cfg.ftStaff} full-time staff.</p>`;
   }
 
   // ===== Export =========================================================
   function downloadCsv(){
-    const rows=[["Day","Class","Age range","Student","Full name","Family","Age Sep 1","Program","Days","Support flag"]];
+    const rows=[["Day","Block","Class","Composition","Age range","Student","Full name","Family","Age Sep 1","Program","Days","Support flag","Hand-added"]];
     for(const d of DAYS_ORDER){
-      const {cls}=classesFor(d);
-      cls.forEach((g,i)=>{
-        const rng=g.length?`${ageYM(g[0].ax)} - ${ageYM(g[g.length-1].ax)}`:"";
-        for(const k of g)rows.push([DAY_LABEL[d],`Class ${i+1}`,rng,k.display,k.name,k.fam,ageYM(k.ax),k.type==="hs"?"Homeschool":(MAJOR_SHORT[k.major]||"Full-time"),k.days.join("/"),k.flag?"yes":""]);
-      });
+      for(const b of DAY_BLOCKS(d)){
+        const {classes}=classesFor(d,b.id);
+        classes.forEach(c=>{
+          if(!c.kids.length)return;
+          const g=c.kids;
+          const rng=`${ageYM(g[0].ax)} - ${ageYM(g[g.length-1].ax)}`;
+          const comp=c.part==="ft"?"FT only":c.part==="hs"?"HS only":(b.ftOnly?"FT (morning)":"mixed");
+          for(const k of g)rows.push([DAY_LABEL[d],b.label,className(c),comp,rng,k.display,k.name,k.fam,ageYM(k.ax),k.type==="hs"?"Homeschool":(MAJOR_SHORT[k.major]||"Full-time"),k.days.join("/"),k.flag?"yes":"",k.manual?"yes":""]);
+        });
+      }
     }
     const csv=rows.map(r=>r.map(c=>`"${String(c==null?"":c).replace(/"/g,'""')}"`).join(",")).join("\n");
     const a=document.createElement("a");
@@ -652,14 +1319,20 @@
     const root=document.getElementById("print-root");
     let html=`<h1>River Tech class plan — 2026–27 (ages as of Sept 1, 2026)</h1>`;
     for(const d of DAYS_ORDER){
-      const {cls}=classesFor(d);
-      html+=`<div class="pday"><h2>${DAY_LABEL[d]} — ${kidsFor(d).length} students · ${cls.length} classes</h2>`;
-      cls.forEach((g,i)=>{
-        const rng=g.length?`${ageYM(g[0].ax)} – ${ageYM(g[g.length-1].ax)}`:"empty";
-        html+=`<h3>Class ${i+1} — ${g.length} students · ${rng}</h3>
-          <table><tr><th>Student</th><th>Family</th><th>Age</th><th>Program</th><th>Days</th></tr>`+
-          g.map(k=>`<tr><td>${esc(k.display)} ${k.flag?"●":""}</td><td>${esc(k.fam)}</td><td>${ageYM(k.ax)}</td><td>${k.type==="hs"?"Homeschool":(MAJOR_SHORT[k.major]||"Full-time")}</td><td>${k.days.join("/")}</td></tr>`).join("")+`</table>`;
-      });
+      html+=`<div class="pday">`;
+      for(const b of DAY_BLOCKS(d)){
+        const {classes}=classesFor(d,b.id);
+        const live=classes.filter(c=>c.kids.length);
+        html+=`<h2>${DAY_LABEL[d]} — ${b.label} (${b.sub}) — ${kidsFor(d,b.id).length} students · ${live.length} classes</h2>`;
+        live.forEach(c=>{
+          const g=c.kids;
+          const rng=`${ageYM(g[0].ax)} – ${ageYM(g[g.length-1].ax)}`;
+          const comp=c.part==="ft"?" — Full-time only":c.part==="hs"?" — Homeschool only":"";
+          html+=`<h3>${className(c)}${comp} — ${g.length} students · ${rng}</h3>
+            <table><tr><th>Student</th><th>Family</th><th>Age</th><th>Program</th><th>Days</th></tr>`+
+            g.map(k=>`<tr><td>${esc(k.display)} ${k.flag?"●":""}</td><td>${esc(k.fam)}</td><td>${ageYM(k.ax)}</td><td>${k.type==="hs"?"Homeschool":(MAJOR_SHORT[k.major]||"Full-time")}</td><td>${k.days.join("/")}</td></tr>`).join("")+`</table>`;
+        });
+      }
       html+=`</div>`;
     }
     root.innerHTML=html;
@@ -668,16 +1341,43 @@
 
   // ===== State persistence =============================================
   function saveState(){
-    try{localStorage.setItem(LS_WALLS,JSON.stringify(walls));localStorage.setItem(LS_CFG,JSON.stringify(cfg));}catch{}
+    try{localStorage.setItem(LS_KEY,JSON.stringify({walls,splits,laneWalls,cfg}));}catch{}
   }
   function restoreState(){
     let saved=null;
-    try{saved=JSON.parse(localStorage.getItem(LS_WALLS)||"null");cfg={...cfg,...(JSON.parse(localStorage.getItem(LS_CFG)||"{}"))};}catch{}
+    try{saved=JSON.parse(localStorage.getItem(LS_KEY)||"null");}catch{}
+    if(saved&&saved.cfg)cfg={...cfg,...saved.cfg};
     document.getElementById("cfg-target").value=cfg.target;
     document.getElementById("cfg-min").value=cfg.min;
     document.getElementById("cfg-max").value=cfg.max;
-    if(saved&&DAYS_ORDER.every(d=>Array.isArray(saved[d]))){walls=saved;return;}
-    for(const d of DAYS_ORDER){const kids=kidsFor(d).sort((a,b)=>a.pos-b.pos);walls[d]=wallsBestCompromise(kids).ws;}
+    updateCutModeChips();
+    const shapeOk=saved&&saved.walls&&DAYS_ORDER.every(d=>saved.walls[d]&&DAY_BLOCKS(d).every(b=>Array.isArray(saved.walls[d][b.id])));
+    if(shapeOk){
+      walls=saved.walls;splits=saved.splits||{};laneWalls=saved.laneWalls||{};
+      enforceMorningLock();
+      DAYS_ORDER.forEach(d=>DAY_BLOCKS(d).forEach(b=>{splitsOf(d,b.id);laneWallsOf(d,b.id);cleanupLaneWalls(d,b.id);}));
+      return;
+    }
+    // v2 storage migration: same wall/split shapes, no lane walls yet
+    let v2=null; try{v2=JSON.parse(localStorage.getItem("rts.classes.v2")||"null");}catch{}
+    if(v2&&v2.walls&&DAYS_ORDER.every(d=>v2.walls[d]&&DAY_BLOCKS(d).every(b=>Array.isArray(v2.walls[d][b.id])))){
+      walls=v2.walls;splits=v2.splits||{};laneWalls={};
+      if(v2.cfg)cfg={...cfg,...v2.cfg};
+      enforceMorningLock();
+      DAYS_ORDER.forEach(d=>DAY_BLOCKS(d).forEach(b=>{splitsOf(d,b.id);laneWallsOf(d,b.id);}));
+      saveState(); return;
+    }
+    walls={};splits={};laneWalls={};
+    for(const d of DAYS_ORDER){
+      walls[d]={};splits[d]={};
+      for(const b of DAY_BLOCKS(d)){
+        const kids=kidsFor(d,b.id).sort((x,y)=>x.pos-y.pos);
+        walls[d][b.id]=wallsBestCompromise(kids).ws;
+        splits[d][b.id]=null;splitsOf(d,b.id);
+        laneWallsOf(d,b.id);
+      }
+    }
+    enforceMorningLock();
     saveState();
   }
   function setStageFilter(v){
